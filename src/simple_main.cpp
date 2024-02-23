@@ -115,9 +115,6 @@ void EuclideanMain::SaveSolutionPath(oc::PathControl path_control, ob::StateSpac
         double x_pose = s->as<R2BeliefSpace::StateType>()->getX();
         double y_pose = s->as<R2BeliefSpace::StateType>()->getY();
         Mat cov = s->as<R2BeliefSpace::StateType>()->getCovariance();
-        // std::cout << "x_pose: " << x_pose << std::endl;
-        // std::cout << "y_pose: " << y_pose << std::endl;
-        // std::cout << "cov: " << cov << std::endl;
 
         outputsolution << x_pose << ","  << y_pose << "," <<  cov.trace() << std::endl;
 
@@ -188,14 +185,6 @@ void EuclideanMain::planWithSimpleSetup()
     double pruning_radius_ = 1.0;
 
     ob::PlannerPtr planner;
-    // std::vector<const ob::State*> last_best_known_solution_states_;
-    // planner = ob::PlannerPtr(new oc::SSBT(si));
-    // planner->as<oc::SSBT>()->setGoalBias(goal_bias_);
-    // planner->as<oc::SSBT>()->setSelectionRadius(selection_radius_);
-    // planner->as<oc::SSBT>()->setPruningRadius(pruning_radius_);
-
-
-    // std::cout << "hello" << std::endl;
     planner = ob::PlannerPtr(new oc::SSBT(si));
     planner->as<oc::SSBT>()->setGoalBias(goal_bias_);
     planner->as<oc::SSBT>()->setSelectionRadius(selection_radius_);
@@ -247,15 +236,10 @@ void EuclideanMain::planWithSimpleSetup()
     ob::StateValidityCheckerPtr om_stat_val_check;
     // om_stat_val_check = ob::StateValidityCheckerPtr(new Scenario2ValidityChecker(si));
     om_stat_val_check = ob::StateValidityCheckerPtr(new StateValidityCheckerPCCBlackmore("scene3", si, 0.99));
-    // StateValidityCheckerPCCBlackmore
     // simple_setup_->setStateValidityChecker(om_stat_val_check);
     si->setStateValidityChecker(om_stat_val_check);
 
-    // std::cout << "a" << std::endl;
-
     si->setup();
-
-    // std::cout << "ya" << std::endl;
 
     ob::ProblemDefinitionPtr pdef(new ob::ProblemDefinition(si));
     pdef->addStartState(start);
@@ -274,8 +258,6 @@ void EuclideanMain::planWithSimpleSetup()
 
     std::vector<unsigned int> edgeList;
     std::ofstream outputfile;
-    // outputfile.open("tree.csv", std::ios::out | std::ios::trunc);
-    // outputfile << "to,from,x,y,cov,cost" << std::endl;
     
     
     // for(unsigned int i = 1; i < planner_data.numVertices(); ++i) {
@@ -358,13 +340,6 @@ void EuclideanMain::planWithSimpleSetup()
         if (planner_data.getIncomingEdges(i, edgeList) > 0){
             outputfile << i << "," << edgeList[0] << "," << x << "," << y << "," << cov.trace() << "," << planner_data.getVertex(i).getState()->as<R2BeliefSpace::StateType>()->getCost() << std::endl; 
         }
-
-        
-        // for (int j = 0; j < edgeList.size(); ++j){
-            // std::cout << edgeList[0] << std::endl;
-            // std::cout << planner_data.getVertex(edgeList[0]).getState()->as<R2BeliefSpace::StateType>()->getX() << std::endl;
-            // std::cout << planner_data.getVertex(i).getParent()->getState()->as<R2BeliefSpace::StateType>()->getX() std::endl;
-        // }
     }
 
     outputfile.close();
@@ -389,11 +364,6 @@ void EuclideanMain::solve(ob::PlannerPtr planner)
     //=======================================================================
     // Attempt to solve the problem
     //=======================================================================
-
-    // std::cout << "hello" << std::endl;
-
-    // ob::PlannerStatus solved = simple_setup_->solve(5.0);
-    // std::cout << "bye" << std::endl;
     if(simple_setup_->haveExactSolutionPath())
     {
 
@@ -508,9 +478,6 @@ void EuclideanMain::solve(ob::PlannerPtr planner)
         path_controls_.reserve(path_control_controls.size());
         exit(0);
     }
-
-    //ompl::tools::::Profiler::Stop();
-    //ompl::tools::::Profiler::Status();
 }
 
 int main(int argc, char **argv)

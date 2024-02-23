@@ -75,17 +75,12 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
     x_pose_reference = control->as<oc::RealVectorControlSpace::ControlType>()->values[0];
     y_pose_reference = control->as<oc::RealVectorControlSpace::ControlType>()->values[1];
     K_sample = control->as<oc::RealVectorControlSpace::ControlType>()->values[2];
-
-    // std::cout << "OL control is " << x_pose_reference << " " << y_pose_reference << std::endl;
     //=========================================================================
     // Compute control inputs (dot(dot(x)) dot(dot(y)) dot(dot(z))) with PD controller
     //=========================================================================
     double u_0 = B_ol_(0, 0) * (x_pose_reference - x_pose); //double u_0 = B_cl_d_(0, 0) * (x_pose_reference - x_pose);
     double u_1 = B_ol_(0, 0) * (y_pose_reference - y_pose); //double u_1 = B_cl_d_(1, 1) * (y_pose_reference - y_pose);
 
-
-    // u_0 = u_0/(u_0 + u_1);
-    // std::cout << "PD control is " << u_0 << " " << u_1 << std::endl;
     // //=========================================================================
     // // Get (dot(v) dot(yaw) dot(heave)) from (dot(dot(x)) dot(dot(y)) dot(dot(z)))
     // //=========================================================================
@@ -101,23 +96,12 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
     //=========================================================================
     // Propagate mean
     //=========================================================================
-    // result_css = result->as<R2BeliefSpace::StateType>();
-    // std::cout << "x_pose: " << duration * x_pose_reference << std::endl;
-    // std::cout << "y_pose: " << duration * y_pose_reference << std::endl;
-
-    // std::cout << duration << std::endl;
-    // if (duration > 0.1){
-    //     std::cout << duration << std::endl;
-    // }
     result->as<R2BeliefSpace::StateType>()->setX(x_pose + duration * x_pose_reference);
     result->as<R2BeliefSpace::StateType>()->setY(y_pose + duration * y_pose_reference);
 
     //=========================================================================
     // Propagate covariance in the equivalent closed loop system
     //=========================================================================
-    // std::cout << result_css << std::endl;
-    // result_css->as<R2BeliefSpace::StateType>()->getSigma();
-
 
     Eigen::Matrix2d sigma_from = state->as<R2BeliefSpace::StateType>()->getSigma();
     Eigen::Matrix2d lambda_from = state->as<R2BeliefSpace::StateType>()->getLambda();
@@ -125,26 +109,11 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
 
     Mat lambda_pred, K;
 
-    // if (x_pose > 75 && y_pose  < 30){
-    //     std::cout << "old state is in measurement region!" << std::endl;
-    // }
-
-    //scenario 1
-    // if (1==2){
-    // if (x_pose < -100.0){
     if (x_pose + duration * u_0 > 0.0 && y_pose + duration * u_1 < 20){ //scenario 2
-    // if (true){ //scenario 3
-    // if (x_pose + duration * u_0 > 0.0 && x_pose + duration * u_0 < 35 && y_pose + duration * u_1 < 25){  //scenario 4
         Mat R = 0.2*0.2*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
-        // Mat R = 1*((x_pose - 87.5)*(x_pose - 87.5) + (y_pose - 15.0)*(y_pose - 15.0) +1)*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
         Mat S = (H * sigma_pred * H.transpose())+ R;
         K = (sigma_pred * H.transpose()) * S.inverse();
-        // lambda_pred = A_cl_*lambda_from*A_cl_;
         lambda_pred = (A_ol_ - B_ol_ *K_sample)*lambda_from*(A_ol_ - B_ol_ *K_sample);
-
-        // std::cout << "MEASUREMENT REGION" <<std::endl;
-        // std::cout << "S is:  " << S << std::endl;
-        // std::cout << "K is: " << K << std::endl;
     }
     else{
         K = Eigen::MatrixXd::Zero(dimensions_, dimensions_);
@@ -153,36 +122,8 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
     Mat sigma_to = (I - (K*H)) * sigma_pred;
     Mat lambda_to = lambda_pred + K*H*sigma_pred;
 
-    // std::cout << "K is: " << K << std::endl;
-    // if (x_pose + duration * u_0 > 75 && y_pose + duration * u_1 < 30){
-    //     std::cout << "K is: " << K << std::endl;
-    //     std::cout << "A closed loop" << A_cl_ << std::endl;
-    //     std::cout << "sigma from" << sigma_from << std::endl;
-    //     std::cout << "sigma_pred" << sigma_pred << std::endl;
-    //     std::cout << "sigma to" << sigma_to << std::endl;
-    //     std::cout << "lambda from" << lambda_from << std::endl;
-    //     std::cout << "lambda_pred" << lambda_pred << std::endl;
-    //     std::cout << "lambda to" << lambda_to << std::endl;
-    //     std::cout << (sigma_from + lambda_from).trace() << std::endl;
-    //     std::cout << (sigma_to + lambda_to).trace() <<std::endl;
-    //     // if ((sigma_from + lambda_from).trace() < 5){
-    //     //     exit(0);
-    //     // }
-    // }
-
-    
-    // if (y_pose + duration * y_pose_reference > 80) {
-    //     std::cout << "x is: " << x_pose + duration * x_pose_reference << std::endl;
-    //     std::cout << "y is: " << y_pose + duration * y_pose_reference << std::endl;
-    // }
     result->as<R2BeliefSpace::StateType>()->setSigma(sigma_to);
     result->as<R2BeliefSpace::StateType>()->setLambda(lambda_to);
-
-    // if (x_pose + duration * u_0 > 75 && y_pose + duration * u_1 < 30){
-    //     if (x_pose + duration * u_0 > 0.0 && x_pose + duration * u_0 < 55 && y_pose + duration * u_1 < 25){ 
-    //     result->as<R2BeliefSpaceEuclidean::StateType>()->setSigma(0.01*Eigen::MatrixXd::Identity(2,2));
-    //     result->as<R2BeliefSpaceEuclidean::StateType>()->setLambda(0.01*Eigen::MatrixXd::Identity(2,2));
-    // }
 }
 
 bool SimpleStatePropagator::canPropagateBackward(void) const
