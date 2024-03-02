@@ -40,7 +40,7 @@ SimpleStatePropagator::SimpleStatePropagator(const oc::SpaceInformationPtr &si) 
     B_cl_d_.resize(2, 2);
     B_cl_d_ = A_cl_d_.inverse() * (A_cl_d_ - Eigen::MatrixXd::Identity(2, 2)) * B_cl_;
 
-    double processNoise = 0.2; //process noise is 0.0 for scenario
+    double processNoise = 0.2;
     Q = pow(processNoise, 2) * Eigen::MatrixXd::Identity(dimensions_, dimensions_);
 }
 
