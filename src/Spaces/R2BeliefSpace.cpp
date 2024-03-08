@@ -20,9 +20,7 @@ bool R2BeliefSpace::StateType::isReached(ompl::base::State *state, bool relaxedC
     {
         return true;
     }
-
     return false;
-    
 }
 
 ompl::base::State* R2BeliefSpace::allocState(void) const

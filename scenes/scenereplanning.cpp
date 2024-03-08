@@ -1,9 +1,3 @@
-/* Author: Èric Pairet
- * Date:   21 May 2018
- *
- * Description:
- */
-
 #include "scenereplanning.hpp"
 
 SceneReplanning::SceneReplanning() {

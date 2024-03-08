@@ -1,9 +1,3 @@
-/* Author: Èric Pairet, Qi Heng
- * Date:   21 May 2018
- *
- * Description:
- */
-
 #ifndef SCENE_REPLAN_
 #define SCENE_REPLAN_
 

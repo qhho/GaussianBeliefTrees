@@ -61,11 +61,8 @@ class OfflinePlannerUncertainty {
         oc::ControlSpacePtr constructCtrlSpace(ob::StateSpacePtr c_space);
         void boundCtrlSpace(oc::ControlSpacePtr ctrl_space);
 
-        void planWithSimpleSetup();
-        void visualizeProblemDefinition();
-
-        void replacePath(og::PathGeometric geopath);
-        void solve();
+        void planWithSimpleSetup(int sysType, double plan_time, double dt, double p_safe, double Q, double R, std::string scene, std::vector<std::vector<double>> bounds_state, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double control_duration_low, double control_duration_high, std::string file)
+        void solve(double goal_bias, double sampling_bias, double selection_radius, double pruning_radius, int distance_function)
 
 
   private:
