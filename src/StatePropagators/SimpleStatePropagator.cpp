@@ -40,7 +40,7 @@ SimpleStatePropagator::SimpleStatePropagator(const oc::SpaceInformationPtr &si) 
     B_cl_d_.resize(2, 2);
     B_cl_d_ = A_cl_d_.inverse() * (A_cl_d_ - Eigen::MatrixXd::Identity(2, 2)) * B_cl_;
 
-    double processNoise = 0.2;
+    double processNoise = 0.01;
     Q = pow(processNoise, 2) * Eigen::MatrixXd::Identity(dimensions_, dimensions_);
 }
 
@@ -109,11 +109,11 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
 
     Mat lambda_pred, K;
 
-    if (x_pose + duration * u_0 > 0.0 && y_pose + duration * u_1 < 20){ //scenario 2
-        Mat R = 0.2*0.2*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
+    if (x_pose + duration * u_0 > 0.0 && y_pose + duration * u_1 < 100){ //scenario 2
+        Mat R = 0.1*0.1*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
         Mat S = (H * sigma_pred * H.transpose())+ R;
         K = (sigma_pred * H.transpose()) * S.inverse();
-        lambda_pred = (A_ol_ - B_ol_ *K_sample)*lambda_from*(A_ol_ - B_ol_ *K_sample);
+        lambda_pred = (A_ol_ - B_ol_ * K_sample)*lambda_from*(A_ol_ - B_ol_ * K_sample);
     }
     else{
         K = Eigen::MatrixXd::Zero(dimensions_, dimensions_);
@@ -122,8 +122,14 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
     Mat sigma_to = (I - (K*H)) * sigma_pred;
     Mat lambda_to = lambda_pred + K*H*sigma_pred;
 
+    // std::cout << x_pose << std::endl;
+    // std::cout << y_pose << std::endl;
+
     result->as<R2BeliefSpace::StateType>()->setSigma(sigma_to);
     result->as<R2BeliefSpace::StateType>()->setLambda(lambda_to);
+
+    // std::cout << sigma_to << std::endl;
+    // std::cout << lambda_to << std::endl;
 }
 
 bool SimpleStatePropagator::canPropagateBackward(void) const

@@ -22,6 +22,7 @@ add_library (rrbt_lib
     scenes/scenereplanning2.cpp
     src/StatePropagators/SimpleStatePropagator.cpp
     src/StatePropagators/SimpleStatePropagatorEuclidean.cpp
+    src/OptimizationObjectives/expected_cost_objective.cpp
     src/OptimizationObjectives/state_cost_objective.cpp
     src/ValidityCheckers/state_validity_checker_pcc_blackmore.cpp
     src/ValidityCheckers/state_validity_checker_pcc_blackmore_euclidean.cpp
@@ -44,9 +45,17 @@ target_include_directories(rrbt_lib
     ${OMPL_INCLUDE_DIRS}
 )
 
-add_executable (main src/simple_main.cpp)
+# add_executable (main src/simple_main.cpp)
 
-target_link_libraries (main
+# target_link_libraries (main
+#     rrbt_lib
+#     ${OMPL_LIBRARIES}
+#     ${Boost_LIBRARIES}
+# )
+
+add_executable (benchmark_2dsimple benchmarks/benchmark_tro_2dsimple.cpp)
+
+target_link_libraries (benchmark_2dsimple
     rrbt_lib
     ${OMPL_LIBRARIES}
     ${Boost_LIBRARIES}

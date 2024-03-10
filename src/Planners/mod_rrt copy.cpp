@@ -139,51 +139,60 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
         Motion *nmotion = nn_->nearest(rmotion);
         /* sample a random control that attempts to go towards the random state, and also sample a control duration */
         unsigned int cd = controlSampler_->sampleTo(rctrl, nmotion->control, nmotion->state, rmotion->state);
-
-        // this code is contributed by Jennifer Barry
-        std::vector<base::State *> pstates;
-        cd = siC_->propagateWhileValid(nmotion->state, rctrl, cd, pstates, true);
-        if (cd >= siC_->getMinControlDuration())
+        if (addIntermediateStates_)
         {
-            Motion *lastmotion = nmotion;
-            bool solved = false;
-            size_t p = 0;
-            for (; p < pstates.size(); ++p)
+            // this code is contributed by Jennifer Barry
+            std::vector<base::State *> pstates;
+            cd = siC_->propagateWhileValid(nmotion->state, rctrl, cd, pstates, true);
+            if (cd >= siC_->getMinControlDuration())
             {
-                /* create a motion */
-                auto *motion = new Motion();
-                motion->state = pstates[p];
-                // we need multiple copies of rctrl
-                motion->control = siC_->allocControl();
-                siC_->copyControl(motion->control, rctrl);
-                motion->steps = 1;
-                motion->parent = lastmotion;
-                lastmotion = motion;
-                nn_->add(motion);
-                double dist = 0.0;
-                solved = goal->isSatisfied(motion->state, &dist);
-                if (solved)
+                Motion *lastmotion = nmotion;
+                bool solved = false;
+                size_t p = 0;
+                for (; p < pstates.size(); ++p)
                 {
-                    approxdif = dist;
-                    solution = motion;
+                    /* create a motion */
+                    auto *motion = new Motion();
+                    motion->state = pstates[p];
+                    // we need multiple copies of rctrl
+                    motion->control = siC_->allocControl();
+                    siC_->copyControl(motion->control, rctrl);
+                    motion->steps = 1;
+                    motion->parent = lastmotion;
+                    lastmotion = motion;
+                    nn_->add(motion);
+                    double dist = 0.0;
+                    solved = goal->isSatisfied(motion->state, &dist);
+                    if (solved)
+                    {
+                        approxdif = dist;
+                        solution = motion;
+                        break;
+                    }
+                    if (dist < approxdif)
+                    {
+                        approxdif = dist;
+                        approxsol = motion;
+                    }
+                }
+
+                // free any states after we hit the goal
+                while (++p < pstates.size())
+                    si_->freeState(pstates[p]);
+                if (solved){
+                    std::cout << "solved" << std::endl;
                     break;
                 }
-                if (dist < approxdif)
-                {
-                    approxdif = dist;
-                    approxsol = motion;
-                }
             }
-
-            // free any states after we hit the goal
-            while (++p < pstates.size())
-                si_->freeState(pstates[p]);
-            if (solved){
-                std::cout << "solved" << std::endl;
-                break;
-            }
-
-            /* create a motion */
+            else
+                for (auto &pstate : pstates)
+                    si_->freeState(pstate);
+        }
+        else
+        {
+            if (cd >= siC_->getMinControlDuration())
+            {
+                /* create a motion */
                 auto *motion = new Motion(siC_);
                 si_->copyState(motion->state, rmotion->state);
                 siC_->copyControl(motion->control, rctrl);
@@ -204,11 +213,8 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
                     approxdif = dist;
                     approxsol = motion;
                 }
+            }
         }
-        else
-            for (auto &pstate : pstates)
-                si_->freeState(pstate);
-
     }
 
     bool solved = false;

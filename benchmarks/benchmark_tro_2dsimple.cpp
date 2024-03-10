@@ -5,40 +5,53 @@
 #include <vector>
 #include <boost/bind.hpp>
 
-// OMPL
-// #include <ompl/control/SpaceInformation.h>
-// #include <ompl/control/planners/PlannerIncludes.h>
-// #include <ompl/base/SpaceInformation.h>
-// #include <ompl/base/spaces/SE2StateSpace.h>
-// #include <ompl/geometric/planners/rrt/RRTstar.h>
-// #include <ompl/geometric/planners/rrt/RRT.h>
-// #include <ompl/geometric/planners/prm/PRMstar.h>
-// #include <ompl/geometric/SimpleSetup.h>
-// #include <ompl/config.h>
-
 // headers
-#include "ValidityCheckers/Scenario1ValidityChecker.hpp" // simple validity checker
-#include "ValidityCheckers/Scenario2ValidityChecker.hpp" // simple validity checker
-#include "ValidityCheckers/Scenario3ValidityChecker.hpp" // simple validity checker
 #include "ValidityCheckers/state_validity_checker_pcc_blackmore.hpp" // simple validity checker
 #include "StatePropagators/SimpleStatePropagator.h"
 #include "Spaces/R2BeliefSpace.h"
 #include "Spaces/R2BeliefSpaceEuclidean.h"
-#include "ControlSpaces/SimpleControlSpace.h"
+// #include "ControlSpaces/SimpleControlSpace.h"
 #include "OptimizationObjectives/state_cost_objective.hpp"
+#include "OptimizationObjectives/expected_cost_objective.hpp"
 #include <boost/program_options/parsers.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
-
-#include "benchmark_main.hpp"
+#include <boost/math/distributions/chi_squared.hpp>
+#include <string>
+#include <bits/stdc++.h>
+#include "benchmark_tro_2dsimple.hpp"
 
 namespace ob = ompl::base;
 namespace oc = ompl::control;
 namespace og = ompl::geometric;
 
+std::vector<std::string> split(std::string str, std::string delimiter)
+{
+   std::vector<std::string> v;
+    if (!str.empty()) {
+        int start = 0;
+        do {
+            // Find the index of occurrence
+            int idx = str.find(delimiter, start);
+            if (idx == std::string::npos) {
+                break;
+            }
+ 
+            // If found add the substring till that
+            // occurrence in the vector
+            int length = idx - start;
+            v.push_back(str.substr(start, length));
+            start += (length + delimiter.size());
+        } while (true);
+        v.push_back(str.substr(start));
+    }
+ 
+    return v;
+}
+
 ob::StateSpacePtr constructStateSpace(void)
 {
-    ob::StateSpacePtr state_space = ob::StateSpacePtr(new R2BeliefSpace());
+    ob::StateSpacePtr state_space = ob::StateSpacePtr(new R2BeliefSpace(0.5));
     return state_space;
 }
 
@@ -51,45 +64,33 @@ ob::StateSpacePtr constructRealVectorStateSpace(void)
 class MyGoalRegion : public ompl::base::GoalRegion
 {
 public:
-    MyGoalRegion(const SpaceInformationPtr &si) : ompl::base::GoalRegion(si)
+    MyGoalRegion(const SpaceInformationPtr &si, double p_safe, std::vector<double> goal_state, double goal_r, double t_crit) : ompl::base::GoalRegion(si)
     {
-        setThreshold(16.0);
+        setThreshold(goal_r);
+        goal_state_ = goal_state;
+        std::cout << goal_state_[0] << " " << goal_state_[1] << std::endl;
+        t_crit_ = t_crit;
+        p_safe_ = p_safe;
     }
     virtual double distanceGoal(const State *st) const
         {
+        double dx = st->as<R2BeliefSpace::StateType>()->getX() - goal_state_[0];
+        double dy = st->as<R2BeliefSpace::StateType>()->getY() - goal_state_[1];
+        double radius = st->as<R2BeliefSpace::StateType>()->getCovariance()(0,0);
+        radius = t_crit_*sqrt(radius);
 
-        double dx = st->as<R2BeliefSpace::StateType>()->getX() - 90.0;
-        double dy = st->as<R2BeliefSpace::StateType>()->getY() - 90.0;
-
-        return (dx*dx + dy*dy);
+        // std::cout << sqrt(dx*dx + dy*dy) + radius << std::endl;
+        return sqrt(dx*dx + dy*dy) + radius;
+        // return sqrt(dx*dx + dy*dy);
     }
+
+    double p_safe_;
+    std::vector<double> goal_state_;
+    double goal_r_;
+    double t_crit_;
 };
 
-
-OfflinePlannerUncertainty::OfflinePlannerUncertainty(double goal_bias, double sampling_bias, double selection_radius, double pruning_radius, int distance_function)
-{
-    //=======================================================================
-    // Get parameters
-    //=======================================================================
-    planning_bounds_x_.resize(2);
-    planning_bounds_y_.resize(2);
-    start_configuration_.resize(2);
-    goal_configuration_.resize(2);
-
-    planning_bounds_x_[0] = 0.0;
-    planning_bounds_x_[1] = 100.0;
-    planning_bounds_y_[0] = 0.0;
-    planning_bounds_y_[1] = 100.0;
-
-    start_configuration_[0] = 10.0; // 50.0; //15.0;
-    start_configuration_[1] = 10.0; // 10.0; //50.0;
-    goal_configuration_[0] = 90.0;
-    goal_configuration_[1] = 90.0;
-
-    initial_covariance_ = 1.0*Eigen::MatrixXd::Identity(2, 2);
-}
-
-void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_time, double dt, double p_safe, double Q, double R, std::string scene, std::vector<std::vector<double>> bounds_state, std::vector<std::vector<double>> bounds_control, std::vector< double> delta_bounds, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double w_1, double goal_bias, double selection_radius, double pruning_radius, double control_duration_low, double control_duration_high, std::string file)
+void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_time, double dt, double p_safe, double Q, double R, std::string scene, std::vector<std::vector<double>> bounds_state, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file)
 {
     //=======================================================================
     // Instantiate the state space
@@ -97,23 +98,32 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     ob::StateSpacePtr space(constructStateSpace()); // [x y surge yaw covariance(16)] -> size = 20
     // set the bounds for the R^2 part of R2BeliefSpace();
     ob::RealVectorBounds bounds_se2(2);
-    bounds_se2.setLow(0, 0.0);
-    bounds_se2.setHigh(0, 100.0);
-    bounds_se2.setLow(1, 0.0);
-    bounds_se2.setHigh(1, 100.0);
-    
+    bounds_se2.setLow(0, bounds_state[0][0]);
+    bounds_se2.setHigh(0, bounds_state[0][1]);
+    bounds_se2.setLow(1, bounds_state[1][0]);
+    bounds_se2.setHigh(1, bounds_state[1][1]);
     space->as<R2BeliefSpace>()->setBounds(bounds_se2);
     
+
+    std::cout << bounds_state[0][0] << " " << bounds_state[0][1] << " " << bounds_state[1][0] << " " << bounds_state[1][1] << std::endl;
+
     //=======================================================================
     // Instantiate the control space
     //=======================================================================
-    auto cspace(std::make_shared<oc::RealVectorControlSpace>(space, 2));
+    auto cspace(std::make_shared<oc::RealVectorControlSpace>(space, 3));
 
-    ob::RealVectorBounds bounds(2);
-    bounds.setLow(-100.0);
-    bounds.setHigh(100.0);
+    ob::RealVectorBounds bounds(3);
+    bounds.setLow(0, bounds_control[0][0]);
+    bounds.setHigh(0, bounds_control[0][1]);
+    bounds.setLow(1, bounds_control[0][0]);
+    bounds.setHigh(1, bounds_control[0][1]);
+
+    bounds.setLow(2, 0.0);
+    bounds.setHigh(2, 1.0);
     
     cspace->setBounds(bounds);
+
+    // std::cout << bounds_control[0][0] << " " << bounds_control[0][1] << std::endl;
     
     //=======================================================================
     // Define a simple setup class
@@ -123,52 +133,20 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     oc::SpaceInformationPtr si = simple_setup_->getSpaceInformation();
     
     // Set minimum and maximum duration of control action
-    si->setMinMaxControlDuration(min_control_duration_, max_control_duration_);
-    si->setPropagationStepSize(dt_);
-
-    //=======================================================================
-    // Create a planner for the defined space
-    //=======================================================================
-    ob::PlannerPtr planner;
-
-    double goal_bias_ = 0.05;
-    double selection_radius_ = 5.0;
-    double pruning_radius_ = 1.5; //0.5 sucks, but 1.5 good
-
-    // planner = ob::PlannerPtr(new oc::SST(si));
-    // planner->as<oc::SST>()->setGoalBias(goal_bias_);
-    // planner->as<oc::SST>()->setSelectionRadius(selection_radius_);
-    // planner->as<oc::SST>()->setPruningRadius(pruning_radius_);
-    
-    // planner = ob::PlannerPtr(new oc::RRT(si));
-    // auto planner(std::make_shared<oc::RRT>(si));
-    // ob::PlannerPtr planner(new ompl::control::RRT(si));
-    // planner->as<oc::RRT>()->setGoalBias(goal_bias_);
-    // planner->as<oc::RRT>()->setRange(15.0);
-    // planner = ob::PlannerPtr(new oc::RRT(si));
-
-
-    // planner = ob::PlannerPtr(new oc::EST(si));
-    // planner->as<oc::EST>()->setRange(15.0);
-
-    //=======================================================================
-    // Setup the setup planner
-    //=======================================================================
+    si->setMinMaxControlDuration(control_duration_low, control_duration_high);
+    si->setPropagationStepSize(dt);
 
     //=======================================================================
     // Create a start and goal states
     //=======================================================================
-    // create a start state
     ob::ScopedState<> start(space);
-    start[0] = double(start_configuration_[0]); //x
-    start[1] = double(start_configuration_[1]); //y
+    start[0] = double(initial_state[0]); //x
+    start[1] = double(initial_state[1]); //y
 
-    //=======================================================================
-    // Set the start and goal states
-    //=======================================================================
-    // simple_setup_->setStartAndGoalStates(start, goal, 20.0);
+    std::cout << initial_state[0] << " " << initial_state[1] << std::endl;
     simple_setup_->setStartState(start);
-    simple_setup_->setGoal(std::make_shared<MyGoalRegion>(si));
+    double t_crit = quantile(boost::math::chi_squared(2), p_safe);
+    simple_setup_->setGoal(std::make_shared<MyGoalRegion>(si, p_safe, goal_state, goal_r, t_crit));
     //=======================================================================
     // set the propagation routine for this space
     //=======================================================================
@@ -177,22 +155,20 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
 //	// Set optimization objective
 //	//=======================================================================
 //	//path length Objective
-	simple_setup_->getProblemDefinition()->setOptimizationObjective(getEuclideanPathLengthObjective(si));
-
-
-    ob::StateValidityCheckerPtr om_stat_val_check;
-    om_stat_val_check = ob::StateValidityCheckerPtr(new StateValidityCheckerPCCBlackmore("scene4", simple_setup_->getSpaceInformation(), 0.95));
-    simple_setup_->setStateValidityChecker(om_stat_val_check);
+	simple_setup_->getProblemDefinition()->setOptimizationObjective(getExpectedPathLengthObjective(si));
+    ob::StateValidityCheckerPtr val_checker;
+    val_checker = ob::StateValidityCheckerPtr(new StateValidityCheckerPCCBlackmore(scene, simple_setup_->getSpaceInformation(), p_safe));
+    simple_setup_->setStateValidityChecker(val_checker);
 
     //=======================================================================
     // Perform setup steps for the planner
     //=======================================================================
     simple_setup_->setup();
     OMPL_INFORM("Benchmarking starting");
-    this->solve();
+    this->solve(goal_bias, sampling_bias, selection_radius, pruning_radius, 1, file);
 }
 
-void OfflinePlannerUncertainty::solve(double goal_bias, double sampling_bias, double selection_radius, double pruning_radius, int distance_function)
+void OfflinePlannerUncertainty::solve(double goal_bias, double sampling_bias, double selection_radius, double pruning_radius, int distance_function, std::string file)
 {
     //=======================================================================
     // Set state validity checking for this space
@@ -206,7 +182,10 @@ void OfflinePlannerUncertainty::solve(double goal_bias, double sampling_bias, do
     // b.addExperimentParameter("bias_value", "double", goal_bias_);
     // b.addExperimentParameter("measurementregion", "x y", "55 25");
     b.addExperimentParameter("first_solution", "bool", "0");
-    b.setDir("results/wasserstein/scenario1final/");
+
+    std::string resultsfile = "../results/" + file + "/";
+
+    b.setDir(resultsfile);
     
     // // We add the planners to evaluate.
     double goal_bias_ = goal_bias;
@@ -230,7 +209,6 @@ void OfflinePlannerUncertainty::solve(double goal_bias, double sampling_bias, do
     // RRBT_Planner = ob::PlannerPtr(new oc::RRBT(simple_setup_->getSpaceInformation()));
     // b.addPlanner(RRBT_Planner);
 
-    // std::cout << "the" << std::endl;
     // // etc
     
     // // For planners that we want to configure in specific ways,
@@ -238,7 +216,7 @@ void OfflinePlannerUncertainty::solve(double goal_bias, double sampling_bias, do
     
     // SST
     double selection_radius_ = selection_radius;
-    double pruning_radius_ = pruning_radius; //0.5 sucks, but 1.5 good, 2.5 is better
+    double pruning_radius_ = pruning_radius;
     
     ob::PlannerPtr planner;
     planner = ob::PlannerPtr(new oc::SSBT(simple_setup_->getSpaceInformation()));
@@ -249,11 +227,12 @@ void OfflinePlannerUncertainty::solve(double goal_bias, double sampling_bias, do
     planner->as<oc::SSBT>()->setDistanceFunction(distance_function); //wasserstein
     b.addPlanner(planner);
     
+    OMPL_INFORM("Benchmarking");
 
     ompl::tools::MyBenchmark::MyRequest req;
-    req.maxTime = times[i] + 1.0;
+    req.maxTime = 5;
     req.maxMem = 1000.0;
-    req.runCount = 50;
+    req.runCount = 5;
     req.displayProgress = true;
     b.benchmark(req);
     b.saveResultsToFile();
@@ -315,14 +294,14 @@ void OfflinePlannerUncertainty::solve(double goal_bias, double sampling_bias, do
         // // This will generate a file of the form ompl_host_time.log
         b.saveResultsToFile();
         */
-    }
 }
 
 int main(int argc, char **argv)
 {
 
     std::string configtype = argv[1];
-    inifile = "../config" + configtype + ".ini";
+    std::string inifile = "../config/" + configtype + ".ini";
+    std::string file = configtype;
     // Read parameters from config.ini file
     boost::property_tree::ptree pt;
     boost::property_tree::ini_parser::read_ini(inifile, pt);
@@ -338,12 +317,8 @@ int main(int argc, char **argv)
     // Planner params
     double p_safe = std::stod(pt.get<std::string>("Planner.p_safe"));
     double plan_time = std::stod(pt.get<std::string>("Planner.planning_time"));
-    std::string bounds_surge = pt.get<std::string>("Planner.surge_bounds");
-    std::vector<std::string> spltStr = split(bounds_surge, ",");
-    double bounds_surge_low = std::stod(spltStr[0]);
-    double bounds_surge_high = std::stod(spltStr[1]);
     std::string goal = pt.get<std::string>("Planner.goal");
-    spltStr = split(goal, ",");
+    std::vector<std::string> spltStr = split(goal, ",");
     double goal_x = std::stod(spltStr[0]);
     double goal_y = std::stod(spltStr[1]);
     double goal_r = std::stod(pt.get<std::string>("Planner.goal_radius"));
@@ -351,11 +326,10 @@ int main(int argc, char **argv)
     spltStr = split(init, ",");
     double initial_state_x = std::stod(spltStr[0]);
     double initial_state_y = std::stod(spltStr[1]);
-    double initial_state_theta = std::stod(spltStr[2]);
-    double initial_state_surge = std::stod(spltStr[3]);
 
     double pruning_radius = std::stod(pt.get<std::string>("Planner.pruning_radius"));
     double selection_radius = std::stod(pt.get<std::string>("Planner.selection_radius"));
+    double sampling_bias = std::stod(pt.get<std::string>("Planner.sampling_bias"));
 
     double goal_bias = std::stod(pt.get<std::string>("Planner.goal_bias"));
 
@@ -410,7 +384,7 @@ int main(int argc, char **argv)
     OMPL_INFORM("USING P_SAFE: %3f, Q: %3f, R: %3f", p_safe, Q, R);
     if(sysType==1){
         OMPL_INFORM("Using linearized unicycle system");
-    } else if (sysType==0{
+    } else if (sysType==0){
         OMPL_INFORM("Using linear system");
     }
     else{
@@ -418,10 +392,10 @@ int main(int argc, char **argv)
     }
 
     std::vector< double > goal_state = {goal_x, goal_y};
-    std::vector< double > initial_state = {initial_state_x, initial_state_y,initial_state_theta,initial_state_surge};
+    std::vector< double > initial_state = {initial_state_x, initial_state_y};
 
     OfflinePlannerUncertainty offline_planner_uncertainty;
-    offline_planner_uncertainty.planWithSimpleSetup(sysType, plan_time, dt, p_safe, Q, R, scene, bounds_state, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, control_duration_low, control_duration_high, file);
+    offline_planner_uncertainty.planWithSimpleSetup(sysType, plan_time, dt, p_safe, Q, R, scene, bounds_state, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
 
     return 0;
 }

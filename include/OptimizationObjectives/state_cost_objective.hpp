@@ -19,7 +19,6 @@
 
 namespace ob = ompl::base;
 
-
 class EuclideanPathLengthObjective : public ob::PathLengthOptimizationObjective
 {
     public:

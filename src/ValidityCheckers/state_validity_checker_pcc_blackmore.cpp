@@ -5,6 +5,8 @@ StateValidityCheckerPCCBlackmore::StateValidityCheckerPCCBlackmore(const std::st
 	si_ = si;
 	p_collision_ = 1 - p_safe;
 
+	OMPL_INFORM("Using P collision of %f", p_collision_);
+
 	OMPL_INFORM("scene is %s", scene_id.c_str());
 	if (scene_id == "scene3") {
 		Scene3 scene = Scene3();
@@ -31,9 +33,21 @@ StateValidityCheckerPCCBlackmore::StateValidityCheckerPCCBlackmore(const std::st
 		A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
 		B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
 	}
+	else if (scene_id == "2d_empty"){
+		n_obstacles_ = 0;
+		A_list_.resize(n_obstacles_);
+		B_list_.resize(n_obstacles_);
+	}
+	else
+	{
+		OMPL_INFORM("Unknown scene id");
+	}
 
+	if (n_obstacles_ == 0) {
+		erf_inv_result_ = computeInverseErrorFunction(1 - 2 * p_collision_);
+	}
+	else
 	erf_inv_result_ = computeInverseErrorFunction(1 - 2 * p_collision_ / n_obstacles_);
-    std::cout << "done" << std::endl;
 }
 
 StateValidityCheckerPCCBlackmore::~StateValidityCheckerPCCBlackmore() {
@@ -43,10 +57,9 @@ bool StateValidityCheckerPCCBlackmore::isValid(const ob::State *state) const {
 	//=========================================================================
 	// Bounds checker
 	//=========================================================================
-	if (!si_->satisfiesBounds(state)) {
-		// std::cout << "state refused! Reason: out of bounds!" << std::endl;
-		return false;
-	}
+	// if (!si_->satisfiesBounds(state)) {
+	// 	return false;
+	// }
 
     const double x = state->as<R2BeliefSpace::StateType>()->getX();
     const double y = state->as<R2BeliefSpace::StateType>()->getY();
@@ -71,11 +84,18 @@ bool StateValidityCheckerPCCBlackmore::isValid(const ob::State *state) const {
 	// Probabilistic collision checker
 	//=========================================================================
 	bool valid = false;
+
+	if (n_obstacles_ == 0) {
+		valid = true;
+		goto exit_switch;
+	}
+
 	for (int o = 0; o < n_obstacles_; o++) {
 		if (not HyperplaneCCValidityChecker(A_list_.at(o), B_list_.at(o), x_pose, y_pose, z_pose, PX)) {
 			goto exit_switch;
 		}
 	}
+
 	valid = true;
 
 	exit_switch:;

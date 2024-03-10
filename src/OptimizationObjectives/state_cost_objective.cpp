@@ -9,17 +9,6 @@
 
 #include "OptimizationObjectives/state_cost_objective.hpp"
 
-// ob::OptimizationObjectivePtr getDirVectorsRiskObjective(const ob::SpaceInformationPtr& si)
-// {
-//     return ob::OptimizationObjectivePtr(new DirVectorsRiskObjective(si));
-// }
-
-// ob::OptimizationObjectivePtr getRiskZonesObjective(const ob::SpaceInformationPtr& si, bool motion_cost_interpolation)
-// {
-//     return ob::OptimizationObjectivePtr(new RiskZonesObjective(si, motion_cost_interpolation));
-// }
-
-
 ob::OptimizationObjectivePtr getEuclideanPathLengthObjective(const ob::SpaceInformationPtr& si)
 {
     return ob::OptimizationObjectivePtr(new EuclideanPathLengthObjective(si));
