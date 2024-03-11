@@ -32,9 +32,6 @@ class ExpectedPathLengthObjective : public ob::PathLengthOptimizationObjective
         ob::Cost motionCost(const State *s1, const State *s2) const override
         {
             Eigen::Vector2d diff = s1->as<R2BeliefSpace::StateType>()->getXY() - s2->as<R2BeliefSpace::StateType>()->getXY();
-
-            // return Cost(diff.norm());
-            // std::cout << sqrt(diff.norm()*diff.norm() + s1->as<R2BeliefSpace::StateType>()->getCovariance().trace() + s2->as<R2BeliefSpace::StateType>()->getCovariance().trace()) << std::endl;
             return Cost(sqrt(diff.norm()*diff.norm() + s1->as<R2BeliefSpace::StateType>()->getCovariance().trace() + s2->as<R2BeliefSpace::StateType>()->getCovariance().trace()));
         }
 };

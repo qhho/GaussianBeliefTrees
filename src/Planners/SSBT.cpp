@@ -260,7 +260,7 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
     unsigned iterations = 0;
 
     max_eigenvalue_ = 10.0;
-    std::cout << "HA" << std::endl;
+    // std::cout << "HA" << std::endl;
     while (ptc == false)
     {
         /* sample random state (with goal biasing) */
@@ -271,7 +271,7 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
 
         if (DISTANCE_FUNC_ == 1){
             if (rng_.uniform01() < samplingBias_){
-                rmotion->state_->as<R2BeliefSpace::StateType>()->setSigma(0.5);
+                rmotion->state_->as<R2BeliefSpace::StateType>()->setSigma(0.5); //TODO: fix this
             }
             else{
                 rmotion->state_->as<R2BeliefSpace::StateType>()->setSigmaX(rng_.uniform01()*max_eigenvalue_);
@@ -292,6 +292,8 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
         if (propCd == cd)
         {
             base::State *laststate = nmotion->state_;
+            // si_->freeState(rmotion->state_);
+            // rmotion->state_ = pstates.back();
             si_->copyState(rmotion->state_, pstates.back());
             bool solved = false;
             size_t p = 0;
@@ -303,8 +305,15 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
                 totalIncCost = opt_->combineCosts(totalIncCost, incCost);
                 // std::cout << "freeing" << laststate << std::endl;
                 if (p > 0)
+                {
                     si_->freeState(laststate);
-                laststate = pstates[p]; //TODO: check this
+                }
+                laststate = pstates[p];
+                // si_->freeState(pstates[p]);
+            }
+            if (p > 0)
+            {
+                si_->freeState(laststate);
             }
 
             base::Cost cost = opt_->combineCosts(nmotion->accCost_, totalIncCost);
@@ -330,7 +339,7 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
 
                 nn_->add(motion);
 
-                std::cout << nmotion->state_->as<R2BeliefSpace::StateType>()->getX() << " " << nmotion->state_->as<R2BeliefSpace::StateType>()->getY() << " " << nmotion->accCost_.value() << " " << motion->state_->as<R2BeliefSpace::StateType>()->getX() << " " <<  motion->state_->as<R2BeliefSpace::StateType>()->getY() << " " << motion->accCost_.value()<< std::endl;
+                // std::cout << nmotion->state_->as<R2BeliefSpace::StateType>()->getX() << " " << nmotion->state_->as<R2BeliefSpace::StateType>()->getY() << " " << nmotion->accCost_.value() << " " << motion->state_->as<R2BeliefSpace::StateType>()->getX() << " " <<  motion->state_->as<R2BeliefSpace::StateType>()->getY() << " " << motion->accCost_.value()<< std::endl;
 
                 if (DISTANCE_FUNC_ == 0){
                     if (motion->state_->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(0,0) > max_eigenvalue_)
@@ -382,8 +391,6 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
                     prevSolutionCost_ = solution->accCost_;
 
                     OMPL_INFORM("Found solution with cost %.2f", solution->accCost_.value());
-
-
                     OMPL_INFORM("Solution state:%f %f ", solution->state_->as<R2BeliefSpace::StateType>()->getX(), solution->state_->as<R2BeliefSpace::StateType>()->getY());
 
                     sufficientlyShort = opt_->isSatisfied(solution->accCost_);

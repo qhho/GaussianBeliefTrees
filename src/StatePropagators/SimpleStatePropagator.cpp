@@ -7,9 +7,10 @@ using namespace ompl;
 
 
 
-SimpleStatePropagator::SimpleStatePropagator(const oc::SpaceInformationPtr &si) : oc::StatePropagator(si)
+SimpleStatePropagator::SimpleStatePropagator(const oc::SpaceInformationPtr &si, double processNoise, double R, double K_default, std::vector<std::vector<double > > measurement_regions) : oc::StatePropagator(si)
 {
     duration_ = si->getPropagationStepSize();
+    K_ = K_default;
 
     //=========================================================================
     // Open loop system definition
@@ -40,8 +41,11 @@ SimpleStatePropagator::SimpleStatePropagator(const oc::SpaceInformationPtr &si) 
     B_cl_d_.resize(2, 2);
     B_cl_d_ = A_cl_d_.inverse() * (A_cl_d_ - Eigen::MatrixXd::Identity(2, 2)) * B_cl_;
 
-    double processNoise = 0.01;
+    // double processNoise = 0.2;
     Q = pow(processNoise, 2) * Eigen::MatrixXd::Identity(dimensions_, dimensions_);
+    R_ = R*R;
+
+    measurementRegions_ = measurement_regions;
 }
 
 void saturate(double &value, const double &min_value, const double &max_value) {
@@ -72,14 +76,14 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
     //=========================================================================
     // control_css = control->as<oc::RealVectorControlSpace::ControlType>();
 
-    x_pose_reference = control->as<oc::RealVectorControlSpace::ControlType>()->values[0];
-    y_pose_reference = control->as<oc::RealVectorControlSpace::ControlType>()->values[1];
+    double u_0 = control->as<oc::RealVectorControlSpace::ControlType>()->values[0];
+    double u_1 = control->as<oc::RealVectorControlSpace::ControlType>()->values[1];
     K_sample = control->as<oc::RealVectorControlSpace::ControlType>()->values[2];
     //=========================================================================
     // Compute control inputs (dot(dot(x)) dot(dot(y)) dot(dot(z))) with PD controller
     //=========================================================================
-    double u_0 = B_ol_(0, 0) * (x_pose_reference - x_pose); //double u_0 = B_cl_d_(0, 0) * (x_pose_reference - x_pose);
-    double u_1 = B_ol_(0, 0) * (y_pose_reference - y_pose); //double u_1 = B_cl_d_(1, 1) * (y_pose_reference - y_pose);
+    // double u_0 = B_ol_(0, 0) * (x_pose_reference - x_pose); //double u_0 = B_cl_d_(0, 0) * (x_pose_reference - x_pose);
+    // double u_1 = B_ol_(0, 0) * (y_pose_reference - y_pose); //double u_1 = B_cl_d_(1, 1) * (y_pose_reference - y_pose);
 
     // //=========================================================================
     // // Get (dot(v) dot(yaw) dot(heave)) from (dot(dot(x)) dot(dot(y)) dot(dot(z)))
@@ -96,8 +100,10 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
     //=========================================================================
     // Propagate mean
     //=========================================================================
-    result->as<R2BeliefSpace::StateType>()->setX(x_pose + duration * x_pose_reference);
-    result->as<R2BeliefSpace::StateType>()->setY(y_pose + duration * y_pose_reference);
+    double x_new = x_pose + duration * u_0;
+    double y_new = y_pose + duration * u_1;
+    result->as<R2BeliefSpace::StateType>()->setX(x_new);
+    result->as<R2BeliefSpace::StateType>()->setY(y_new);
 
     //=========================================================================
     // Propagate covariance in the equivalent closed loop system
@@ -109,8 +115,8 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
 
     Mat lambda_pred, K;
 
-    if (x_pose + duration * u_0 > 0.0 && y_pose + duration * u_1 < 100){ //scenario 2
-        Mat R = 0.1*0.1*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
+    if (x_new > measurementRegions_[0][0] && x_new < measurementRegions_[0][1] && y_new < measurementRegions_[1][1] && y_new < measurementRegions_[1][1]){ //scenario 2
+        Mat R = R_*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
         Mat S = (H * sigma_pred * H.transpose())+ R;
         K = (sigma_pred * H.transpose()) * S.inverse();
         lambda_pred = (A_ol_ - B_ol_ * K_sample)*lambda_from*(A_ol_ - B_ol_ * K_sample);
@@ -121,9 +127,6 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
     }
     Mat sigma_to = (I - (K*H)) * sigma_pred;
     Mat lambda_to = lambda_pred + K*H*sigma_pred;
-
-    // std::cout << x_pose << std::endl;
-    // std::cout << y_pose << std::endl;
 
     result->as<R2BeliefSpace::StateType>()->setSigma(sigma_to);
     result->as<R2BeliefSpace::StateType>()->setLambda(lambda_to);

@@ -1,12 +1,12 @@
-#include "scene3.hpp"
+#include "2d_narrow.hpp"
 
-Scene3::Scene3() {
+Narrow2D::Narrow2D() {
 	n_obstacles_ = 2;
 	loadConstraints();
 	loadDescription();
 }
 
-void Scene3::loadConstraints() {
+void Narrow2D::loadConstraints() {
 	Eigen::MatrixXf A(6, 3), B(6, 1);
 
     A << -0, -430, 0, 300, 0, 0, -0, 430, 0, -300, -0, 0, 0, 0, -1290, -0, 0, 1290; A_list_.push_back(A);
@@ -16,7 +16,7 @@ void Scene3::loadConstraints() {
 
 }
 
-void Scene3::loadDescription() {
+void Narrow2D::loadDescription() {
 	x_offset_ = 0.0; obs_x_n_ = 2; obs_x_size_ = 40.0; inc_x_ = 10.0;
 	y_offset_ = 40.0; obs_y_n_ = 1; obs_y_size_ = 30.0; inc_y_ = 17.0;
 	z_offset_ = -1.0; obs_z_n_ = 1; obs_z_size_ = 8.0; inc_z_ = 0.0;

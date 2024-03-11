@@ -34,7 +34,7 @@
 
 /* Authors: Alejandro Perez, Sertac Karaman, Ryan Luna, Luis G. Torres, Ioan Sucan, Javier V Gomez, Jonathan Gammell */
 
-#include "rrbt.hpp"
+#include "Planners/rrbt.hpp"
 #include <algorithm>
 #include <boost/math/constants/constants.hpp>
 #include <limits>
@@ -51,10 +51,10 @@
 #include "ompl/util/GeometricEquations.h"
 // #include "ompl/util/controlEquations.h"
 
-#include "../Spaces/R2BeliefSpace.h"
-
-#include "../ValidityCheckers/scene3.hpp"
-#include "../ValidityCheckers/scene4.hpp"
+// #include "../Spaces/R2BeliefSpaceEuclidean.h"
+#include "../scenes/2d_narrow.hpp"
+// #include "../ValidityCheckers/scene3.hpp"
+// #include "../ValidityCheckers/scene4.hpp"
 
 #include <boost/math/special_functions/erf.hpp>
 
@@ -135,22 +135,25 @@ ompl::control::RRBT::RRBT(const SpaceInformationPtr &si)
     std::string scene_id = "scene4";
 
 	OMPL_INFORM("scene is %s", scene_id.c_str());
-	if (scene_id == "scene3") {
-		Scene3 scene = Scene3();
+	if (scene_id == "2d_narrow") {
+		Narrow2D scene = Narrow2D();
 		n_obstacles_ = scene.n_obstacles_;
 		A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
 		B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
         // std::cout << "done" << std::endl;
         // std::cout << A_list_(0,0) << std::endl;
 	}
-    else if (scene_id == "scene4") {
-		Scene4 scene = Scene4();
-		n_obstacles_ = scene.n_obstacles_;
-		A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
-		B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
-        // std::cout << "done" << std::endl;
-        // std::cout << A_list_(0,0) << std::endl;
-	}
+    // else if (scene_id == "scene4") {
+	// 	Scene4 scene = Scene4();
+	// 	n_obstacles_ = scene.n_obstacles_;
+	// 	A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
+	// 	B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
+    //     // std::cout << "done" << std::endl;
+    //     // std::cout << A_list_(0,0) << std::endl;
+	// }
+    else{
+        OMPL_ERROR("Scene not found");
+    }
 
 	erf_inv_result_ = boost::math::erf_inv(1 - 2 * p_collision_ / n_obstacles_);
 }
@@ -237,6 +240,8 @@ void ompl::control::RRBT::clear()
 
 ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminationCondition &ptc)
 {
+    //TODO: clean code
+    //TODO: update cost computation method
 
     // std::cout << "trying to solve" << std::endl;
     // checkValidity();
@@ -258,7 +263,7 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
             // std::cout << "belief" << std::endl;
             auto *nbelief = new Belief();
             nbelief->motion = motion;
-            nbelief->sigma_ = 5.0*Eigen::MatrixXd::Identity(2,2);
+            nbelief->sigma_ = 2.0*Eigen::MatrixXd::Identity(2,2);
             nbelief->lambda_ = 0.0*Eigen::MatrixXd::Identity(2,2);
             nbelief->cost = motion->cost;
             nbelief->x = motion->state->as<ob::RealVectorStateSpace::StateType>()->values[0];
@@ -453,7 +458,8 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
                 BeliefQueue.emplace(*i);
                 }
             }
-            
+            double distanceFromGoal;
+            bool checkForSolution = false;
             while (BeliefQueue.size() > 0){
 
                 // if (BeliefQueue.size() > 10){
@@ -503,12 +509,17 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
                         dbelief->parent = belief;
                         dbelief->motion = nbh_queue[i];
                         // std::cout << "here" << std::endl;
-                        unsigned int propCd = mypropagateWhileValid(belief, rctrl, cd, dbelief); //rstate should be new motion
+
+                        double cost = 0;
+
+                        // unsigned int propCd = mypropagateWhileValid(belief, rctrl, cd, dbelief); //rstate should be new motion
+                        unsigned int propCd = mypropagateAndCostWhileValid(belief, rctrl, cd, dbelief, cost); //rstate should be new motion
                         // std::cout << "here" << std::endl;
                         if (propCd == cd){
                             dbelief->x = dbelief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[0];
                             dbelief->y = dbelief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[1];
-                            dbelief->incCost = opt_->motionCost(dbelief->motion->state, belief->motion->state); //update inccost of new belief
+                            // dbelief->incCost = opt_->motionCost(dbelief->motion->state, belief->motion->state); //update inccost of new belief
+                            dbelief->incCost = Cost(cost);
                             dbelief->cost = opt_->combineCosts(belief->cost, dbelief->incCost); //update cost of new belief
                             // if (belief->cost.value() > 250){
                             //     std::cout << belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[0] << " " << belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[1] << std::endl;
@@ -517,28 +528,40 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
                             // std::cout << "here" << std::endl;
 
                             if (myisValid(dbelief))
-                            if (appendBelief(dbelief->motion, dbelief)){
-                                // if (dbelief->x  > 40 && dbelief->y  > 50){
-                                // if ((dbelief->x - ){
-                                    // std::cout << dbelief->x << " " << dbelief->y << " " << (dbelief->lambda_ + dbelief->sigma_).trace() << std::endl;
-                                    // std::cout << "might find solution" << std::endl;
-                                // }
+                            {
+                                if (appendBelief(dbelief->motion, dbelief)){
+                                    //TODO: fix this because the state is not R2BeliefSpace but RealVectorStateSpace - define goalregion in this script.
+                                    if (goal->isSatisfied(dbelief->motion->state, &distanceFromGoal))
+                                    {
+                                        motion->inGoal = true;
+                                        goalMotions_.push_back(motion);
+                                        checkForSolution = true;
+                                    }
+                                    // if (dbelief->x  > 40 && dbelief->y  > 50){
+                                    // if ((dbelief->x - ){
+                                        // std::cout << dbelief->x << " " << dbelief->y << " " << (dbelief->lambda_ + dbelief->sigma_).trace() << std::endl;
+                                        // std::cout << "might find solution" << std::endl;
+                                    // }
 
-                                // if (dbelief->y - )
-                                // std::cout << "here: " << belief->deleted << std::endl;
-                                // if (opt_->isCostBetterThan(dbelief->cost, dbelief->motion->cost){
-                                //     dbelief->motion->incCost = dbelief->incCost;
-                                //     dbelief->motion->parent = belief->motion;
-                                // }
-                                belief->children.push_back(dbelief);
-                                // std::cout << "after appending " << belief->motion->beliefs.size() << std::endl;
-                                // std::cout << "appending" << std::endl;
-                                BeliefQueue.emplace(dbelief);
+                                    // if (dbelief->y - )
+                                    // std::cout << "here: " << belief->deleted << std::endl;
+                                    // if (opt_->isCostBetterThan(dbelief->cost, dbelief->motion->cost){
+                                    //     dbelief->motion->incCost = dbelief->incCost;
+                                    //     dbelief->motion->parent = belief->motion;
+                                    // }
+                                    belief->children.push_back(dbelief);
+                                    // std::cout << "after appending " << belief->motion->beliefs.size() << std::endl;
+                                    // std::cout << "appending" << std::endl;
+                                    BeliefQueue.emplace(dbelief);
+                                }
+                                else{
+                                    // std::cout << "not appending" << std::endl;
+                                    delete dbelief;
+                                    // std::cout << "deleted" << std::endl;
+                                }
                             }
                             else{
-                                // std::cout << "not appending" << std::endl;
                                 delete dbelief;
-                                // std::cout << "deleted" << std::endl;
                             }
                             
                         }
@@ -547,29 +570,26 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
                             // if (!dbelief->deleted)
                                 delete dbelief;
                         }
-                        // std::cout << "uh" << std::endl;
                         if (motion->state)
                             si_->freeState(motion->state);
                         if (motion->control_)
                             siC_->freeControl(motion->control_);
                         delete motion;
-                        // std::cout << "done" << std::endl;
                     }
                 }
                 // std::cout << "done!" << std::endl;
             
             }
 
-            bool checkForSolution = false;
+            // bool checkForSolution = false;
             // Add the new motion to the goalMotion_ list, if it satisfies the goal
-            double distanceFromGoal;
-            if (goal->isSatisfied(motion->state, &distanceFromGoal))
-            {
-                // std::cout << "reached goal!" << std::endl;
-                motion->inGoal = true;
-                goalMotions_.push_back(motion);
-                checkForSolution = true;
-            }
+            // double distanceFromGoal;
+            // if (goal->isSatisfied(motion->state, &distanceFromGoal))
+            // {
+            //     motion->inGoal = true;
+            //     goalMotions_.push_back(motion);
+            //     checkForSolution = true;
+            // }
 
             // Checking for solution or iterative improvement
             if (checkForSolution)
@@ -580,22 +600,30 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
                     // We have found our first solution, store it as the best. We only add one
                     // vertex at a time, so there can only be one goal vertex at this moment.
                     bestGoalMotion_ = goalMotions_.front();
-                    bestCost_ = bestGoalMotion_->cost;
-                    updatedSolution = true;
-                    double bestCost = 10000;
-                    Belief* result;
-                    for (auto ii:bestGoalMotion_->beliefs){
-                        if (ii->cost.value() < bestCost){
-                            bestCost = ii->cost.value();
-                            result = ii;
+                    for (auto &belief : bestGoalMotion_->beliefs)
+                    {
+                        if (belief->inGoal && opt_->isCostBetterThan(belief->cost, bestCost_))
+                        {
+                            bestCost_ = belief->cost;
+                            updatedSolution = true;
                         }
                     }
+                    // bestCost_ = bestGoalMotion_->cost;
+                    // updatedSolution = true;
+                    // double bestCost = 10000;
+                    // Belief* result;
+                    // for (auto ii:bestGoalMotion_->beliefs){
+                    //     if (ii->cost.value() < bestCost){
+                    //         bestCost = ii->cost.value();
+                    //         result = ii;
+                    //     }
+                    // }
 
-                    while (result->parent != nullptr){
-                        OMPL_INFORM("%f %f", result->x, result->y);
-                        result = result->parent;
-                    }
-                    OMPL_INFORM("%f %f", result->x, result->y);
+                    // while (result->parent != nullptr){
+                    //     OMPL_INFORM("%f %f", result->x, result->y);
+                    //     result = result->parent;
+                    // }
+                    // OMPL_INFORM("%f %f", result->x, result->y);
                     // OMPL_INFORM("Belief cost is : %f", bestCost );
                     
                     OMPL_INFORM("%s: Found an initial solution with a cost of %.2f in %u iterations (%u "
@@ -604,21 +632,26 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
                 }
                 else
                 {
+                    //TODO:2024: Need to check if the belief cost is the correct one...
                     // We already have a solution, iterate through the list of goal vertices
                     // and see if there's any improvement.
                     for (auto &goalMotion : goalMotions_)
                     {
-                        // Is this goal motion better than the (current) best?
-                        if (opt_->isCostBetterThan(goalMotion->cost, bestCost_))
+                        for (auto &belief : goalMotion->beliefs)
                         {
-                            bestGoalMotion_ = goalMotion;
-                            bestCost_ = bestGoalMotion_->cost;
-                            updatedSolution = true;
-
-                            // Check if it satisfies the optimization objective, if it does, break the for loop
-                            if (opt_->isSatisfied(bestCost_))
+                            // Is this goal motion better than the (current) best?
+                            if (belief->inGoal && opt_->isCostBetterThan(belief->cost, bestCost_))
                             {
-                                break;
+                                bestGoalMotion_ = goalMotion;
+                                // bestCost_ = bestGoalMotion_->cost;
+                                bestCost_ = belief->cost;
+                                updatedSolution = true;
+
+                                // Check if it satisfies the optimization objective, if it does, break the for loop
+                                if (opt_->isSatisfied(bestCost_))
+                                {
+                                    break;
+                                }
                             }
                         }
                     }
@@ -907,6 +940,75 @@ unsigned int ompl::control::RRBT::mypropagateWhileValid(const Belief* belief, co
     return 0;
 }
 
+unsigned int ompl::control::RRBT::mypropagateAndCostWhileValid(const Belief* belief, const Control *control,
+                                                                  int steps, Belief* result, double &cost) const
+{
+
+    cost = 0;
+    if (steps == 0)
+    {
+        // result->parent = belief->parent;
+        result->cost = belief->cost;
+        result->incCost = belief->incCost;
+        result->sigma_ = belief->sigma_;
+        result->lambda_ = belief->lambda_;
+        return 0;
+    }
+
+    double signedStepSize = steps > 0 ? stepSize_ : -stepSize_;
+    steps = abs(steps);
+
+    // perform the first step of propagation
+    mypropagate(belief, control, signedStepSize, result);
+
+    cost += opt_->motionCost(belief->motion->state, result->motion->state).value(); 
+
+    // if we found a valid state after one step, we can go on
+    if (myisValid(result))
+    {
+        Belief *temp1 = result;
+        Belief *temp2 = new Belief();
+        Belief *toDelete = temp2;
+        unsigned int r = steps;
+
+        // for the remaining number of steps
+        for (int i = 1; i < steps; ++i)
+        {
+            mypropagate(temp1, control, signedStepSize, temp2);
+            if (myisValid(temp2))
+            {
+                cost += opt_->motionCost(temp1->motion->state, temp2->motion->state).value();
+                std::swap(temp1, temp2);
+            }
+            else
+            {
+                // the last valid state is temp1;
+                r = i;
+                break;
+            }
+        }
+
+        // if we finished the for-loop without finding an invalid state, the last valid state is temp1
+        // make sure result contains that information
+        if (result->x != temp1->x && result->y != temp1->y){
+            result = temp1;
+        }
+        // free the temporary memory
+        delete toDelete;
+
+        return r;
+    }
+    // if the first propagation step produced an invalid step, return 0 steps
+    // the last valid state is the starting one (assumed to be valid)
+    if (result->x != belief->x && result->y != belief->y){
+        result->cost = belief->cost;
+        result->incCost = belief->incCost;
+        result->sigma_ = belief->sigma_;
+        result->lambda_ = belief->lambda_;
+    }
+    return 0;
+}
+
 void ompl::control::RRBT::mypropagate(const Belief *belief, const control::Control* control, const double duration, Belief *result) const
 {
     //=========================================================================
@@ -948,7 +1050,7 @@ void ompl::control::RRBT::mypropagate(const Belief *belief, const control::Contr
     // std::cout << "reached measurement region" << std::endl;
     // if (true){ //scenario 3
     if (x_pose + duration * u_0 > 0.0 && x_pose + duration * u_0 < 55 && y_pose + duration * u_1 < 25){  //scenario 4
-        Mat R = 0.001*Eigen::MatrixXd::Identity(2, 2);
+        Mat R = 0.1*Eigen::MatrixXd::Identity(2, 2);
         // std::cout << "what1" << std::endl;
         Mat S = (H * sigma_pred * H.transpose()) + R;
         // std::cout << "what2" << std::endl;
@@ -1120,7 +1222,7 @@ bool ompl::control::RRBT::appendBelief(Motion* motion, Belief* newbelief)
     }
     
     // double min_cost = newbelief->cost.value(); //very high value, should change
-    motion->cost = ob::Cost(1000);
+    motion->cost = ob::Cost(10000);
     // for (auto & existingbelief : motion->beliefs)
     // {
     //     std::cout << existingbelief->x << " " << existingbelief->y << " " << (existingbelief->lambda_ + existingbelief->sigma_).trace() << " " << existingbelief->cost << std::endl;
@@ -1680,3 +1782,9 @@ bool ompl::control::RRBT::dominates(Belief *a, Belief*b) const{
     };
     return true;
 }
+
+
+// double ompl::control::RRBT::chanceConstrainedGoalRegion(Belief *a, Belief *b) const{
+
+
+// }

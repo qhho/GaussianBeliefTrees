@@ -51,7 +51,7 @@ std::vector<std::string> split(std::string str, std::string delimiter)
 
 ob::StateSpacePtr constructStateSpace(void)
 {
-    ob::StateSpacePtr state_space = ob::StateSpacePtr(new R2BeliefSpace(0.5));
+    ob::StateSpacePtr state_space = ob::StateSpacePtr(new R2BeliefSpace(2.0));
     return state_space;
 }
 
@@ -90,7 +90,7 @@ public:
     double t_crit_;
 };
 
-void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_time, double dt, double p_safe, double Q, double R, std::string scene, std::vector<std::vector<double>> bounds_state, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file)
+void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_time, double dt, double p_safe, double Q, double R, double K, std::string scene,  std::vector<std::vector<double>> measurement_region, std::vector<std::vector<double>> bounds_state, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file)
 {
     //=======================================================================
     // Instantiate the state space
@@ -143,14 +143,13 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     start[0] = double(initial_state[0]); //x
     start[1] = double(initial_state[1]); //y
 
-    std::cout << initial_state[0] << " " << initial_state[1] << std::endl;
     simple_setup_->setStartState(start);
     double t_crit = quantile(boost::math::chi_squared(2), p_safe);
     simple_setup_->setGoal(std::make_shared<MyGoalRegion>(si, p_safe, goal_state, goal_r, t_crit));
     //=======================================================================
     // set the propagation routine for this space
     //=======================================================================
-    simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new SimpleStatePropagator(si)));
+    simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new SimpleStatePropagator(si, Q, R, K, measurement_region)));
 //	//=======================================================================
 //	// Set optimization objective
 //	//=======================================================================
@@ -226,74 +225,80 @@ void OfflinePlannerUncertainty::solve(double goal_bias, double sampling_bias, do
     planner->as<oc::SSBT>()->setSamplingBias(sampling_bias_);
     planner->as<oc::SSBT>()->setDistanceFunction(distance_function); //wasserstein
     b.addPlanner(planner);
+
+    ob::PlannerPtr planner_rrt;
+    planner_rrt = ob::PlannerPtr(new oc::mod_RRT(simple_setup_->getSpaceInformation()));
+    planner_rrt->as<oc::mod_RRT>()->setGoalBias(goal_bias_);
+    planner_rrt->as<oc::mod_RRT>()->setSamplingBias(sampling_bias_);
+    planner_rrt->as<oc::mod_RRT>()->setDistanceFunction(distance_function); //wasserstein
+    b.addPlanner(planner_rrt);
     
     OMPL_INFORM("Benchmarking");
 
     ompl::tools::MyBenchmark::MyRequest req;
-    req.maxTime = 5;
+    req.maxTime = 10;
     req.maxMem = 1000.0;
-    req.runCount = 5;
+    req.runCount = 2;
     req.displayProgress = true;
     b.benchmark(req);
     b.saveResultsToFile();
-        // }
 
-        /*
-        simple_setup_->getProblemDefinition()->getOptimizationObjective()->setCostThreshold(ob::Cost(1000.0));
-        ompl::tools::MyBenchmark b(*simple_setup_, "4 wasserstein");
-        
-        // // Optionally, specify some benchmark parameters (doesn't change how the benchmark is run)
-        // b.addExperimentParameter("measurementregion", "x y", "55 25");
-        b.addExperimentParameter("first_solution", "bool", "1");
-        b.setDir("results/wasserstein/scenario4final/");
-        // // b.addExperimentParameter("num_obstacles", "INTEGER", "10");
-        
-        // // We add the planners to evaluate.
-        // b.addPlanner(ob::PlannerPtr(new oc::mod_RRT(simple_setup_->getSpaceInformation())));
-        double goal_bias_ = 0.05;
-        double sampling_bias_ = 0.05 * k;
+    /*
+    simple_setup_->getProblemDefinition()->getOptimizationObjective()->setCostThreshold(ob::Cost(1000.0));
+    ompl::tools::MyBenchmark b(*simple_setup_, "4 wasserstein");
+    
+    // // Optionally, specify some benchmark parameters (doesn't change how the benchmark is run)
+    // b.addExperimentParameter("measurementregion", "x y", "55 25");
+    b.addExperimentParameter("first_solution", "bool", "1");
+    b.setDir("results/wasserstein/scenario4final/");
+    // // b.addExperimentParameter("num_obstacles", "INTEGER", "10");
+    
+    // // We add the planners to evaluate.
+    // b.addPlanner(ob::PlannerPtr(new oc::mod_RRT(simple_setup_->getSpaceInformation())));
+    double goal_bias_ = 0.05;
+    double sampling_bias_ = 0.05 * k;
 
-        b.addExperimentParameter("bias_value", "double", std::to_string(sampling_bias_));
+    b.addExperimentParameter("bias_value", "double", std::to_string(sampling_bias_));
 
-        ob::PlannerPtr RRG_Planner;
-        RRG_Planner = ob::PlannerPtr(new oc::RRG(simple_setup_->getSpaceInformation()));
-        RRG_Planner->as<oc::RRG>()->setGoalBias(goal_bias_);
-        RRG_Planner->as<oc::RRG>()->setSamplingBias(sampling_bias_);
-        RRG_Planner->as<oc::RRG>()->setDistanceFunction(1); //wasserstein
-        b.addPlanner(RRG_Planner);
+    ob::PlannerPtr RRG_Planner;
+    RRG_Planner = ob::PlannerPtr(new oc::RRG(simple_setup_->getSpaceInformation()));
+    RRG_Planner->as<oc::RRG>()->setGoalBias(goal_bias_);
+    RRG_Planner->as<oc::RRG>()->setSamplingBias(sampling_bias_);
+    RRG_Planner->as<oc::RRG>()->setDistanceFunction(1); //wasserstein
+    b.addPlanner(RRG_Planner);
 
-        ob::PlannerPtr EST_Planner;
-        EST_Planner = ob::PlannerPtr(new oc::EST(simple_setup_->getSpaceInformation()));
-        EST_Planner->as<oc::EST>()->setRange(10.0);
-        b.addPlanner(EST_Planner);
-        
-        // SST
-        
-        double selection_radius_ = 5.0;
-        double pruning_radius_ = 3.0; //0.5 sucks, but 1.5 good, 2.5 is better
-        
-        ob::PlannerPtr planner;
-        planner = ob::PlannerPtr(new oc::SSBT(simple_setup_->getSpaceInformation()));
-        planner->as<oc::SSBT>()->setGoalBias(goal_bias_);
-        planner->as<oc::SSBT>()->setSelectionRadius(selection_radius_);
-        planner->as<oc::SSBT>()->setPruningRadius(pruning_radius_);
-        planner->as<oc::SSBT>()->setSamplingBias(sampling_bias_);
-        planner->as<oc::SSBT>()->setDistanceFunction(1); //wasserstein
-        b.addPlanner(planner);
-        
-        // Now we can benchmark: 5 second time limit for each plan computation,
-        // 100 MB maximum memory usage per plan computation, 50 runs for each planner
-        // and true means that a text-mode progress bar should be displayed while
-        // computation is running.
-        ompl::tools::MyBenchmark::MyRequest req;
-        req.maxTime = 100;
-        req.maxMem = 1000.0;
-        req.runCount = 100;
-        req.displayProgress = true;
-        b.benchmark(req);
-        // // This will generate a file of the form ompl_host_time.log
-        b.saveResultsToFile();
-        */
+    ob::PlannerPtr EST_Planner;
+    EST_Planner = ob::PlannerPtr(new oc::EST(simple_setup_->getSpaceInformation()));
+    EST_Planner->as<oc::EST>()->setRange(10.0);
+    b.addPlanner(EST_Planner);
+    
+    // SST
+    
+    double selection_radius_ = 5.0;
+    double pruning_radius_ = 3.0; //0.5 sucks, but 1.5 good, 2.5 is better
+    
+    ob::PlannerPtr planner;
+    planner = ob::PlannerPtr(new oc::SSBT(simple_setup_->getSpaceInformation()));
+    planner->as<oc::SSBT>()->setGoalBias(goal_bias_);
+    planner->as<oc::SSBT>()->setSelectionRadius(selection_radius_);
+    planner->as<oc::SSBT>()->setPruningRadius(pruning_radius_);
+    planner->as<oc::SSBT>()->setSamplingBias(sampling_bias_);
+    planner->as<oc::SSBT>()->setDistanceFunction(1); //wasserstein
+    b.addPlanner(planner);
+    
+    // Now we can benchmark: 5 second time limit for each plan computation,
+    // 100 MB maximum memory usage per plan computation, 50 runs for each planner
+    // and true means that a text-mode progress bar should be displayed while
+    // computation is running.
+    ompl::tools::MyBenchmark::MyRequest req;
+    req.maxTime = 100;
+    req.maxMem = 1000.0;
+    req.runCount = 100;
+    req.displayProgress = true;
+    b.benchmark(req);
+    // // This will generate a file of the form ompl_host_time.log
+    b.saveResultsToFile();
+    */
 }
 
 int main(int argc, char **argv)
@@ -311,6 +316,7 @@ int main(int argc, char **argv)
     // int discTime = std::stoi(pt.get<std::string>("System.discTime"));
     double Q = std::stod(pt.get<std::string>("System.Q"));
     double R = std::stod(pt.get<std::string>("System.R"));
+    double K = std::stod(pt.get<std::string>("System.K"));
     double dt = std::stod(pt.get<std::string>("System.dt"));
     std::string scene = pt.get<std::string>("Scene.scene");
 
@@ -381,6 +387,21 @@ int main(int argc, char **argv)
         bounds_control.push_back(rowsBound_doub);
     }
 
+    Boundstr = pt.get<std::string>("Environment.measurement_region");
+    Boundsplt = split(Boundstr, ":"); // Split rows
+    iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
+    std::vector< std::vector<double>> measurement_region;
+    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    {
+        std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
+        std::vector<double> rowsBound_doub(spltStrBound_rows.size());
+        std::transform(spltStrBound_rows.begin(), spltStrBound_rows.end(), rowsBound_doub.begin(), [](const std::string& val)
+            {
+                return std::stod(val);
+            });
+        measurement_region.push_back(rowsBound_doub);
+    }
+
     OMPL_INFORM("USING P_SAFE: %3f, Q: %3f, R: %3f", p_safe, Q, R);
     if(sysType==1){
         OMPL_INFORM("Using linearized unicycle system");
@@ -395,7 +416,7 @@ int main(int argc, char **argv)
     std::vector< double > initial_state = {initial_state_x, initial_state_y};
 
     OfflinePlannerUncertainty offline_planner_uncertainty;
-    offline_planner_uncertainty.planWithSimpleSetup(sysType, plan_time, dt, p_safe, Q, R, scene, bounds_state, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
+    offline_planner_uncertainty.planWithSimpleSetup(sysType, plan_time, dt, p_safe, Q, R, K, scene, measurement_region, bounds_state, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
 
     return 0;
 }

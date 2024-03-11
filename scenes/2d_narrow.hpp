@@ -1,12 +1,12 @@
-#ifndef SCENE_3_
-#define SCENE_3_
+#ifndef SCENE_2D_NARROW_
+#define SCENE_2D_NARROW_
 
 #include <vector>
 #include <eigen3/Eigen/Dense>
 
-class Scene3 {
+class Narrow2D {
 	public:
-    Scene3();
+    Narrow2D();
 
     unsigned int n_obstacles_;
     std::vector<Eigen::Matrix<float, 6, 3> > A_list_;

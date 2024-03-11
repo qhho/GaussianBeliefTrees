@@ -21,7 +21,7 @@
 #include "../Spaces/R2BeliefSpaceEuclidean.h"
 
 // scenes
-#include "../scenes/scene3.hpp"
+#include "../scenes/2d_narrow.hpp"
 #include "../scenes/scene4.hpp"
 
 namespace ob = ompl::base;
@@ -45,7 +45,7 @@ class StateValidityCheckerPCCBlackmoreEuclidean : public ob::StateValidityChecke
 		inline double computeInverseErrorFunction(const double &argument) {
             
 			return boost::math::erf_inv(argument);
-            std::cout << "calculated" << std::endl;
+            // std::cout << "calculated" << std::endl;
 		}
 		bool HyperplaneCCValidityChecker(const Eigen::MatrixXf &A, const Eigen::MatrixXf &B, const double &x_pose, const double &y_pose, const double &z_pose, const Eigen::MatrixXf &PX) const;
 };

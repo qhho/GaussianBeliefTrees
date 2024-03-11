@@ -384,6 +384,8 @@ namespace ompl
 
                 base::Cost incCost;
 
+                bool inGoal{false};
+
                 Eigen::Matrix2d sigma_;
                 Eigen::Matrix2d lambda_{Eigen::Matrix2d::Zero()};
 
@@ -514,6 +516,9 @@ namespace ompl
 
             unsigned int mypropagateWhileValid(const Belief* belief, const Control *control,
                                                                   int steps, Belief* result) const;
+
+            unsigned int mypropagateAndCostWhileValid(const Belief* belief, const Control *control,
+                                                                  int steps, Belief* result, double& cost) const;
 
             void mypropagate(const Belief *belief, const control::Control* control, const double duration, Belief *result) const;
 

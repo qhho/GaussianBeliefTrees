@@ -35,8 +35,8 @@
 #include "ompl/base/goals/GoalSampleableRegion.h"
 #include "ompl/tools/config/SelfConfig.h"
 #include <limits>
-
 #include "Spaces/R2BeliefSpace.h"
+#include "Spaces/R2BeliefSpaceEuclidean.h"
 
 ompl::control::mod_RRT::mod_RRT(const SpaceInformationPtr &si) : base::Planner(si, "mod_RRT")
 {
@@ -125,7 +125,8 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
     base::State *rstate = rmotion->state;
     Control *rctrl = rmotion->control;
     base::State *xstate = si_->allocState();
-    std::cout << "here" << std::endl;
+    // std::cout << "here" << std::endl;
+    max_eigenvalue_ = 10.0;
     while (ptc == false)
     {
         /* sample random state (with goal biasing) */
@@ -134,7 +135,17 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
         else
             sampler_->sampleUniform(rstate);
 
-        rmotion->state->as<R2BeliefSpace::StateType>()->setSigma(0.1);
+
+        if (DISTANCE_FUNC_ == 1){
+            if (rng_.uniform01() < samplingBias_){
+                rmotion->state->as<R2BeliefSpace::StateType>()->setSigma(0.5); //TODO: fix this
+            }
+            else{
+                rmotion->state->as<R2BeliefSpace::StateType>()->setSigmaX(rng_.uniform01()*max_eigenvalue_);
+                rmotion->state->as<R2BeliefSpace::StateType>()->setSigmaY(rng_.uniform01()*max_eigenvalue_);
+            }
+        }
+        // rmotion->state->as<R2BeliefSpace::StateType>()->setSigma(0.1);
         /* find closest state in the tree */
         Motion *nmotion = nn_->nearest(rmotion);
         /* sample a random control that attempts to go towards the random state, and also sample a control duration */
@@ -160,6 +171,28 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
                 motion->parent = lastmotion;
                 lastmotion = motion;
                 nn_->add(motion);
+
+                if (DISTANCE_FUNC_ == 0){
+                    if (motion->state->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(0,0) > max_eigenvalue_)
+                    {
+                        max_eigenvalue_ = motion->state->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(0,0);
+                    }
+                    else if (motion->state->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(1,1) > max_eigenvalue_)
+                    {
+                        max_eigenvalue_ = motion->state->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(1,1);
+                    }
+                }
+                else if (DISTANCE_FUNC_ == 1){
+                    if (motion->state->as<R2BeliefSpace::StateType>()->getCovariance()(0,0) > max_eigenvalue_)
+                    {
+                        max_eigenvalue_ = motion->state->as<R2BeliefSpace::StateType>()->getCovariance()(0,0);
+                    }
+                    else if (motion->state->as<R2BeliefSpace::StateType>()->getCovariance()(1,1) > max_eigenvalue_)
+                    {
+                        max_eigenvalue_ = motion->state->as<R2BeliefSpace::StateType>()->getCovariance()(1,1);
+                    }
+                }
+
                 double dist = 0.0;
                 solved = goal->isSatisfied(motion->state, &dist);
                 if (solved)
@@ -179,7 +212,6 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
             while (++p < pstates.size())
                 si_->freeState(pstates[p]);
             if (solved){
-                std::cout << "solved" << std::endl;
                 break;
             }
 

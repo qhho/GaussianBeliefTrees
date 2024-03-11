@@ -16,7 +16,7 @@ add_library (rrbt_lib
     src/Spaces/RealVectorBeliefSpace.cpp
     src/Spaces/R2BeliefSpace.cpp
     src/Spaces/R2BeliefSpaceEuclidean.cpp
-    scenes/scene3.cpp
+    scenes/2d_narrow.cpp
     scenes/scene4.cpp
     scenes/scenereplanning.cpp
     scenes/scenereplanning2.cpp
@@ -25,11 +25,12 @@ add_library (rrbt_lib
     src/OptimizationObjectives/expected_cost_objective.cpp
     src/OptimizationObjectives/state_cost_objective.cpp
     src/ValidityCheckers/state_validity_checker_pcc_blackmore.cpp
-    src/ValidityCheckers/state_validity_checker_pcc_blackmore_euclidean.cpp
+    # src/ValidityCheckers/state_validity_checker_pcc_blackmore_euclidean.cpp
     src/Benchmarking/MyBenchmark.cpp
     src/Benchmarking/MyBenchmarkRRBT.cpp
     src/Planners/SSBT.cpp
     src/Planners/mod_rrt.cpp
+    src/Planners/rrbt.cpp
 )
 
 

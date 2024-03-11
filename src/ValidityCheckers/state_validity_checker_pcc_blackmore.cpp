@@ -8,8 +8,8 @@ StateValidityCheckerPCCBlackmore::StateValidityCheckerPCCBlackmore(const std::st
 	OMPL_INFORM("Using P collision of %f", p_collision_);
 
 	OMPL_INFORM("scene is %s", scene_id.c_str());
-	if (scene_id == "scene3") {
-		Scene3 scene = Scene3();
+	if (scene_id == "2d_narrow") {
+		Narrow2D scene = Narrow2D();
 		n_obstacles_ = scene.n_obstacles_;
 		A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
 		B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;

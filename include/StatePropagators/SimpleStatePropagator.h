@@ -54,7 +54,7 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     /** \brief Construct representation of a unicycle state propagator.
     */
-    SimpleStatePropagator(const oc::SpaceInformationPtr &si);
+    SimpleStatePropagator(const oc::SpaceInformationPtr &si, double Q, double R, double K_default, std::vector<std::vector<double > > measurement_Regions);
 
     virtual ~SimpleStatePropagator(void)
     {
@@ -92,7 +92,11 @@ private:
 
     Eigen::Matrix2d sigma_pred, lambda_pred, K, Q, Ak;
 
-    double K_ = 0.1;
+    double K_;
+    // double Q_;
+    double R_;
+
+    std::vector<std::vector<double>> measurementRegions_;
 
     mutable const R2BeliefSpace::StateType *result_css;
     ob::RealVectorStateSpace::StateType *result_css_rvs_pose;

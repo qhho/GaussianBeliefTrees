@@ -1,0 +1,20 @@
+Info:    Beginning benchmark
+Info:    Preparing for run 0 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    ProblemDefinition: Adding approximate solution from planner SSBT
+Info:    SSBT: Created 11731 states in 63144 iterations
+Info:    Preparing for run 1 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    ProblemDefinition: Adding approximate solution from planner SSBT
+Info:    SSBT: Created 13096 states in 66587 iterations
+Info:    Preparing for run 0 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    ProblemDefinition: Adding approximate solution from planner mod_RRT
+Info:    mod_RRT: Created 248842 states
+Info:    Preparing for run 1 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    ProblemDefinition: Adding approximate solution from planner mod_RRT
+Info:    mod_RRT: Created 249406 states
+Info:    Benchmark complete

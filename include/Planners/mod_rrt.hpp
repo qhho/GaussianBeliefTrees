@@ -98,6 +98,23 @@ namespace ompl
                 return goalBias_;
             }
 
+            /** TODO: BRIEF FOR THIS */
+            void setSamplingBias(double samplingBias)
+            {
+                samplingBias_ = samplingBias;
+            }
+
+            /** \brief Get the sampling bias the planner is using */
+            double getSamplingBias() const
+            {
+                return samplingBias_;
+            }
+
+            void setDistanceFunction(int distfunc)
+            {
+                DISTANCE_FUNC_ = distfunc;
+            }
+
             /** \brief Return true if the intermediate states generated along motions are to be added to the tree itself
              */
             bool getIntermediateStates() const
@@ -183,6 +200,10 @@ namespace ompl
              * available) */
             double goalBias_{0.05};
 
+            double samplingBias_{0.50};
+
+            int DISTANCE_FUNC_{1}; //1 is 
+
             /** \brief Flag indicating whether intermediate states are added to the built tree of motions */
             bool addIntermediateStates_{false};
 
@@ -191,6 +212,8 @@ namespace ompl
 
             /** \brief The most recent goal motion.  Used for PlannerData computation */
             Motion *lastGoalMotion_{nullptr};
+
+            double max_eigenvalue_;
         };
     }
 }

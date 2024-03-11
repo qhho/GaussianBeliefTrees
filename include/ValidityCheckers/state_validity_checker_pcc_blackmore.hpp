@@ -21,7 +21,7 @@
 #include "Spaces/R2BeliefSpaceEuclidean.h"
 
 // scenes
-#include "../scenes/scene3.hpp"
+#include "../scenes/2d_narrow.hpp"
 #include "../scenes/scene4.hpp"
 #include "../scenes/scenereplanning.hpp"
 #include "../scenes/scenereplanning2.hpp"
