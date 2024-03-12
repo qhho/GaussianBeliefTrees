@@ -77,8 +77,8 @@ public:
 
 EuclideanMain::EuclideanMain(const std::string& scene_config)
 {   
+    
     scene_ = Scene(scene_config);
-    std::cout<<"num obstacles: "<<scene_.n_obstacles_<<std::endl;
     //=======================================================================
     // Get parameters
     //===============================WW========================================

@@ -38,6 +38,7 @@
 // #include "Planners/rrg.hpp"
 
 #include <limits>
+#include "Scene/Scene.h"
 
 namespace ob = ompl::base;
 namespace og = ompl::geometric;
@@ -45,22 +46,24 @@ namespace oc = ompl::control;
 
 class EuclideanMain {
   public:
-        EuclideanMain();
-        // ~EuclideanMain();
+    EuclideanMain(const std::string& scene_config);
+    // ~EuclideanMain();
 
-        ob::StateSpacePtr constructCSpace();
-        void boundCSpace(ob::StateSpacePtr c_space);
+    ob::StateSpacePtr constructCSpace();
+    void boundCSpace(ob::StateSpacePtr c_space);
 
-        oc::ControlSpacePtr constructCtrlSpace(ob::StateSpacePtr c_space);
-        void boundCtrlSpace(oc::ControlSpacePtr ctrl_space);
+    oc::ControlSpacePtr constructCtrlSpace(ob::StateSpacePtr c_space);
+    void boundCtrlSpace(oc::ControlSpacePtr ctrl_space);
 
-        void planWithSimpleSetup();
-        void visualizeProblemDefinition();
+    void planWithSimpleSetup();
+    void visualizeProblemDefinition();
 
-        void replacePath(og::PathGeometric geopath);
-        void solve(ob::PlannerPtr planner);
+    void replacePath(og::PathGeometric geopath);
+    void solve(ob::PlannerPtr planner);
 
-        void SaveSolutionPath(oc::PathControl path_control, ob::StateSpacePtr space, std::string pathstring);
+    void SaveSolutionPath(oc::PathControl path_control, ob::StateSpacePtr space, std::string pathstring);
+
+    Scene scene_;
 
 
   private:

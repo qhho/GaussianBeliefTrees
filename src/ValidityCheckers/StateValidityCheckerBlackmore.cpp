@@ -1,45 +1,32 @@
-/* Author: Èric Pairet
- * Date:   28 February 2018
- *
- * Description:
- */
+#include "ValidityCheckers/StateValidityCheckerBlackmore.h"
 
-#include "state_validity_checker_pcc_blackmore.hpp"
-
-StateValidityCheckerPCCBlackmore::StateValidityCheckerPCCBlackmore(const std::string &scene_id, const ob::SpaceInformationPtr &si, const double p_safe) :
+StateValidityCheckerBlackmore::StateValidityCheckerBlackmore(const Scene scene_, const ob::SpaceInformationPtr &si, const double accep_prob) :
 	ob::StateValidityChecker(si) {
 	si_ = si;
-	p_collision_ = 1 - p_safe;
-
-	ROS_WARN("%s: scene is %s", ros::this_node::getName().c_str(), scene_id.c_str());
-	if (scene_id == "blocks_131") {
-		SceneBlocks131 scene = SceneBlocks131();
-		n_obstacles_ = scene.n_obstacles_;
-		A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
-		B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
-	}
-	else if (scene_id == "blocks_632") {
-		SceneBlocks632 scene = SceneBlocks632();
-		n_obstacles_ = scene.n_obstacles_;
-		A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
-		B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
-	}
-	else {ROS_ERROR("%s: Unkown scene id", ros::this_node::getName().c_str());}
-
+	p_collision_ = 1 - accep_prob;
+	n_obstacles_ = scene_.n_obstacles_;
+	A_list_.resize(n_obstacles_); A_list_ = scene_.A_list_;
+	B_list_.resize(n_obstacles_); B_list_ = scene_.B_list_;
 	erf_inv_result_ = computeInverseErrorFunction(1 - 2 * p_collision_ / n_obstacles_);
 }
 
-StateValidityCheckerPCCBlackmore::~StateValidityCheckerPCCBlackmore() {
+StateValidityCheckerBlackmore::~StateValidityCheckerBlackmore() {
 }
 
-bool StateValidityCheckerPCCBlackmore::isValid(const ob::State *state) const {
-	//=========================================================================
+bool StateValidityCheckerBlackmore::isValid(const ob::State *state) const {
+   //=========================================================================
 	// Bounds checker
 	//=========================================================================
 	if (!si_->satisfiesBounds(state)) {
-		//std::cout << "state refused! Reason: out of bounds!" << std::endl;
+		// std::cout << "state refused! Reason: out of bounds!" << std::endl;
 		return false;
 	}
+
+    const double x = state->as<R2BeliefSpace::StateType>()->getX();
+    const double y = state->as<R2BeliefSpace::StateType>()->getY();
+    if (x > 100.0 || x < 0.0 || y < 0.0 || y > 100.0){
+        return false;
+    }
 
 	//=========================================================================
 	// Extract the component of the state and cast it to what we expect
@@ -47,12 +34,12 @@ bool StateValidityCheckerPCCBlackmore::isValid(const ob::State *state) const {
 	double x_pose, y_pose, z_pose;
 	Eigen::MatrixXf PX(3, 3); PX.setZero();
 
-	x_pose = state->as<ob::CompoundStateSpace::StateType>()->as<ob::RealVectorStateSpace::StateType>(0)->values[0];
-	y_pose = state->as<ob::CompoundStateSpace::StateType>()->as<ob::RealVectorStateSpace::StateType>(0)->values[1];
-	z_pose = state->as<ob::CompoundStateSpace::StateType>()->as<ob::RealVectorStateSpace::StateType>(0)->values[2];
-	PX(0,0) = state->as<ob::CompoundStateSpace::StateType>()->as<ob::RealVectorStateSpace::StateType>(4)->values[0];
-	PX(1,1) = state->as<ob::CompoundStateSpace::StateType>()->as<ob::RealVectorStateSpace::StateType>(4)->values[1];
-	PX(2,2) = state->as<ob::CompoundStateSpace::StateType>()->as<ob::RealVectorStateSpace::StateType>(4)->values[2];
+	x_pose = state->as<R2BeliefSpace::StateType>()->getX();
+	y_pose = state->as<R2BeliefSpace::StateType>()->getY();
+	z_pose = 4.0;
+    PX(0,0) = state->as<R2BeliefSpace::StateType>()->getCovariance()(0,0);
+    PX(1,1) = state->as<R2BeliefSpace::StateType>()->getCovariance()(1,1);
+    PX(2,2) = 0.000001;
 
 	//=========================================================================
 	// Probabilistic collision checker
@@ -69,8 +56,10 @@ bool StateValidityCheckerPCCBlackmore::isValid(const ob::State *state) const {
 	return valid;
 }
 
-bool StateValidityCheckerPCCBlackmore::HyperplaneCCValidityChecker(const Eigen::MatrixXf &A, const Eigen::MatrixXf &B, const double &x_pose, const double &y_pose, const double &z_pose, const Eigen::MatrixXf &PX) const {
-	bool valid = false;
+bool StateValidityCheckerBlackmore::HyperplaneCCValidityChecker(const Eigen::MatrixXf &A, const Eigen::MatrixXf &B, const double &x_pose, const double &y_pose, const double &z_pose, const Eigen::MatrixXf &PX) const {
+	
+    
+    bool valid = false;
 	double PV, b_bar;
 	Eigen::MatrixXf Pv_2;
 

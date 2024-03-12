@@ -45,7 +45,7 @@ namespace oc = ompl::control;
 
 class EuclideanMain {
   public:
-        EuclideanMain();
+        EuclideanMain(const std::string& scene_config);
         // ~EuclideanMain();
 
         ob::StateSpacePtr constructCSpace();
