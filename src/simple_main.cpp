@@ -24,8 +24,9 @@
 // #include "ValidityCheckers/Scenario3ValidityChecker.hpp" // simple validity checker
 // #include "ValidityCheckers/EuclideanScenario2ValidityChecker.hpp" // simple validity checker
 
-#include "ValidityCheckers/state_validity_checker_pcc_blackmore.hpp" // simple validity checker
-#include "ValidityCheckers/state_validity_checker_pcc_blackmore_euclidean.hpp" // simple validity checker
+// #include "ValidityCheckers/state_validity_checker_pcc_blackmore.hpp" // simple validity checker
+// #include "ValidityCheckers/state_validity_checker_pcc_blackmore_euclidean.hpp" // simple validity checker
+#include "ValidityCheckers/StateValidityCheckerBlackmore.h" 
 // #include "Planners/mod_sst.hpp" //PLANNER
 #include "StatePropagators/SimpleStatePropagator.h" //SIMPLE STATE PROPAGATOR *mostly done*
 #include "StatePropagators/SimpleStatePropagatorEuclidean.h" //SIMPLE STATE PROPAGATOR *mostly done*
@@ -33,7 +34,9 @@
 #include "Spaces/R2BeliefSpaceEuclidean.h"
 #include "OptimizationObjectives/state_cost_objective.hpp"
 
-#include "euclidean_main.hpp"
+#include "euclidean_main.hpp" // TODO: Why is there a simple_main.hpp with a class euclidean_main inside but we are using euclidean_main.hpp?
+#include "Scene/Scene.h"
+#include <filesystem>
 
 namespace ob = ompl::base;
 namespace oc = ompl::control;
@@ -72,27 +75,32 @@ public:
 };
 
 
-EuclideanMain::EuclideanMain()
-{
+EuclideanMain::EuclideanMain(const std::string& scene_config)
+{   
+    scene_ = Scene(scene_config);
+    std::cout<<"num obstacles: "<<scene_.n_obstacles_<<std::endl;
     //=======================================================================
     // Get parameters
-    //=======================================================================
+    //===============================WW========================================
     planning_bounds_x_.resize(2);
     planning_bounds_y_.resize(2);
     start_configuration_.resize(2);
     goal_configuration_.resize(2);
 
-    planning_bounds_x_[0] = 0.0;
-    planning_bounds_x_[1] = 100.0;
-    planning_bounds_y_[0] = 0.0;
-    planning_bounds_y_[1] = 100.0;
+    // TODO: Remove planning bounds? I include this in the scene.
+    planning_bounds_x_[0] = scene_.x_min_;
+    planning_bounds_x_[1] = scene_.x_max_;
+    planning_bounds_y_[0] = scene_.y_min_;
+    planning_bounds_y_[1] = scene_.y_max_;
 
     //84.039,10.9097,10
+    // TODO: make these not hardcoded.
     start_configuration_[0] = 10.0; //10.0; //50.0; //15.0
     start_configuration_[1] = 10.0; //10.0; //10.0; //40.0
     goal_configuration_[0] = 90.0;
     goal_configuration_[1] = 90.0;
 
+    // TODO: Should this be hardcoded to a 2x2? Will need to change when we make R^n.
     initial_covariance_ = 1.0*Eigen::MatrixXd::Identity(2, 2);
 }
 
@@ -130,17 +138,17 @@ void EuclideanMain::planWithSimpleSetup()
 {
 
     std::cout << "solving" << std::endl;
+
     //=======================================================================
     // Instantiate the state space (SE2)
     //=======================================================================
     ob::StateSpacePtr space(constructStateSpace()); //space should probably be a class attribute
     // set the bounds for the R^2 part of R2BeliefSpace();
     ob::RealVectorBounds bounds_se2(2);
-    bounds_se2.setLow(0, 0.0);
-    bounds_se2.setHigh(0, 100.0);
-    bounds_se2.setLow(1, 0.0);
-    bounds_se2.setHigh(1, 100.0);
-    
+    bounds_se2.setLow(0, scene_.x_min_);
+    bounds_se2.setHigh(0, scene_.x_max_);
+    bounds_se2.setLow(1, scene_.y_min_);
+    bounds_se2.setHigh(1, scene_.y_max_);
     space->as<R2BeliefSpace>()->setBounds(bounds_se2);
     
     //=======================================================================
@@ -152,13 +160,13 @@ void EuclideanMain::planWithSimpleSetup()
 
     ob::RealVectorBounds bounds(3);
     // bounds_se2.setLow(0, 0.0);
+    // TODO: remove hardcoded bounds
     bounds.setLow(0, -100.0);
     bounds.setHigh(0, 100.0);
     bounds.setLow(1, -100.0);
     bounds.setHigh(1, 100.0);
     bounds.setLow(2, 0.0);
     bounds.setHigh(2, 0.6);
-    
     cspace->setBounds(bounds);
     
     //=======================================================================
@@ -235,7 +243,7 @@ void EuclideanMain::planWithSimpleSetup()
 //	//simple_setup_->getProblemDefinition()->setOptimizationObjective(getBalancedObjective2(si));
     ob::StateValidityCheckerPtr om_stat_val_check;
     // om_stat_val_check = ob::StateValidityCheckerPtr(new Scenario2ValidityChecker(si));
-    om_stat_val_check = ob::StateValidityCheckerPtr(new StateValidityCheckerPCCBlackmore("scene3", si, 0.99));
+    om_stat_val_check = ob::StateValidityCheckerPtr(new StateValidityCheckerBlackmore(scene_, si, 0.99));
     // simple_setup_->setStateValidityChecker(om_stat_val_check);
     si->setStateValidityChecker(om_stat_val_check);
 
@@ -481,11 +489,10 @@ void EuclideanMain::solve(ob::PlannerPtr planner)
 }
 
 int main(int argc, char **argv)
-{
-
-    EuclideanMain offline_planner_uncertainty;
-    std::cout << "test" << std::endl;
+{   
+    std::filesystem::path currentPath = std::filesystem::current_path();
+    std::filesystem::path scene_config = currentPath  / ".." / "scenes" / "scene5.yaml"; // TODO: What else should I include in the scene json? 
+    EuclideanMain offline_planner_uncertainty(scene_config);
     offline_planner_uncertainty.planWithSimpleSetup();
-
     return 0;
 }
