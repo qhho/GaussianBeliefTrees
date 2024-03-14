@@ -1,0 +1,902 @@
+Info:    Beginning benchmark
+Info:    Preparing for run 0 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 469.28
+Info:    Solution state:90.945492 90.100278 
+Info:    SSBT: Created 556 states in 908 iterations
+Info:    Preparing for run 1 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 485.12
+Info:    Solution state:86.793448 90.779022 
+Info:    SSBT: Created 229 states in 356 iterations
+Info:    Preparing for run 2 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 407.25
+Info:    Solution state:90.098234 89.678764 
+Info:    SSBT: Created 358 states in 555 iterations
+Info:    Preparing for run 3 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 416.40
+Info:    Solution state:90.944857 89.291176 
+Info:    SSBT: Created 158 states in 225 iterations
+Info:    Preparing for run 4 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 230.70
+Info:    Solution state:91.215181 89.608444 
+Info:    SSBT: Created 253 states in 428 iterations
+Info:    Preparing for run 5 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 189.24
+Info:    Solution state:90.142140 89.994309 
+Info:    SSBT: Created 273 states in 428 iterations
+Info:    Preparing for run 6 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 408.47
+Info:    Solution state:91.903643 88.077062 
+Info:    SSBT: Created 400 states in 651 iterations
+Info:    Preparing for run 7 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 458.97
+Info:    Solution state:87.430774 87.217868 
+Info:    SSBT: Created 280 states in 423 iterations
+Info:    Preparing for run 8 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 350.75
+Info:    Solution state:88.897258 92.250554 
+Info:    SSBT: Created 200 states in 318 iterations
+Info:    Preparing for run 9 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 198.52
+Info:    Solution state:88.193992 93.112373 
+Info:    SSBT: Created 589 states in 1044 iterations
+Info:    Preparing for run 10 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 388.51
+Info:    Solution state:87.124374 88.833872 
+Info:    SSBT: Created 189 states in 291 iterations
+Info:    Preparing for run 11 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 361.04
+Info:    Solution state:92.016333 91.849700 
+Info:    SSBT: Created 471 states in 814 iterations
+Info:    Preparing for run 12 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 559.86
+Info:    Solution state:87.637340 90.553265 
+Info:    SSBT: Created 168 states in 264 iterations
+Info:    Preparing for run 13 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 490.07
+Info:    Solution state:92.256840 89.481310 
+Info:    SSBT: Created 327 states in 533 iterations
+Info:    Preparing for run 14 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 454.69
+Info:    Solution state:86.703729 91.091499 
+Info:    SSBT: Created 131 states in 195 iterations
+Info:    Preparing for run 15 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 453.64
+Info:    Solution state:91.553399 87.646984 
+Info:    SSBT: Created 517 states in 865 iterations
+Info:    Preparing for run 16 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 434.89
+Info:    Solution state:90.934831 92.734857 
+Info:    SSBT: Created 408 states in 695 iterations
+Info:    Preparing for run 17 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 337.31
+Info:    Solution state:88.852930 92.151851 
+Info:    SSBT: Created 157 states in 252 iterations
+Info:    Preparing for run 18 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 310.05
+Info:    Solution state:90.687570 88.681980 
+Info:    SSBT: Created 354 states in 577 iterations
+Info:    Preparing for run 19 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 495.69
+Info:    Solution state:90.817702 93.353995 
+Info:    SSBT: Created 450 states in 714 iterations
+Info:    Preparing for run 20 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 453.21
+Info:    Solution state:91.806905 90.950248 
+Info:    SSBT: Created 671 states in 1148 iterations
+Info:    Preparing for run 21 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 339.90
+Info:    Solution state:91.923765 91.993105 
+Info:    SSBT: Created 280 states in 427 iterations
+Info:    Preparing for run 22 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 442.05
+Info:    Solution state:93.703568 90.064894 
+Info:    SSBT: Created 509 states in 884 iterations
+Info:    Preparing for run 23 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 356.40
+Info:    Solution state:89.143212 92.071857 
+Info:    SSBT: Created 437 states in 714 iterations
+Info:    Preparing for run 24 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 266.38
+Info:    Solution state:93.514527 90.829977 
+Info:    SSBT: Created 356 states in 576 iterations
+Info:    Preparing for run 25 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 557.76
+Info:    Solution state:87.481779 89.284957 
+Info:    SSBT: Created 428 states in 705 iterations
+Info:    Preparing for run 26 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 271.06
+Info:    Solution state:86.575157 89.775353 
+Info:    SSBT: Created 219 states in 357 iterations
+Info:    Preparing for run 27 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 387.32
+Info:    Solution state:90.600324 91.373418 
+Info:    SSBT: Created 725 states in 1251 iterations
+Info:    Preparing for run 28 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 485.01
+Info:    Solution state:93.346217 89.341824 
+Info:    SSBT: Created 463 states in 788 iterations
+Info:    Preparing for run 29 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 484.52
+Info:    Solution state:86.944390 91.920269 
+Info:    SSBT: Created 248 states in 409 iterations
+Info:    Preparing for run 30 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 541.70
+Info:    Solution state:88.986060 91.366485 
+Info:    SSBT: Created 225 states in 349 iterations
+Info:    Preparing for run 31 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 461.33
+Info:    Solution state:87.271389 91.923254 
+Info:    SSBT: Created 459 states in 722 iterations
+Info:    Preparing for run 32 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 345.88
+Info:    Solution state:89.208578 92.005487 
+Info:    SSBT: Created 534 states in 932 iterations
+Info:    Preparing for run 33 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 423.30
+Info:    Solution state:91.468032 86.521025 
+Info:    SSBT: Created 141 states in 206 iterations
+Info:    Preparing for run 34 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 501.81
+Info:    Solution state:90.069836 91.343229 
+Info:    SSBT: Created 312 states in 492 iterations
+Info:    Preparing for run 35 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 631.01
+Info:    Solution state:86.627852 88.080393 
+Info:    SSBT: Created 456 states in 727 iterations
+Info:    Preparing for run 36 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 477.95
+Info:    Solution state:88.123066 88.572411 
+Info:    SSBT: Created 396 states in 664 iterations
+Info:    Preparing for run 37 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 402.56
+Info:    Solution state:87.517317 87.351343 
+Info:    SSBT: Created 292 states in 451 iterations
+Info:    Preparing for run 38 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 496.00
+Info:    Solution state:91.869081 88.434947 
+Info:    SSBT: Created 374 states in 590 iterations
+Info:    Preparing for run 39 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 380.59
+Info:    Solution state:87.261683 89.157472 
+Info:    SSBT: Created 247 states in 395 iterations
+Info:    Preparing for run 40 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 679.52
+Info:    Solution state:89.747072 89.251398 
+Info:    SSBT: Created 517 states in 877 iterations
+Info:    Preparing for run 41 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 419.82
+Info:    Solution state:90.391397 86.654991 
+Info:    SSBT: Created 401 states in 676 iterations
+Info:    Preparing for run 42 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 219.30
+Info:    Solution state:92.095284 89.364054 
+Info:    SSBT: Created 92 states in 141 iterations
+Info:    Preparing for run 43 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 551.07
+Info:    Solution state:90.909724 91.826199 
+Info:    SSBT: Created 613 states in 1035 iterations
+Info:    Preparing for run 44 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 478.95
+Info:    Solution state:87.771918 90.908179 
+Info:    SSBT: Created 604 states in 1023 iterations
+Info:    Preparing for run 45 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 270.32
+Info:    Solution state:88.918950 87.548795 
+Info:    SSBT: Created 596 states in 981 iterations
+Info:    Preparing for run 46 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 210.23
+Info:    Solution state:86.428194 89.807401 
+Info:    SSBT: Created 227 states in 360 iterations
+Info:    Preparing for run 47 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 238.90
+Info:    Solution state:91.765314 93.194991 
+Info:    SSBT: Created 170 states in 264 iterations
+Info:    Preparing for run 48 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 496.76
+Info:    Solution state:87.288795 88.747098 
+Info:    SSBT: Created 380 states in 626 iterations
+Info:    Preparing for run 49 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 473.06
+Info:    Solution state:86.200123 90.866167 
+Info:    SSBT: Created 475 states in 811 iterations
+Info:    Preparing for run 50 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 524.23
+Info:    Solution state:87.405920 89.844377 
+Info:    SSBT: Created 505 states in 848 iterations
+Info:    Preparing for run 51 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 206.61
+Info:    Solution state:90.843697 87.256376 
+Info:    SSBT: Created 130 states in 209 iterations
+Info:    Preparing for run 52 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 636.06
+Info:    Solution state:89.370781 92.367348 
+Info:    SSBT: Created 430 states in 703 iterations
+Info:    Preparing for run 53 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 285.30
+Info:    Solution state:87.160462 92.350773 
+Info:    SSBT: Created 486 states in 832 iterations
+Info:    Preparing for run 54 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 184.55
+Info:    Solution state:88.345198 89.281569 
+Info:    SSBT: Created 217 states in 349 iterations
+Info:    Preparing for run 55 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 315.47
+Info:    Solution state:89.811794 91.845472 
+Info:    SSBT: Created 208 states in 315 iterations
+Info:    Preparing for run 56 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 553.75
+Info:    Solution state:86.842046 91.965024 
+Info:    SSBT: Created 304 states in 504 iterations
+Info:    Preparing for run 57 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 395.77
+Info:    Solution state:90.781118 92.495076 
+Info:    SSBT: Created 321 states in 511 iterations
+Info:    Preparing for run 58 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 399.40
+Info:    Solution state:93.413078 90.795386 
+Info:    SSBT: Created 294 states in 471 iterations
+Info:    Preparing for run 59 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 218.08
+Info:    Solution state:93.049261 88.637152 
+Info:    SSBT: Created 174 states in 274 iterations
+Info:    Preparing for run 60 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 467.83
+Info:    Solution state:90.057568 87.934880 
+Info:    SSBT: Created 361 states in 582 iterations
+Info:    Preparing for run 61 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 548.66
+Info:    Solution state:87.703139 91.685082 
+Info:    SSBT: Created 187 states in 317 iterations
+Info:    Preparing for run 62 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 391.56
+Info:    Solution state:89.856656 89.394083 
+Info:    SSBT: Created 372 states in 647 iterations
+Info:    Preparing for run 63 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 603.67
+Info:    Solution state:92.591379 91.921900 
+Info:    SSBT: Created 273 states in 452 iterations
+Info:    Preparing for run 64 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 408.47
+Info:    Solution state:88.715417 89.349948 
+Info:    SSBT: Created 248 states in 367 iterations
+Info:    Preparing for run 65 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 475.17
+Info:    Solution state:86.848740 90.219638 
+Info:    SSBT: Created 152 states in 216 iterations
+Info:    Preparing for run 66 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 343.81
+Info:    Solution state:88.748501 87.504963 
+Info:    SSBT: Created 200 states in 367 iterations
+Info:    Preparing for run 67 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 247.06
+Info:    Solution state:90.887699 88.203920 
+Info:    SSBT: Created 160 states in 264 iterations
+Info:    Preparing for run 68 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 660.28
+Info:    Solution state:91.543142 86.812124 
+Info:    SSBT: Created 486 states in 824 iterations
+Info:    Preparing for run 69 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 418.65
+Info:    Solution state:89.860264 92.219098 
+Info:    SSBT: Created 272 states in 447 iterations
+Info:    Preparing for run 70 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 440.07
+Info:    Solution state:89.440099 88.862589 
+Info:    SSBT: Created 309 states in 482 iterations
+Info:    Preparing for run 71 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 370.99
+Info:    Solution state:91.536350 90.101789 
+Info:    SSBT: Created 480 states in 798 iterations
+Info:    Preparing for run 72 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 625.75
+Info:    Solution state:90.426236 90.644297 
+Info:    SSBT: Created 660 states in 1141 iterations
+Info:    Preparing for run 73 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 517.63
+Info:    Solution state:88.637228 89.070593 
+Info:    SSBT: Created 233 states in 385 iterations
+Info:    Preparing for run 74 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 502.59
+Info:    Solution state:90.544431 93.461151 
+Info:    SSBT: Created 147 states in 225 iterations
+Info:    Preparing for run 75 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 635.05
+Info:    Solution state:89.985196 93.105462 
+Info:    SSBT: Created 510 states in 899 iterations
+Info:    Preparing for run 76 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 367.71
+Info:    Solution state:87.755273 92.002898 
+Info:    SSBT: Created 189 states in 309 iterations
+Info:    Preparing for run 77 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 474.85
+Info:    Solution state:91.380049 93.417030 
+Info:    SSBT: Created 313 states in 484 iterations
+Info:    Preparing for run 78 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 640.97
+Info:    Solution state:90.365637 93.177112 
+Info:    SSBT: Created 914 states in 1634 iterations
+Info:    Preparing for run 79 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 258.20
+Info:    Solution state:88.589750 87.207209 
+Info:    SSBT: Created 132 states in 215 iterations
+Info:    Preparing for run 80 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 391.35
+Info:    Solution state:92.297321 91.386830 
+Info:    SSBT: Created 173 states in 280 iterations
+Info:    Preparing for run 81 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 536.53
+Info:    Solution state:92.213043 88.350667 
+Info:    SSBT: Created 272 states in 437 iterations
+Info:    Preparing for run 82 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 548.51
+Info:    Solution state:86.534123 91.322512 
+Info:    SSBT: Created 716 states in 1247 iterations
+Info:    Preparing for run 83 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 594.62
+Info:    Solution state:89.657432 89.252499 
+Info:    SSBT: Created 463 states in 768 iterations
+Info:    Preparing for run 84 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 326.44
+Info:    Solution state:88.958671 86.794441 
+Info:    SSBT: Created 89 states in 129 iterations
+Info:    Preparing for run 85 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 445.89
+Info:    Solution state:92.363831 88.050373 
+Info:    SSBT: Created 212 states in 365 iterations
+Info:    Preparing for run 86 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 502.25
+Info:    Solution state:90.500772 92.301014 
+Info:    SSBT: Created 486 states in 806 iterations
+Info:    Preparing for run 87 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 369.69
+Info:    Solution state:90.659007 93.281631 
+Info:    SSBT: Created 380 states in 667 iterations
+Info:    Preparing for run 88 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 430.59
+Info:    Solution state:92.343496 89.307191 
+Info:    SSBT: Created 628 states in 1063 iterations
+Info:    Preparing for run 89 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 387.88
+Info:    Solution state:87.194505 92.220377 
+Info:    SSBT: Created 522 states in 892 iterations
+Info:    Preparing for run 90 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 438.91
+Info:    Solution state:88.671567 91.864528 
+Info:    SSBT: Created 490 states in 782 iterations
+Info:    Preparing for run 91 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 488.42
+Info:    Solution state:89.230944 93.357187 
+Info:    SSBT: Created 258 states in 400 iterations
+Info:    Preparing for run 92 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 305.81
+Info:    Solution state:92.933697 90.109600 
+Info:    SSBT: Created 1408 states in 2659 iterations
+Info:    Preparing for run 93 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 522.90
+Info:    Solution state:87.547626 88.932207 
+Info:    SSBT: Created 641 states in 1206 iterations
+Info:    Preparing for run 94 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 529.92
+Info:    Solution state:89.012450 90.470537 
+Info:    SSBT: Created 294 states in 488 iterations
+Info:    Preparing for run 95 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 306.70
+Info:    Solution state:90.892518 92.247639 
+Info:    SSBT: Created 312 states in 514 iterations
+Info:    Preparing for run 96 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 459.19
+Info:    Solution state:86.609754 88.173242 
+Info:    SSBT: Created 405 states in 679 iterations
+Info:    Preparing for run 97 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 238.76
+Info:    Solution state:89.483714 88.273883 
+Info:    SSBT: Created 448 states in 714 iterations
+Info:    Preparing for run 98 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 514.28
+Info:    Solution state:89.659088 86.994538 
+Info:    SSBT: Created 239 states in 369 iterations
+Info:    Preparing for run 99 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 475.92
+Info:    Solution state:86.431503 88.558872 
+Info:    SSBT: Created 432 states in 684 iterations
+Info:    Preparing for run 0 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1258 states
+Info:    Preparing for run 1 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1587 states
+Info:    Preparing for run 2 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 492 states
+Info:    Preparing for run 3 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2729 states
+Info:    Preparing for run 4 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 5244 states
+Info:    Preparing for run 5 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 5606 states
+Info:    Preparing for run 6 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3904 states
+Info:    Preparing for run 7 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3485 states
+Info:    Preparing for run 8 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1925 states
+Info:    Preparing for run 9 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1928 states
+Info:    Preparing for run 10 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 4651 states
+Info:    Preparing for run 11 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2953 states
+Info:    Preparing for run 12 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2262 states
+Info:    Preparing for run 13 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 8097 states
+Info:    Preparing for run 14 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3262 states
+Info:    Preparing for run 15 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3379 states
+Info:    Preparing for run 16 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2775 states
+Info:    Preparing for run 17 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2634 states
+Info:    Preparing for run 18 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3406 states
+Info:    Preparing for run 19 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3866 states
+Info:    Preparing for run 20 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1136 states
+Info:    Preparing for run 21 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 4081 states
+Info:    Preparing for run 22 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2687 states
+Info:    Preparing for run 23 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2748 states
+Info:    Preparing for run 24 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 744 states
+Info:    Preparing for run 25 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3972 states
+Info:    Preparing for run 26 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 5500 states
+Info:    Preparing for run 27 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3853 states
+Info:    Preparing for run 28 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 4291 states
+Info:    Preparing for run 29 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1852 states
+Info:    Preparing for run 30 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2269 states
+Info:    Preparing for run 31 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2036 states
+Info:    Preparing for run 32 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1100 states
+Info:    Preparing for run 33 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 4659 states
+Info:    Preparing for run 34 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3050 states
+Info:    Preparing for run 35 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1643 states
+Info:    Preparing for run 36 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3376 states
+Info:    Preparing for run 37 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1789 states
+Info:    Preparing for run 38 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 4418 states
+Info:    Preparing for run 39 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2243 states
+Info:    Preparing for run 40 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 6475 states
+Info:    Preparing for run 41 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2637 states
+Info:    Preparing for run 42 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 4460 states
+Info:    Preparing for run 43 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1922 states
+Info:    Preparing for run 44 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 4486 states
+Info:    Preparing for run 45 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3718 states
+Info:    Preparing for run 46 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1923 states
+Info:    Preparing for run 47 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3077 states
+Info:    Preparing for run 48 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2115 states
+Info:    Preparing for run 49 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3100 states
+Info:    Preparing for run 50 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 6003 states
+Info:    Preparing for run 51 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3581 states
+Info:    Preparing for run 52 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 4118 states
+Info:    Preparing for run 53 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1447 states
+Info:    Preparing for run 54 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2832 states
+Info:    Preparing for run 55 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2347 states
+Info:    Preparing for run 56 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1950 states
+Info:    Preparing for run 57 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 4131 states
+Info:    Preparing for run 58 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3149 states
+Info:    Preparing for run 59 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2284 states
+Info:    Preparing for run 60 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1359 states
+Info:    Preparing for run 61 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2543 states
+Info:    Preparing for run 62 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 5729 states
+Info:    Preparing for run 63 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 4143 states
+Info:    Preparing for run 64 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2618 states
+Info:    Preparing for run 65 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 4522 states
+Info:    Preparing for run 66 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3101 states
+Info:    Preparing for run 67 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2222 states
+Info:    Preparing for run 68 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1934 states
+Info:    Preparing for run 69 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1324 states
+Info:    Preparing for run 70 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3647 states
+Info:    Preparing for run 71 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2894 states
+Info:    Preparing for run 72 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2464 states
+Info:    Preparing for run 73 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2804 states
+Info:    Preparing for run 74 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2601 states
+Info:    Preparing for run 75 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 5346 states
+Info:    Preparing for run 76 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2047 states
+Info:    Preparing for run 77 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2779 states
+Info:    Preparing for run 78 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3667 states
+Info:    Preparing for run 79 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1755 states
+Info:    Preparing for run 80 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 4448 states
+Info:    Preparing for run 81 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2665 states
+Info:    Preparing for run 82 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 773 states
+Info:    Preparing for run 83 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2195 states
+Info:    Preparing for run 84 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 4886 states
+Info:    Preparing for run 85 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 4006 states
+Info:    Preparing for run 86 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1909 states
+Info:    Preparing for run 87 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 5245 states
+Info:    Preparing for run 88 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1081 states
+Info:    Preparing for run 89 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1346 states
+Info:    Preparing for run 90 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 6398 states
+Info:    Preparing for run 91 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1377 states
+Info:    Preparing for run 92 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1443 states
+Info:    Preparing for run 93 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3854 states
+Info:    Preparing for run 94 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1170 states
+Info:    Preparing for run 95 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 4487 states
+Info:    Preparing for run 96 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 1892 states
+Info:    Preparing for run 97 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3166 states
+Info:    Preparing for run 98 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 2026 states
+Info:    Preparing for run 99 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3350 states
+Info:    Benchmark complete

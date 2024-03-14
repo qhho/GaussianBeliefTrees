@@ -7,41 +7,51 @@ StateValidityCheckerPCCBlackmore::StateValidityCheckerPCCBlackmore(const std::st
 
 	OMPL_INFORM("Using P collision of %f", p_collision_);
 
+	Scene scene_ = Scene(scene_id);
+
+	n_obstacles_ = scene_.n_obstacles_;
+	A_list_.resize(n_obstacles_); A_list_ = scene_.A_list_;
+	B_list_.resize(n_obstacles_); B_list_ = scene_.B_list_;
+
 	OMPL_INFORM("scene is %s", scene_id.c_str());
-	if (scene_id == "2d_narrow") {
-		Narrow2D scene = Narrow2D();
-		n_obstacles_ = scene.n_obstacles_;
-		A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
-		B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
-	}
-    else if (scene_id == "scene4") {
-		Scene4 scene = Scene4();
-		n_obstacles_ = scene.n_obstacles_;
-		A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
-		B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
-	}
-	else if (scene_id == "scenereplanning") {
-		SceneReplanning scene = SceneReplanning();
-		n_obstacles_ = scene.n_obstacles_;
-		A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
-		B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
-		std::cout << "scene is scene replanning" << std::endl;
-	}
-	else if (scene_id == "scenereplanning2") {
-		SceneReplanning2 scene = SceneReplanning2();
-		n_obstacles_ = scene.n_obstacles_;
-		A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
-		B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
-	}
-	else if (scene_id == "2d_empty"){
-		n_obstacles_ = 0;
-		A_list_.resize(n_obstacles_);
-		B_list_.resize(n_obstacles_);
-	}
-	else
-	{
-		OMPL_INFORM("Unknown scene id");
-	}
+
+	// OMPL_INFORM("scene is %s", scene_id.c_str());
+	// if (scene_id == "2d_narrow") {
+	// 	Narrow2D scene = Narrow2D();
+	// 	n_obstacles_ = scene.n_obstacles_;
+	// 	A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
+	// 	B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
+	// }
+    // else if (scene_id == "scene4") {
+	// 	Scene4 scene = Scene4();
+	// 	n_obstacles_ = scene.n_obstacles_;
+	// 	A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
+	// 	B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
+	// }
+	// else if (scene_id == "scenereplanning") {
+	// 	SceneReplanning scene = SceneReplanning();
+	// 	n_obstacles_ = scene.n_obstacles_;
+	// 	A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
+	// 	B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
+	// 	std::cout << "scene is scene replanning" << std::endl;
+	// }
+	// else if (scene_id == "scenereplanning2") {
+	// 	SceneReplanning2 scene = SceneReplanning2();
+	// 	n_obstacles_ = scene.n_obstacles_;
+	// 	A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
+	// 	B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
+	// }
+	// else if (scene_id == "2d_empty"){
+	// 	n_obstacles_ = 0;
+	// 	A_list_.resize(n_obstacles_);
+	// 	B_list_.resize(n_obstacles_);
+	// }
+	// else
+	// {
+	// 	OMPL_INFORM("Unknown scene id");
+	// }
+
+	// scene
 
 	if (n_obstacles_ == 0) {
 		erf_inv_result_ = computeInverseErrorFunction(1 - 2 * p_collision_);

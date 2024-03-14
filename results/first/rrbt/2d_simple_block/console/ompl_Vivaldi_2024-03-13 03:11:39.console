@@ -1,0 +1,16 @@
+Info:    Beginning benchmark
+Info:    Preparing for run 0 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 0 of control_RRBT
+Info:    Preparing for run 0 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 0.00000.
+Info:    RRBT: Initial k-nearest value of 25
+Info:    RRBT: Found an initial solution with a cost of 254.17 in 117 iterations (91 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 241.50 in 133 iterations (103 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 240.73 in 133 iterations (103 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 240.64 in 145 iterations (110 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 133.31 in 190 iterations (148 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 133.13 in 448 iterations (353 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 132.91 in 840 iterations (667 vertices in the graph)

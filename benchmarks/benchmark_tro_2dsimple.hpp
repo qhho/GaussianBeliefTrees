@@ -54,10 +54,12 @@ class OfflinePlannerUncertainty {
         void boundCSpace(ob::StateSpacePtr c_space);
 
         oc::ControlSpacePtr constructCtrlSpace(ob::StateSpacePtr c_space);
+        oc::ControlSpacePtr constructUnicycleCtrlSpace(ob::StateSpacePtr c_space);
         void boundCtrlSpace(oc::ControlSpacePtr ctrl_space);
 
-        void planWithSimpleSetup(int sysType, double plan_time, double dt, double p_safe, double Q, double R, double K, std::string scene,  std::vector<std::vector<double>> measurement_region, std::vector<std::vector<double>> bounds_state, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file);
-        void solve(double goal_bias, double sampling_bias, double selection_radius, double pruning_radius, int distance_function, std::string file);
+        void planWithSimpleSetup(int sysType, double plan_time, double dt, double p_safe, double Q, double R, double R_bad, double K, std::string scene,  std::vector<std::vector<double>> measurement_region, std::vector<std::vector<double>> bounds_state, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file);
+        void planWithUnicycle(int sysType, double plan_time, double dt, double p_safe, double Q, double R, double R_bad, double K, std::string scene,  std::vector<std::vector<double>> measurement_region, std::vector<std::vector<double>> bounds_state, std::vector<double > bounds_surge, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file);
+        void solve(double plan_time, double goal_bias, double Q, double R, double R_bad, double sampling_bias, double selection_radius, double pruning_radius, int distance_function, std::string file, bool first_solution);
 
 
   private:

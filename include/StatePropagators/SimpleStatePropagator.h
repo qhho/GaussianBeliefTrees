@@ -31,7 +31,6 @@
 *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
-/* Author: Ali-akbar Agha-mohammadi, Saurav Agarwal */
 
 #ifndef TWODPOINT_STATE_PROPAGATOR_
 #define TWODPOINT_STATE_PROPAGATOR_
@@ -54,7 +53,7 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     /** \brief Construct representation of a unicycle state propagator.
     */
-    SimpleStatePropagator(const oc::SpaceInformationPtr &si, double Q, double R, double K_default, std::vector<std::vector<double > > measurement_Regions);
+    SimpleStatePropagator(const oc::SpaceInformationPtr &si, double Q, double R, double R_bad, double K_default, std::vector<std::vector<double > > measurement_Regions);
 
     virtual ~SimpleStatePropagator(void)
     {
@@ -95,6 +94,7 @@ private:
     double K_;
     // double Q_;
     double R_;
+    double R_bad_;
 
     std::vector<std::vector<double>> measurementRegions_;
 

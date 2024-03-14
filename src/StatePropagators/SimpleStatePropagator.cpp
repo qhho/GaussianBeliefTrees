@@ -7,7 +7,7 @@ using namespace ompl;
 
 
 
-SimpleStatePropagator::SimpleStatePropagator(const oc::SpaceInformationPtr &si, double processNoise, double R, double K_default, std::vector<std::vector<double > > measurement_regions) : oc::StatePropagator(si)
+SimpleStatePropagator::SimpleStatePropagator(const oc::SpaceInformationPtr &si, double processNoise, double R, double R_bad, double K_default, std::vector<std::vector<double > > measurement_regions) : oc::StatePropagator(si)
 {
     duration_ = si->getPropagationStepSize();
     K_ = K_default;
@@ -44,26 +44,13 @@ SimpleStatePropagator::SimpleStatePropagator(const oc::SpaceInformationPtr &si, 
     // double processNoise = 0.2;
     Q = pow(processNoise, 2) * Eigen::MatrixXd::Identity(dimensions_, dimensions_);
     R_ = R*R;
+    R_bad_ = R_bad*R_bad;
 
     measurementRegions_ = measurement_regions;
 }
 
-void saturate(double &value, const double &min_value, const double &max_value) {
-    if(value < min_value) value = min_value;
-    if(value > max_value) value = max_value;
-}
-
-double wrap(double angle) {
-    angle = fmod(angle, 2 * M_PI);
-    if (angle > M_PI) angle -= 2 * M_PI;
-    return angle;
-}
-
 void SimpleStatePropagator::propagate(const base::State *state, const control::Control* control, const double duration, base::State *result) const
 {
-    // use the motionmodel to apply the controls
-    // motionModel_->Evolve(state, control, motionModel_->getZeroNoise(), to);
-
     //=========================================================================
     // Get CX vector (RRT near vertex)
     //=========================================================================
@@ -115,24 +102,25 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
 
     Mat lambda_pred, K;
 
-    if (x_new > measurementRegions_[0][0] && x_new < measurementRegions_[0][1] && y_new < measurementRegions_[1][1] && y_new < measurementRegions_[1][1]){ //scenario 2
+    if (x_new > measurementRegions_[0][0] && x_new < measurementRegions_[0][1] && y_new < measurementRegions_[1][1] && y_new < measurementRegions_[1][1]){
         Mat R = R_*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
         Mat S = (H * sigma_pred * H.transpose())+ R;
         K = (sigma_pred * H.transpose()) * S.inverse();
         lambda_pred = (A_ol_ - B_ol_ * K_sample)*lambda_from*(A_ol_ - B_ol_ * K_sample);
     }
     else{
-        K = Eigen::MatrixXd::Zero(dimensions_, dimensions_);
-        lambda_pred = lambda_from;
+        Mat R = R_bad_*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
+        Mat S = (H * sigma_pred * H.transpose()) + R;
+        K = (sigma_pred * H.transpose()) * S.inverse();
+        lambda_pred =  (A_ol_ - B_ol_ * K_sample)*lambda_from*(A_ol_ - B_ol_ * K_sample);
+        // K = Eigen::MatrixXd::Zero(dimensions_, dimensions_);
+        // lambda_pred = lambda_from;
     }
     Mat sigma_to = (I - (K*H)) * sigma_pred;
     Mat lambda_to = lambda_pred + K*H*sigma_pred;
 
     result->as<R2BeliefSpace::StateType>()->setSigma(sigma_to);
     result->as<R2BeliefSpace::StateType>()->setLambda(lambda_to);
-
-    // std::cout << sigma_to << std::endl;
-    // std::cout << lambda_to << std::endl;
 }
 
 bool SimpleStatePropagator::canPropagateBackward(void) const

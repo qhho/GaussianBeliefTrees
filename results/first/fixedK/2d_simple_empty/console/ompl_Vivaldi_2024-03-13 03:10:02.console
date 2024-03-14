@@ -1,0 +1,124 @@
+Info:    Beginning benchmark
+Info:    Preparing for run 0 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 622.85
+Info:    Solution state:86.595296 90.718464 
+Info:    Found solution with cost 579.23
+Info:    Solution state:86.947077 87.929953 
+Info:    Found solution with cost 563.78
+Info:    Solution state:91.601423 93.534858 
+Info:    Found solution with cost 548.94
+Info:    Solution state:92.035622 88.769287 
+Info:    Found solution with cost 547.33
+Info:    Solution state:90.650207 93.075326 
+Info:    Found solution with cost 478.25
+Info:    Solution state:88.138723 88.420788 
+Info:    Found solution with cost 451.29
+Info:    Solution state:86.953542 89.245455 
+Info:    Found solution with cost 443.00
+Info:    Solution state:86.688337 91.409528 
+Info:    Found solution with cost 409.99
+Info:    Solution state:92.654153 90.775098 
+Info:    Found solution with cost 403.01
+Info:    Solution state:92.377569 86.955481 
+Info:    Found solution with cost 348.21
+Info:    Solution state:92.623064 89.476785 
+Info:    Found solution with cost 327.22
+Info:    Solution state:88.387782 91.666696 
+Info:    Found solution with cost 318.30
+Info:    Solution state:86.862553 88.163661 
+Info:    Found solution with cost 314.90
+Info:    Solution state:93.262848 87.907047 
+Info:    Found solution with cost 288.77
+Info:    Solution state:93.084659 87.709201 
+Info:    Found solution with cost 267.13
+Info:    Solution state:89.403283 87.462842 
+Info:    Found solution with cost 264.53
+Info:    Solution state:89.475134 87.991443 
+Info:    Found solution with cost 261.10
+Info:    Solution state:91.007557 88.604320 
+Info:    Found solution with cost 250.39
+Info:    Solution state:89.433483 86.208106 
+Info:    Found solution with cost 250.25
+Info:    Solution state:88.174009 87.264771 
+Info:    Found solution with cost 247.60
+Info:    Solution state:86.801471 88.021444 
+Info:    Found solution with cost 244.31
+Info:    Solution state:86.822505 89.300450 
+Info:    SSBT: Created 35922 states in 151579 iterations
+Info:    Preparing for run 1 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 453.98
+Info:    Solution state:88.663292 91.680937 
+Info:    Found solution with cost 427.65
+Info:    Solution state:92.745543 87.224650 
+Info:    Found solution with cost 406.14
+Info:    Solution state:88.172044 90.564200 
+Info:    Found solution with cost 382.08
+Info:    Solution state:87.981250 86.755475 
+Info:    Found solution with cost 366.22
+Info:    Solution state:86.893146 88.017234 
+Info:    Found solution with cost 362.56
+Info:    Solution state:87.999783 90.970366 
+Info:    Found solution with cost 361.32
+Info:    Solution state:89.404462 91.782826 
+Info:    Found solution with cost 326.46
+Info:    Solution state:89.533194 88.379332 
+Info:    Found solution with cost 322.60
+Info:    Solution state:89.639596 88.423269 
+Info:    Found solution with cost 312.89
+Info:    Solution state:91.422245 86.951700 
+Info:    Found solution with cost 311.07
+Info:    Solution state:87.697818 88.095680 
+Info:    Found solution with cost 292.71
+Info:    Solution state:88.109716 91.886234 
+Info:    Found solution with cost 290.17
+Info:    Solution state:89.366252 88.432971 
+Info:    Found solution with cost 288.76
+Info:    Solution state:89.644678 88.595468 
+Info:    Found solution with cost 277.05
+Info:    Solution state:87.040279 88.780412 
+Info:    Found solution with cost 265.03
+Info:    Solution state:89.595861 88.184056 
+Info:    Found solution with cost 262.78
+Info:    Solution state:89.907933 87.178100 
+Info:    Found solution with cost 262.63
+Info:    Solution state:90.829413 86.278896 
+Info:    Found solution with cost 262.50
+Info:    Solution state:88.272750 92.400143 
+Info:    Found solution with cost 259.12
+Info:    Solution state:86.316952 89.517988 
+Info:    Found solution with cost 254.20
+Info:    Solution state:88.794974 88.737521 
+Info:    Found solution with cost 254.07
+Info:    Solution state:87.834554 87.294284 
+Info:    Found solution with cost 254.02
+Info:    Solution state:88.857502 86.761511 
+Info:    Found solution with cost 247.86
+Info:    Solution state:89.437291 90.367428 
+Info:    Found solution with cost 242.49
+Info:    Solution state:86.906421 88.389860 
+Info:    Found solution with cost 241.81
+Info:    Solution state:88.147876 90.162915 
+Info:    SSBT: Created 36780 states in 146277 iterations
+Info:    Preparing for run 2 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 496.95
+Info:    Solution state:88.680597 93.099770 
+Info:    Found solution with cost 488.48
+Info:    Solution state:90.721985 93.096110 
+Info:    Found solution with cost 454.03
+Info:    Solution state:89.485422 90.627614 
+Info:    Found solution with cost 448.69
+Info:    Solution state:86.446684 90.509144 
+Info:    Found solution with cost 386.54
+Info:    Solution state:89.625222 90.157430 
+Info:    Found solution with cost 381.20
+Info:    Solution state:86.448895 91.385408 
+Info:    Found solution with cost 367.31
+Info:    Solution state:92.923387 88.824332 
+Info:    Found solution with cost 327.57
+Info:    Solution state:87.970695 89.617945 

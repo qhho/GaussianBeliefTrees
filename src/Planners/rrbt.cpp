@@ -52,11 +52,14 @@
 // #include "ompl/util/controlEquations.h"
 
 // #include "../Spaces/R2BeliefSpaceEuclidean.h"
-#include "../scenes/2d_narrow.hpp"
+#include "Scene/Scene.h"
 // #include "../ValidityCheckers/scene3.hpp"
 // #include "../ValidityCheckers/scene4.hpp"
 
 #include <boost/math/special_functions/erf.hpp>
+
+#include <boost/math/distributions/chi_squared.hpp>
+
 
 namespace ob = ompl::base;
 namespace oc = ompl::control;
@@ -94,11 +97,14 @@ ompl::control::RRBT::RRBT(const SpaceInformationPtr &si)
     Planner::declareParam<bool>("focus_search", this, &RRBT::setFocusSearch, &RRBT::getFocusSearch, "0,1");
     Planner::declareParam<unsigned int>("number_sampling_attempts", this, &RRBT::setNumSamplingAttempts,
                                         &RRBT::getNumSamplingAttempts, "10:10:100000");
+    
+    // Planner::declareParam<std::vector<double>>("goal", this, &RRBT::setGoal, &RRBT::getGoal, "0.:1.:10000.");
+    // Planner::declareParam<std::string>("scene_id", this, &RRBT::setScene, &RRBT::getScene);
 
     addPlannerProgressProperty("iterations INTEGER", [this] { return numIterationsProperty(); });
     addPlannerProgressProperty("best cost REAL", [this] { return bestCostProperty(); });
 
-    double K_ = 0.3;
+    double K_ = 0.7;
     double myduration_ = si->getPropagationStepSize();
     A_ol_.resize(2, 2);
     A_ol_ << 1.0, 0.0,
@@ -126,36 +132,24 @@ ompl::control::RRBT::RRBT(const SpaceInformationPtr &si)
     B_cl_d_.resize(2, 2);
     B_cl_d_ = A_cl_d_.inverse() * (A_cl_d_ - Eigen::MatrixXd::Identity(2, 2)) * B_cl_;
 
-    double processNoise = 0.1;
-    Q = pow(processNoise, 2) * Eigen::MatrixXd::Identity(2, 2);
-
     p_collision_ = 0.05;
 
-
-    std::string scene_id = "scene4";
-
-	OMPL_INFORM("scene is %s", scene_id.c_str());
-	if (scene_id == "2d_narrow") {
-		Narrow2D scene = Narrow2D();
-		n_obstacles_ = scene.n_obstacles_;
-		A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
-		B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
-        // std::cout << "done" << std::endl;
-        // std::cout << A_list_(0,0) << std::endl;
-	}
-    // else if (scene_id == "scene4") {
-	// 	Scene4 scene = Scene4();
+	// OMPL_INFORM("scene is %s", scene_id.c_str());
+	// if (scene_id == "2d_narrow") {
+	// 	Narrow2D scene = Narrow2D();
 	// 	n_obstacles_ = scene.n_obstacles_;
 	// 	A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
 	// 	B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
-    //     // std::cout << "done" << std::endl;
-    //     // std::cout << A_list_(0,0) << std::endl;
 	// }
-    else{
-        OMPL_ERROR("Scene not found");
-    }
-
-	erf_inv_result_ = boost::math::erf_inv(1 - 2 * p_collision_ / n_obstacles_);
+    // else if (scene_id == "2d_empty")
+    // {
+	// 	n_obstacles_ = 0;
+	// 	A_list_.resize(n_obstacles_);
+	// 	B_list_.resize(n_obstacles_);
+	// }
+    // else{
+    //     OMPL_ERROR("Scene not found");
+    // }
 }
 
 ompl::control::RRBT::~RRBT()
@@ -176,6 +170,28 @@ void ompl::control::RRBT::setup()
     if (!nn_)
         nn_.reset(tools::SelfConfig::getDefaultNearestNeighbors<Motion *>(this));
     nn_->setDistanceFunction([this](const Motion *a, const Motion *b) { return distanceFunction(a, b); });
+
+
+
+    Q = Q_ * Eigen::MatrixXd::Identity(2, 2);
+
+    std::cout << scene_id_ << std::endl;
+    Scene scene_ = Scene(scene_id_);
+
+	n_obstacles_ = scene_.n_obstacles_;
+	A_list_.resize(n_obstacles_); A_list_ = scene_.A_list_;
+	B_list_.resize(n_obstacles_); B_list_ = scene_.B_list_;
+
+	OMPL_INFORM("scene is %s", scene_id_.c_str());
+
+
+	if (n_obstacles_ == 0) {
+		erf_inv_result_ = boost::math::erf_inv(1 - 2 * p_collision_);
+	}
+	else
+	erf_inv_result_ = boost::math::erf_inv(1 - 2 * p_collision_ / n_obstacles_);
+
+    t_crit_ = quantile(boost::math::chi_squared(2), 1 - p_collision_);
 
     // Setup optimization objective
     //
@@ -293,7 +309,7 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
     }
 
     
-
+    bestCost_ = opt_->infiniteCost();
     OMPL_INFORM("%s: Started planning with %u states. Seeking a solution better than %.5f.", getName().c_str(), nn_->size(), opt_->getCostThreshold().value());
 
     if ((useTreePruning_ || useRejectionSampling_ || useInformedSampling_ || useNewStateRejection_) &&
@@ -349,10 +365,6 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
     while (ptc == false)
     {
         iterations_++;
-        // std::cout << "iteration " << iterations_ << std::endl;
-        // if (iterations_ > 3){
-        //     exit(0);
-        // }
         // sample random state (with goal biasing)
         // Goal samples are only sampled until maxSampleCount() goals are in the tree, to prohibit duplicate goal
         // states.
@@ -374,6 +386,8 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
 
         // find closest state in the tree
         Motion *nmotion = nn_->nearest(rmotion);
+
+        // std::cout << nn_->size() << std::endl;
 
         // std::cout << nmotion->beliefs[0]->x << " " << nmotion->beliefs[0]->y << std::endl;
         // std::exit(0);
@@ -461,15 +475,7 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
             double distanceFromGoal;
             bool checkForSolution = false;
             while (BeliefQueue.size() > 0){
-
-                // if (BeliefQueue.size() > 10){
-                //     exit(0);
-                // }
-                
-                // std::cout << "Belief queue size " << BeliefQueue.size() << std::endl;
-                // std::cout << "pop "<< std::endl;
                 Belief *belief = BeliefQueue.top();
-                // std::cout << "pop "<< std::endl;
                 BeliefQueue.pop();
                 
                 if (belief->deleted){
@@ -478,18 +484,10 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
                 if (belief->parent == nullptr && belief->motion->parent != NULL) {  
                    continue;
                 }
-                // std::cout << "pop "<< std::endl;
                 getNeighbors(belief->motion, nbh_queue); //returns a bunch of motions
                 // std::cout << nbh_queue.size() << std::endl;
-                // std::cout << "pop "<< std::endl;
                 for (std::size_t i=0; i < nbh_queue.size(); ++i)
                 {
-
-                    // std::cout << "huh" << std::endl; 
-                    // if (nbh_queue[i]->deleted){
-                    //     continue;
-                    // }
-
                     if (nbh_queue[i]->state != belief->motion->state) //if neighbor motion of belief is not the same motion that belief belongs to
                     {  
                         auto *motion = new Motion(siC_);
@@ -497,30 +495,46 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
                         double duration = 0.0;
                         Control *rctrl = motion->control_;
                         const ompl::base::RealVectorBounds &bounds = siC_->getControlSpace()->as<ompl::control::RealVectorControlSpace>()->getBounds();
-                        const double diff_x = abs(nbh_queue[i]->state->as<ob::RealVectorStateSpace::StateType>()->values[0] - belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[0]);
-                        const double diff_y = abs(nbh_queue[i]->state->as<ob::RealVectorStateSpace::StateType>()->values[1] - belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[1]);
+                        const double diff_x = nbh_queue[i]->state->as<ob::RealVectorStateSpace::StateType>()->values[0] - belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[0];
+                        const double diff_y = nbh_queue[i]->state->as<ob::RealVectorStateSpace::StateType>()->values[1] - belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[1];
 
-                        unsigned int cd = ceil(std::max(diff_x, diff_y)/(bounds.high[0]*0.1));
-                        rctrl->as<RealVectorControlSpace::ControlType>()->values[0] = diff_x/cd;
-                        rctrl->as<RealVectorControlSpace::ControlType>()->values[1] = diff_y/cd;
+                        unsigned int cd = ceil(std::max(abs(diff_x), abs(diff_y))/(bounds.high[0]*stepSize_));
+
+                        // std::cout << cd << std::endl;
+
+                        if (cd > siC_->getMaxControlDuration() || std::max(abs(diff_x), abs(diff_y)) > maxDistance_){
+                            continue;
+                        }
+
+                        rctrl->as<RealVectorControlSpace::ControlType>()->values[0] = diff_x/(cd*stepSize_);
+                        rctrl->as<RealVectorControlSpace::ControlType>()->values[1] = diff_y/(cd*stepSize_);
 
                         Belief *dbelief = new Belief();
 
                         dbelief->parent = belief;
                         dbelief->motion = nbh_queue[i];
-                        // std::cout << "here" << std::endl;
 
                         double cost = 0;
+
+                        // std::cout << "initial belief: " << belief->x << " " << belief->y << std::endl;
+                        // std::cout << "goal belief: " << dbelief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[0] << " " << dbelief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[1] << std::endl;
 
                         // unsigned int propCd = mypropagateWhileValid(belief, rctrl, cd, dbelief); //rstate should be new motion
                         unsigned int propCd = mypropagateAndCostWhileValid(belief, rctrl, cd, dbelief, cost); //rstate should be new motion
                         // std::cout << "here" << std::endl;
                         if (propCd == cd){
+
+                            // std::cout << dbelief->x << " " << dbelief->y << std::endl;
+                            //TODO: something wrong with propagation...
                             dbelief->x = dbelief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[0];
                             dbelief->y = dbelief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[1];
                             // dbelief->incCost = opt_->motionCost(dbelief->motion->state, belief->motion->state); //update inccost of new belief
                             dbelief->incCost = Cost(cost);
                             dbelief->cost = opt_->combineCosts(belief->cost, dbelief->incCost); //update cost of new belief
+                            // std::cout << "old belief: " << belief->x << " " << belief->y << std::endl;
+                            // std::cout << "new belief: " << dbelief->x << " " << dbelief->y << std::endl;
+                            // std::cout << belief->cost.value() << " " << dbelief->incCost << std::endl;
+                            // std::cout << dbelief->cost.value() << std::endl;
                             // if (belief->cost.value() > 250){
                             //     std::cout << belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[0] << " " << belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[1] << std::endl;
                             //     std::cout << dbelief->incCost.value() << " " << dbelief->cost.value() << std::endl;
@@ -531,10 +545,12 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
                             {
                                 if (appendBelief(dbelief->motion, dbelief)){
                                     //TODO: fix this because the state is not R2BeliefSpace but RealVectorStateSpace - define goalregion in this script.
-                                    if (goal->isSatisfied(dbelief->motion->state, &distanceFromGoal))
+                                    if (distanceGoal(dbelief) < 10.0) //TODO: fix this
                                     {
-                                        motion->inGoal = true;
-                                        goalMotions_.push_back(motion);
+                                        // std::cout << "GOAL " << dbelief->x << " " << dbelief->y << std::endl;
+                                        dbelief->motion->inGoal = true;
+                                        dbelief->inGoal = true;
+                                        goalMotions_.push_back(dbelief->motion);
                                         checkForSolution = true;
                                     }
                                     // if (dbelief->x  > 40 && dbelief->y  > 50){
@@ -594,18 +610,33 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
             // Checking for solution or iterative improvement
             if (checkForSolution)
             {
+                // OMPL_INFORM("CHECKING FOR SOLUTION");
                 bool updatedSolution = false;
+                // std::cout << bestGoalMotion_ << std::endl;
                 if (!bestGoalMotion_ && !goalMotions_.empty())
                 {
+                    // std::cout << "first time" << std::endl;
+                    // std::cout << goalMotions_.size() << std::endl;
                     // We have found our first solution, store it as the best. We only add one
                     // vertex at a time, so there can only be one goal vertex at this moment.
                     bestGoalMotion_ = goalMotions_.front();
                     for (auto &belief : bestGoalMotion_->beliefs)
                     {
+                        // std::cout << "beliefsing" << std::endl;
+                        // std::cout << belief->inGoal << std::endl;
+                        // std::cout << belief->cost.value() << std::endl;
+                        // std::cout << bestCost_.value() << std::endl;
                         if (belief->inGoal && opt_->isCostBetterThan(belief->cost, bestCost_))
                         {
                             bestCost_ = belief->cost;
+                            // std::cout << bestCost_ << std::endl;
                             updatedSolution = true;
+
+                            OMPL_INFORM("%s: Found an initial solution with a cost of %.2f in %u iterations (%u "
+                                "vertices in the graph)",
+                                getName().c_str(), bestCost_.value(), iterations_, nn_->size());
+
+                            // std::cout << "found an initial solution" << std::endl;
                         }
                     }
                     // bestCost_ = bestGoalMotion_->cost;
@@ -625,10 +656,7 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
                     // }
                     // OMPL_INFORM("%f %f", result->x, result->y);
                     // OMPL_INFORM("Belief cost is : %f", bestCost );
-                    
-                    OMPL_INFORM("%s: Found an initial solution with a cost of %.2f in %u iterations (%u "
-                                "vertices in the graph)",
-                                getName().c_str(), bestCost_.value(), iterations_, nn_->size());
+                
                 }
                 else
                 {
@@ -646,6 +674,10 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
                                 // bestCost_ = bestGoalMotion_->cost;
                                 bestCost_ = belief->cost;
                                 updatedSolution = true;
+
+                                OMPL_INFORM("%s: Found a new solution with a cost of %.2f in %u iterations (%u "
+                                "vertices in the graph)",
+                                getName().c_str(), bestCost_.value(), iterations_, nn_->size());
 
                                 // Check if it satisfies the optimization objective, if it does, break the for loop
                                 if (opt_->isSatisfied(bestCost_))
@@ -834,17 +866,15 @@ bool ompl::control::RRBT::checkMotion(Motion * nmotion, State* dstate)
     }
 
     const ompl::base::RealVectorBounds &bounds = siC_->getControlSpace()->as<ompl::control::RealVectorControlSpace>()->getBounds();
-    const double diff_x = abs(dstate->as<ob::RealVectorStateSpace::StateType>()->values[0] - nmotion->state->as<ob::RealVectorStateSpace::StateType>()->values[0]);
-    const double diff_y = abs(dstate->as<ob::RealVectorStateSpace::StateType>()->values[1] - nmotion->state->as<ob::RealVectorStateSpace::StateType>()->values[1]);
+    const double diff_x = (dstate->as<ob::RealVectorStateSpace::StateType>()->values[0] - nmotion->state->as<ob::RealVectorStateSpace::StateType>()->values[0]);
+    const double diff_y = (dstate->as<ob::RealVectorStateSpace::StateType>()->values[1] - nmotion->state->as<ob::RealVectorStateSpace::StateType>()->values[1]);
 
-    unsigned int cd = ceil(std::max(diff_x, diff_y)/(bounds.high[0]*0.1));
+    unsigned int cd = ceil(std::max(abs(diff_x), abs(diff_y))/(bounds.high[0]*stepSize_));
     auto *motion = new Motion(siC_);
     siC_->nullControl(motion->control_);
     Control *rctrl = motion->control_;
-    // cd = 10*cd;
-    // std::cout << cd << std::endl;
-    rctrl->as<RealVectorControlSpace::ControlType>()->values[0] = diff_x/cd;
-    rctrl->as<RealVectorControlSpace::ControlType>()->values[1]= diff_y/cd;
+    rctrl->as<RealVectorControlSpace::ControlType>()->values[0] = diff_x/(cd*stepSize_);
+    rctrl->as<RealVectorControlSpace::ControlType>()->values[1]= diff_y/(cd*stepSize_);
 
     auto *result = new Belief();
     // std::cout << "number of beliefs for motion" << nmotion->beliefs.size() << std::endl;
@@ -861,10 +891,8 @@ bool ompl::control::RRBT::checkMotion(Motion * nmotion, State* dstate)
     for (auto it:nmotion->beliefs){
         // std::cout << "propagating from: "<< it->x << " " << it->y << " to " << dstate->as<ob::RealVectorStateSpace::StateType>()->values[0] << " " << dstate->as<ob::RealVectorStateSpace::StateType>()->values[1] << std::endl;
         unsigned int propCd = mypropagateWhileValid(it, rctrl, cd, result);
-        result->x  = dstate->as<ob::RealVectorStateSpace::StateType>()->values[0];
-        result->y = dstate->as<ob::RealVectorStateSpace::StateType>()->values[1];
-        // propCd = cd;
-        // std::cout << "motion is " << propCd << " " << cd << std::endl;
+        // result->x  = dstate->as<ob::RealVectorStateSpace::StateType>()->values[0];
+        // result->y = dstate->as<ob::RealVectorStateSpace::StateType>()->values[1];
         if (propCd == cd && myisValid(result)){
             return true;
         }
@@ -922,7 +950,8 @@ unsigned int ompl::control::RRBT::mypropagateWhileValid(const Belief* belief, co
         // if we finished the for-loop without finding an invalid state, the last valid state is temp1
         // make sure result contains that information
         if (result->x != temp1->x && result->y != temp1->y){
-            result = temp1;
+            result->x = temp1->x;
+            result->y = temp1->y;
         }
         // free the temporary memory
         delete toDelete;
@@ -944,7 +973,8 @@ unsigned int ompl::control::RRBT::mypropagateAndCostWhileValid(const Belief* bel
                                                                   int steps, Belief* result, double &cost) const
 {
 
-    cost = 0;
+    // std::cout << control->as<oc::RealVectorControlSpace::ControlType>()->values[0] << " " << control->as<oc::RealVectorControlSpace::ControlType>()->values[1] << std::endl;
+
     if (steps == 0)
     {
         // result->parent = belief->parent;
@@ -961,7 +991,10 @@ unsigned int ompl::control::RRBT::mypropagateAndCostWhileValid(const Belief* bel
     // perform the first step of propagation
     mypropagate(belief, control, signedStepSize, result);
 
-    cost += opt_->motionCost(belief->motion->state, result->motion->state).value(); 
+    cost += expectedPathLengthmotionCost(belief, result);
+
+    // std::cout << "INITIAL BELIEF: " << belief->x << " " << belief->y << std::endl;
+    // std::cout << "Steps: " << steps << std::endl;
 
     // if we found a valid state after one step, we can go on
     if (myisValid(result))
@@ -975,15 +1008,18 @@ unsigned int ompl::control::RRBT::mypropagateAndCostWhileValid(const Belief* bel
         for (int i = 1; i < steps; ++i)
         {
             mypropagate(temp1, control, signedStepSize, temp2);
+            // std::cout << temp2->x << " " << temp2->y << std::endl;
             if (myisValid(temp2))
             {
-                cost += opt_->motionCost(temp1->motion->state, temp2->motion->state).value();
+                // std::cout << "valid" << std::endl;
+                cost += expectedPathLengthmotionCost(temp1, temp2);
                 std::swap(temp1, temp2);
             }
             else
             {
                 // the last valid state is temp1;
                 r = i;
+                // std::cout << "breaking" << std::endl;
                 break;
             }
         }
@@ -991,11 +1027,19 @@ unsigned int ompl::control::RRBT::mypropagateAndCostWhileValid(const Belief* bel
         // if we finished the for-loop without finding an invalid state, the last valid state is temp1
         // make sure result contains that information
         if (result->x != temp1->x && result->y != temp1->y){
-            result = temp1;
+            // std::cout << temp1->x << " " << temp1->y << std::endl;
+            result->x = temp1->x;
+            result->y = temp1->y;
+            // std::cout << result->x << " " << result->y << std::endl;
         }
         // free the temporary memory
         delete toDelete;
-
+        // std::cout << result->x << " " << result->y << std::endl;
+        // if (r == steps)
+        // {
+        // std::cout << "FINAL BELIEF: " << result->x << " " << result->y << std::endl;
+        //     std::cout << "COST " << cost << std::endl;
+        // }
         return r;
     }
     // if the first propagation step produced an invalid step, return 0 steps
@@ -1021,18 +1065,21 @@ void ompl::control::RRBT::mypropagate(const Belief *belief, const control::Contr
     // Get CX vector (RRT random vertex)
     //=========================================================================
 
-    double x_pose_reference = control->as<oc::RealVectorControlSpace::ControlType>()->values[0];
-    double y_pose_reference = control->as<oc::RealVectorControlSpace::ControlType>()->values[1];
+    double u_0 = control->as<oc::RealVectorControlSpace::ControlType>()->values[0];
+    double u_1 = control->as<oc::RealVectorControlSpace::ControlType>()->values[1];
     //=========================================================================
     // Compute control inputs (dot(dot(x)) dot(dot(y)) dot(dot(z))) with PD controller
     //=========================================================================
-    double u_0 = B_ol_(0, 0) * (x_pose_reference - x_pose); //double u_0 = B_cl_d_(0, 0) * (x_pose_reference - x_pose);
-    double u_1 = B_ol_(0, 0) * (y_pose_reference - y_pose); //double u_1 = B_cl_d_(1, 1) * (y_pose_reference - y_pose);
+    // double u_0 = B_ol_(0, 0) * (x_pose_reference - x_pose); //double u_0 = B_cl_d_(0, 0) * (x_pose_reference - x_pose);
+    // double u_1 = B_ol_(0, 0) * (y_pose_reference - y_pose); //double u_1 = B_cl_d_(1, 1) * (y_pose_reference - y_pose);
     //=========================================================================
     // Propagate mean
     //=========================================================================
-    result->x = x_pose + duration * x_pose_reference;
-    result->y = y_pose + duration * y_pose_reference;
+
+    double x_new = x_pose + duration * u_0;
+    double y_new = y_pose + duration * u_1;
+    result->x = x_new;
+    result->y = y_new;
 
     //=========================================================================
     // Propagate covariance in the equivalent closed loop system
@@ -1049,8 +1096,11 @@ void ompl::control::RRBT::mypropagate(const Belief *belief, const control::Contr
     // if (x_pose + duration * u_0 > 75 && y_pose + duration * u_1 < 30){ //scenario 2
     // std::cout << "reached measurement region" << std::endl;
     // if (true){ //scenario 3
-    if (x_pose + duration * u_0 > 0.0 && x_pose + duration * u_0 < 55 && y_pose + duration * u_1 < 25){  //scenario 4
-        Mat R = 0.1*Eigen::MatrixXd::Identity(2, 2);
+    // if (x_pose + duration * u_0 > 0.0 && x_pose + duration * u_0 < 100 && y_pose + duration * u_1 < 100){  //scenario 4
+    // if (x_pose + duration * u_0 > 50.0 && x_pose + duration * u_0 < 100 && y_pose + duration * u_1 > 0 && y_pose + duration * u_1 < 30){
+    if (x_new > measurementRegion_[0][0] && x_new < measurementRegion_[0][1] && y_new < measurementRegion_[1][1] && y_new < measurementRegion_[1][1])
+    {
+        Mat R = R_*Eigen::MatrixXd::Identity(2, 2);
         // std::cout << "what1" << std::endl;
         Mat S = (H * sigma_pred * H.transpose()) + R;
         // std::cout << "what2" << std::endl;
@@ -1060,8 +1110,15 @@ void ompl::control::RRBT::mypropagate(const Belief *belief, const control::Contr
         // std::cout << "what4" << std::endl;
     }
     else{
-        K = Eigen::MatrixXd::Zero(2, 2);
-        lambda_pred = lambda_from;
+        Mat R = R_bad_*Eigen::MatrixXd::Identity(2, 2);
+        // std::cout << "what1" << std::endl;
+        Mat S = (H * sigma_pred * H.transpose()) + R;
+        // std::cout << "what2" << std::endl;
+        K = (sigma_pred * H.transpose()) * S.inverse();
+        // std::cout << "what3" << std::endl;
+        lambda_pred = A_cl_*lambda_from*A_cl_;
+        // K = Eigen::MatrixXd::Zero(2, 2);
+        // lambda_pred = lambda_from;
     }
     Mat sigma_to = (I - (K*H)) * sigma_pred;
     Mat lambda_to = lambda_pred + K*H*sigma_pred;
@@ -1142,7 +1199,7 @@ bool ompl::control::RRBT::myisValid(const Belief *state) const
 	z_pose = 4.0;
     PX(0,0) = state->lambda_(0,0) + state->sigma_(0,0);
     PX(1,1) = state->lambda_(1,1) + state->sigma_(1,1);
-    PX(2,2) = 0.1;
+    PX(2,2) = 0.00000001;
 	// PX(0,0) = state->as<ob::CompoundStateSpace::StateType>()->as<ob::RealVectorStateSpace::StateType>(4)->values[0];
 	// PX(1,1) = state->as<ob::CompoundStateSpace::StateType>()->as<ob::RealVectorStateSpace::StateType>(4)->values[1];
 	// PX(2,2) = state->as<ob::CompoundStateSpace::StateType>()->as<ob::RealVectorStateSpace::StateType>(4)->values[2];
@@ -1152,6 +1209,12 @@ bool ompl::control::RRBT::myisValid(const Belief *state) const
 	// Probabilistic collision checker
 	//=========================================================================
 	bool valid = false;
+
+    if (n_obstacles_ == 0) {
+		valid = true;
+		goto exit_switch;
+	}
+
 	for (int o = 0; o < n_obstacles_; o++) {
 		if (not HyperplaneCCValidityChecker(A_list_.at(o), B_list_.at(o), x, y, z_pose, PX)) {
 			goto exit_switch;
@@ -1162,8 +1225,7 @@ bool ompl::control::RRBT::myisValid(const Belief *state) const
 	exit_switch:;
 	return valid;
 
-    // return true;
-    return !(inCollision(state));
+    // return !(inCollision(state));
 }
 
 bool ompl::control::RRBT::HyperplaneCCValidityChecker(const Eigen::MatrixXf &A, const Eigen::MatrixXf &B, const double &x_pose, const double &y_pose, const double &z_pose, const Eigen::MatrixXf &PX) const {
@@ -1783,8 +1845,48 @@ bool ompl::control::RRBT::dominates(Belief *a, Belief*b) const{
     return true;
 }
 
+double ompl::control::RRBT::expectedPathLengthmotionCost(const Belief *s1, const Belief *s2) const
+{
+    double x_diff = s1->x - s2->x;
+    double y_diff = s1->y - s2->y;
 
-// double ompl::control::RRBT::chanceConstrainedGoalRegion(Belief *a, Belief *b) const{
+    double diff_sq = x_diff*x_diff + y_diff*y_diff;
+
+    // std::cout << s1->x << " " << s1->y << "---" << s2->x << " " << s2->y << std::endl;
+
+    // std::cout << x_diff << " " << y_diff << std::endl;
+
+    // std::cout << s1->sigma_.trace() << " " << s1->lambda_.trace() << " " << s2->sigma_.trace() << " " << s2->lambda_.trace() << std::endl;
+
+    return sqrt(diff_sq + s1->sigma_.trace() + s2->sigma_.trace() + s1->lambda_.trace() + s2->lambda_.trace());
+}
 
 
+// ob::Cost motionCost(const State *s1, const State *s2, const oc::Control *u) const
+// {
+//     Eigen::Vector2d diff = s1->as<R2BeliefSpace::StateType>()->getXY() - s2->as<R2BeliefSpace::StateType>()->getXY();
+//     // return Cost(sqrt(diff.norm()*diff.norm() + s1->as<R2BeliefSpace::StateType>()->getCovariance().trace() + s2->as<R2BeliefSpace::StateType>()->getCovariance().trace()));
+//     double nominalcontrolEffort = dotprod(u, control_dimension_ - 1);
+//     double K = u->as<oc::RealVectorControlSpace::ControlType>()->values[control_dimension_];
+//     double uncertaintyTerm = (K*K*s1->as<R2BeliefSpace::StateType>()->getLambda()).trace();
+
+//     return Cost(nominalcontrolEffort + uncertaintyTerm);
 // }
+
+
+    //     ob::Cost ExpectedCost(const State *s1, const State *s2, const oc::Control *u) const
+    //     {
+    //         Eigen::Vector2d diff = s1->as<R2BeliefSpace::StateType>()->getXY() - s2->as<R2BeliefSpace::StateType>()->getXY();
+    //         return Cost(diff.norm());
+    //     }
+    // int control_dimension_;
+// };
+
+double ompl::control::RRBT::distanceGoal(const oc::RRBT::Belief *st) const
+{
+    double dx = st->x - goal_[0];
+    double dy = st->y - goal_[1];
+    double radius = st->sigma_(0,0) + st->lambda_(0,0);
+    radius = t_crit_*sqrt(radius);
+    return sqrt(dx*dx + dy*dy) + radius;
+}

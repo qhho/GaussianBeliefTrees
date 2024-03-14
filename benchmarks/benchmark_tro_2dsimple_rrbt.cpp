@@ -19,7 +19,7 @@
 #include <boost/math/distributions/chi_squared.hpp>
 #include <string>
 #include <bits/stdc++.h>
-#include "benchmark_tro_2dsimple.hpp"
+#include "benchmark_tro_2dsimple_rrbt.hpp"
 
 namespace ob = ompl::base;
 namespace oc = ompl::control;
@@ -71,16 +71,21 @@ public:
         t_crit_ = t_crit;
         p_safe_ = p_safe;
     }
-    virtual double distanceGoal(const Belief *st) const
-        {
-        double dx = st->x;
-        double dy = st->y;
+
+    virtual double distanceGoal(const State *st) const
+    {
+        return 0;
+    }
+
+    double distanceGoal(const oc::RRBT::Belief *st) const
+    {
+        double dx = st->x - goal_state_[0];
+        double dy = st->y - goal_state_[1];
         double radius = st->sigma_(0,0) + st->lambda_(0,0);
         radius = t_crit_*sqrt(radius);
-
-        // std::cout << sqrt(dx*dx + dy*dy) + radius << std::endl;
-        return sqrt(dx*dx + dy*dy) + radius;
-        // return sqrt(dx*dx + dy*dy);
+        // return sqrt(dx*dx + dy*dy) + radius;
+        std::cout << "Distance to goal: " << sqrt(dx*dx + dy*dy) << std::endl;
+        return sqrt(dx*dx + dy*dy);
     }
 
     //TODO: add distance to goal for whole motion node.
@@ -91,7 +96,7 @@ public:
     double t_crit_;
 };
 
-void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_time, double dt, double p_safe, double Q, double R, double K, std::string scene,  std::vector<std::vector<double>> measurement_region, std::vector<std::vector<double>> bounds_state, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file)
+void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_time, double dt, double p_safe, double Q, double R, double R_bad, double K, std::string scene,  std::vector<std::vector<double>> measurement_region, std::vector<std::vector<double>> bounds_state, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file)
 {
     //=======================================================================
     // Instantiate the state space
@@ -111,7 +116,7 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     //=======================================================================
     // Instantiate the control space
     //=======================================================================
-    auto cspace(std::make_shared<oc::RealVectorControlSpace>(space, 3));
+    auto cspace(std::make_shared<oc::RealVectorControlSpace>(space, 2));
 
     ob::RealVectorBounds bounds(2);
     bounds.setLow(0, bounds_control[0][0]);
@@ -144,7 +149,7 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     //=======================================================================
     // set the propagation routine for this space
     //=======================================================================
-    simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new SimpleStatePropagator(si, Q, R, K, measurement_region)));
+    simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new SimpleStatePropagator(si, Q, R, R_bad, K, measurement_region)));
 //	//=======================================================================
 //	// Set optimization objective
 //	//=======================================================================
@@ -159,41 +164,46 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     //=======================================================================
     simple_setup_->setup();
     OMPL_INFORM("Benchmarking starting");
-    this->solve(goal_bias, sampling_bias, selection_radius, pruning_radius, 1, file);
+    this->solve(plan_time, goal_bias, goal_state, scene, measurement_region, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 0, file, true);
+    this->solve(plan_time, goal_bias, goal_state, scene, measurement_region, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 0, file, false);
 }
 
-void OfflinePlannerUncertainty::solve(double goal_bias, double sampling_bias, double selection_radius, double pruning_radius, int distance_function, std::string file)
+void OfflinePlannerUncertainty::solve(double plan_time, double goal_bias, std::vector<double> goal_state, std::string scene, std::vector<std::vector<double>> measurement_region, double Q, double R, double R_bad, double sampling_bias, double selection_radius, double pruning_radius, int distance_function, std::string file, bool first_solution)
 {
-    //=======================================================================
-    // Set state validity checking for this space
-    //=======================================================================
 
-    simple_setup_->getProblemDefinition()->getOptimizationObjective()->setCostThreshold(ob::Cost(00));
-    ompl::tools::MyBenchmarkRRBT b(*simple_setup_, "1 rrbt");
-    
-    // // Optionally, specify some benchmark parameters (doesn't change how the benchmark is run)
-    b.addExperimentParameter("measurementregion", "x y", "55 25");
-    b.addExperimentParameter("first_solution", "bool", "1");
-    std::string resultsfile = "../results/rrbt/" + file + "/";
+    ompl::tools::MyBenchmarkRRBT b(*simple_setup_, "rrbt");
+    std::string resultsfile = "../results/first/rrbt/" + file + "/";
+    if (first_solution)
+    {
+        simple_setup_->getProblemDefinition()->getOptimizationObjective()->setCostThreshold(ob::Cost(10000.0));
+        b.addExperimentParameter("first_solution", "bool", "1");
+    }
+    else
+    {
+        simple_setup_->getProblemDefinition()->getOptimizationObjective()->setCostThreshold(ob::Cost(0.0));
+        b.addExperimentParameter("first_solution", "bool", "0");
+        resultsfile = "../results/final/rrbt/" + file + "/";
+    }
+
+    b.addExperimentParameter("Q_value", "double",std::to_string(Q));
+    b.addExperimentParameter("R", "double",std::to_string(R));
+    b.addExperimentParameter("R_bad_value", "double", std::to_string(R_bad));
+
     b.setDir(resultsfile);
-    // // b.addExperimentParameter("num_obstacles", "INTEGER", "10");
-    
-    // // We add the planners to evaluate.
-    // b.addPlanner(ob::PlannerPtr(new oc::mod_RRT(simple_setup_->getSpaceInformation())));
     double goal_bias_ = goal_bias;
-
     ob::PlannerPtr RRBT_Planner;
     RRBT_Planner = ob::PlannerPtr(new oc::RRBT(simple_setup_->getSpaceInformation()));
     RRBT_Planner->as<oc::RRBT>()->setGoalBias(goal_bias_);
-    RRBT_Planner->as<oc::RRBT>()->setRange(10.0); //TODO: fix this.
+    RRBT_Planner->as<oc::RRBT>()->setRange(30.0);
+    RRBT_Planner->as<oc::RRBT>()->setGoal(goal_state);
+    RRBT_Planner->as<oc::RRBT>()->setScene(scene);
+    RRBT_Planner->as<oc::RRBT>()->setMeasurementRegion(measurement_region);
+    RRBT_Planner->as<oc::RRBT>()->setR(R);
+    RRBT_Planner->as<oc::RRBT>()->setR_bad(R_bad);
+    RRBT_Planner->as<oc::RRBT>()->setQ(Q);
     b.addPlanner(RRBT_Planner);
-    
-    // Now we can benchmark: 5 second time limit for each plan computation,
-    // 100 MB maximum memory usage per plan computation, 50 runs for each planner
-    // and true means that a text-mode progress bar should be displayed while
-    // computation is running.
     ompl::tools::MyBenchmarkRRBT::MyRequest req;
-    req.maxTime = 50;
+    req.maxTime = plan_time;
     req.maxMem = 10000.0;
     req.runCount = 100;
     req.displayProgress = true;
@@ -217,9 +227,13 @@ int main(int argc, char **argv)
     // int discTime = std::stoi(pt.get<std::string>("System.discTime"));
     double Q = std::stod(pt.get<std::string>("System.Q"));
     double R = std::stod(pt.get<std::string>("System.R"));
+    double R_bad = std::stod(pt.get<std::string>("System.R_bad"));
     double K = std::stod(pt.get<std::string>("System.K"));
     double dt = std::stod(pt.get<std::string>("System.dt"));
     std::string scene = pt.get<std::string>("Scene.scene");
+    scene = "../scenes/" + scene + ".yaml";
+
+    std::cout << scene << std::endl;
 
     // Planner params
     double p_safe = std::stod(pt.get<std::string>("Planner.p_safe"));
@@ -317,7 +331,7 @@ int main(int argc, char **argv)
     std::vector< double > initial_state = {initial_state_x, initial_state_y};
 
     OfflinePlannerUncertainty offline_planner_uncertainty;
-    offline_planner_uncertainty.planWithSimpleSetup(sysType, plan_time, dt, p_safe, Q, R, K, scene, measurement_region, bounds_state, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
+    offline_planner_uncertainty.planWithSimpleSetup(sysType, plan_time, dt, p_safe, Q, R, R_bad, K, scene, measurement_region, bounds_state, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
 
     return 0;
 }

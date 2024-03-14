@@ -1,0 +1,10 @@
+scene:
+
+  obstacles:
+
+    - fx: 30
+      tx: 90
+      fy: 50
+      ty: 80
+      fz: 0
+      tz: 10

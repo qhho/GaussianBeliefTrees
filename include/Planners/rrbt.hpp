@@ -335,6 +335,49 @@ namespace ompl
             {
                 return bestCost_;
             }
+
+
+            void setGoal(std::vector<double> goal)
+            {
+                goal_ = goal;
+            }
+
+            std::vector<double> getGoal() const
+            {
+                return goal_;
+            }
+
+            void setScene(std::string scene_id)
+            {
+                scene_id_ = scene_id;
+            }
+
+            std::string getScene() const
+            {
+                return scene_id_;
+            }
+
+            void setQ(double Q)
+            {
+                Q_ = Q*Q;
+            }
+
+            void setR(double R)
+            {
+                R_ = R*R;
+            }
+
+            void setR_bad(double R_bad)
+            {
+                R_bad_ = R_bad*R_bad;
+            }
+
+            void setMeasurementRegion(std::vector<std::vector<double>> measurementRegion)
+            {
+                measurementRegion_ = measurementRegion;
+            }
+
+
             Eigen::Matrix2d A_ol_, B_ol_, A_cl_, B_cl_, A_cl_d_, B_cl_d_;
 
             unsigned int n_obstacles_;
@@ -538,6 +581,10 @@ namespace ompl
 
             bool dominates(Belief *a, Belief*b) const;
 
+            double expectedPathLengthmotionCost(const Belief *s1, const Belief *s2) const;
+
+            double distanceGoal(const Belief *st) const;
+
             /** \brief State sampler */
             base::StateSamplerPtr sampler_;
 
@@ -632,6 +679,18 @@ namespace ompl
             unsigned int iterations_{0u};
 
             double stepSize_{0.1};
+
+            double t_crit_{2.477};
+
+            std::vector<double> goal_;
+
+            std::string scene_id_;
+
+            double Q_{0.1};
+            double R_{0.1};
+            double R_bad_{0.3};
+
+            std::vector<std::vector<double>> measurementRegion_;
 
             Eigen::Matrix2d I = Eigen::MatrixXd::Identity(2, 2);
             Eigen::Matrix2d H = Eigen::MatrixXd::Identity(2, 2);

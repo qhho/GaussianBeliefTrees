@@ -8,6 +8,7 @@ find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED)
 find_package(ompl REQUIRED)
 find_package(Threads REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 include_directories(include ${EIGEN3_INCLUDE_DIRS} ${BOOST_INCLUDE_DIRS} ${ompl_INCLUDE_DIRS})
 
@@ -16,12 +17,12 @@ add_library (rrbt_lib
     src/Spaces/RealVectorBeliefSpace.cpp
     src/Spaces/R2BeliefSpace.cpp
     src/Spaces/R2BeliefSpaceEuclidean.cpp
-    scenes/2d_narrow.cpp
-    scenes/scene4.cpp
     scenes/scenereplanning.cpp
     scenes/scenereplanning2.cpp
     src/StatePropagators/SimpleStatePropagator.cpp
-    src/StatePropagators/SimpleStatePropagatorEuclidean.cpp
+    src/StatePropagators/SimpleStatePropagatorfixedK.cpp
+    src/StatePropagators/2DUnicyclePropagator.cpp
+    src/StatePropagators/2DUnicyclePropagatorfixedK.cpp
     src/OptimizationObjectives/expected_cost_objective.cpp
     src/OptimizationObjectives/state_cost_objective.cpp
     src/ValidityCheckers/state_validity_checker_pcc_blackmore.cpp
@@ -31,6 +32,7 @@ add_library (rrbt_lib
     src/Planners/SSBT.cpp
     src/Planners/mod_rrt.cpp
     src/Planners/rrbt.cpp
+    src/Scene/Scene.cpp
 )
 
 
@@ -39,6 +41,7 @@ target_link_libraries (rrbt_lib
     ${EIGEN3_LIBRARIES}
     ${OMPL_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
+    yaml-cpp
 )
 
 target_include_directories(rrbt_lib
@@ -60,8 +63,26 @@ target_link_libraries (benchmark_2dsimple
     rrbt_lib
     ${OMPL_LIBRARIES}
     ${Boost_LIBRARIES}
+    yaml-cpp
 )
 
+add_executable (benchmark_2drrbt benchmarks/benchmark_tro_2dsimple_rrbt.cpp)
+
+target_link_libraries (benchmark_2drrbt
+    rrbt_lib
+    ${OMPL_LIBRARIES}
+    ${Boost_LIBRARIES}
+    yaml-cpp
+)
+
+add_executable (benchmark_2dsimple_fixedK benchmarks/benchmark_tro_2dsimple_fixedK.cpp)
+
+target_link_libraries (benchmark_2dsimple_fixedK
+    rrbt_lib
+    ${OMPL_LIBRARIES}
+    ${Boost_LIBRARIES}
+    yaml-cpp
+)
 
 # add_executable (euc src/euclidean_main.cpp)
 
