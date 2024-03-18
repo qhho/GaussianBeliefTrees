@@ -1,0 +1,1112 @@
+Info:    Beginning benchmark
+Info:    Preparing for run 0 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 1 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 2 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 3 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 4 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 5 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 6 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 7 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 8 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 9 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 10 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 11 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 12 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 13 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 14 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 15 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 16 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 17 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 18 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 19 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 20 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 21 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 22 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 23 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 24 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 25 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 26 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 27 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 28 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 29 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 30 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 31 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 32 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 33 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 34 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 35 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 36 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 37 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 38 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 39 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 40 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 41 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 42 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 43 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 44 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 45 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 46 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 47 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 48 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 49 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 50 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 51 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 52 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 53 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 54 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 55 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 56 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 57 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 58 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 59 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 60 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 61 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 62 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 63 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 64 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 65 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 66 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 67 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 68 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 69 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 70 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 71 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 72 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 73 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 74 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 75 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 76 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 77 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 78 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 79 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 80 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 81 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 82 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 83 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 84 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 85 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 86 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 87 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 88 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 89 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 90 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 91 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 92 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 93 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 94 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 95 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 96 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 97 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 98 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 99 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 0 of control_mod_RRT
+Warning: mod_RRT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   mod_RRT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   mod_RRT: There are no valid initial states!
+         at line 109 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/mod_rrt.cpp

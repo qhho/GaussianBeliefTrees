@@ -38,8 +38,8 @@
 // #include "SpaceInformation/SpaceInformation.h"
 #include "ompl/control/SpaceInformation.h"
 #include <ompl/control/spaces/RealVectorControlSpace.h>
-#include "../Spaces/R2BeliefSpace.h"
-#include "../Spaces/R2BeliefSpaceEuclidean.h"
+#include "Spaces/R2BeliefSpace.h"
+#include "Spaces/R2BeliefSpaceEuclidean.h"
 
 namespace ob = ompl::base;
 namespace oc = ompl::control;

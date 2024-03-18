@@ -3,6 +3,7 @@
 #include "StatePropagators/2DUnicyclePropagator.h"
 #include "ompl/control/spaces/RealVectorControlSpace.h"
 #include "ompl/util/Exception.h"
+#include <unsupported/Eigen/MatrixFunctions>
 using namespace ompl;
 
 
@@ -54,18 +55,33 @@ DynUnicycleControlSpace::DynUnicycleControlSpace(const oc::SpaceInformationPtr &
     controller_parameters_.push_back(0.0);
     controller_parameters_.push_back(0.3054);
     controller_parameters_.push_back(0.0316);
+
+    Eigen::MatrixXd Adt;
+    Adt = A_ol_*duration_;
+    Adt = Adt.exp();
+
+    std::cout << "STATE!!" << std::endl;
+
+    std::cout << Adt << std::endl;
+
+    F(0,0) = Adt(0,0);
+    F(1,1) = Adt(2,2);
+
+    std:: cout << F << std::endl;
+
     //=========================================================================
     // Close loop system definition
     //=========================================================================
     A_cl_ = A_ol_ - B_ol_ * K_;
 
-
     A_cl_d_ = Eigen::MatrixXd::Identity(4, 4) - A_cl_ * duration_;
     A_cl_d_ = A_cl_d_.inverse().eval();
-    A_cl_d_22_(0, 0) = 0.7;
+    A_cl_d_22_(0, 0) = A_cl_d_(0, 0);
     A_cl_d_22_(0, 1) = A_cl_d_(0, 2);
     A_cl_d_22_(1, 0) = A_cl_d_(2, 0);
-    A_cl_d_22_(1, 1) = 0.7;
+    A_cl_d_22_(1, 1) = A_cl_d_(2, 2);
+
+    std::cout << A_cl_d_22_ << std::endl;
 
     Q = pow(processNoise, 2) * Eigen::MatrixXd::Identity(dimensions_, dimensions_);
     R_ = R*R;

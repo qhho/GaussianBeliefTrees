@@ -19,6 +19,7 @@
 #include <ompl/geometric/SimpleSetup.h>
 #include "Spaces/R2BeliefSpace.h"
 #include "Spaces/R2BeliefSpaceEuclidean.h"
+#include "Spaces/R3BeliefSpace.h"
 
 // scenes
 #include "Scene/Scene.h"
@@ -31,7 +32,7 @@ namespace ob = ompl::base;
 
 class StateValidityCheckerPCCBlackmore : public ob::StateValidityChecker {
 	public:
-		StateValidityCheckerPCCBlackmore(const std::string &scene_id, const ob::SpaceInformationPtr &si, const double accep_prob);
+		StateValidityCheckerPCCBlackmore(const std::string &scene_id, const ob::SpaceInformationPtr &si, const double accep_prob, int sysType);
 		~StateValidityCheckerPCCBlackmore();
 
 		virtual bool isValid(const ob::State *state) const;
@@ -45,10 +46,11 @@ class StateValidityCheckerPCCBlackmore : public ob::StateValidityChecker {
 
 		ob::SpaceInformationPtr si_;
 
+		int sysType_;
+
 		inline double computeInverseErrorFunction(const double &argument) {
             
 			return boost::math::erf_inv(argument);
-            std::cout << "calculated" << std::endl;
 		}
 		bool HyperplaneCCValidityChecker(const Eigen::MatrixXf &A, const Eigen::MatrixXf &B, const double &x_pose, const double &y_pose, const double &z_pose, const Eigen::MatrixXf &PX) const;
 };

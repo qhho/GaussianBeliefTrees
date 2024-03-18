@@ -17,12 +17,17 @@ add_library (rrbt_lib
     src/Spaces/RealVectorBeliefSpace.cpp
     src/Spaces/R2BeliefSpace.cpp
     src/Spaces/R2BeliefSpaceEuclidean.cpp
+    src/Spaces/R3BeliefSpace.cpp
     scenes/scenereplanning.cpp
     scenes/scenereplanning2.cpp
     src/StatePropagators/SimpleStatePropagator.cpp
     src/StatePropagators/SimpleStatePropagatorfixedK.cpp
+    src/StatePropagators/3DSimpleStatePropagator.cpp
+    src/StatePropagators/3DSimpleStatePropagatorfixedK.cpp
     src/StatePropagators/2DUnicyclePropagator.cpp
     src/StatePropagators/2DUnicyclePropagatorfixedK.cpp
+    src/StatePropagators/3DUnicyclePropagator.cpp
+    src/StatePropagators/3DUnicyclePropagatorfixedK.cpp
     src/OptimizationObjectives/expected_cost_objective.cpp
     src/OptimizationObjectives/state_cost_objective.cpp
     src/ValidityCheckers/state_validity_checker_pcc_blackmore.cpp
@@ -32,6 +37,8 @@ add_library (rrbt_lib
     src/Planners/SSBT.cpp
     src/Planners/mod_rrt.cpp
     src/Planners/rrbt.cpp
+    src/Planners/rrbt_unicycle.cpp
+    # src/Planners/rrbt_fixedwing.cpp
     src/Scene/Scene.cpp
 )
 
@@ -57,39 +64,29 @@ target_include_directories(rrbt_lib
 #     ${Boost_LIBRARIES}
 # )
 
-add_executable (benchmark_2dsimple benchmarks/benchmark_tro_2dsimple.cpp)
+add_executable (varyK benchmarks/benchmark_varyK.cpp)
 
-target_link_libraries (benchmark_2dsimple
+target_link_libraries (varyK
     rrbt_lib
     ${OMPL_LIBRARIES}
     ${Boost_LIBRARIES}
     yaml-cpp
 )
 
-add_executable (benchmark_2drrbt benchmarks/benchmark_tro_2dsimple_rrbt.cpp)
+add_executable (rrbt benchmarks/benchmark_rrbt.cpp)
 
-target_link_libraries (benchmark_2drrbt
+target_link_libraries (rrbt
     rrbt_lib
     ${OMPL_LIBRARIES}
     ${Boost_LIBRARIES}
     yaml-cpp
 )
 
-add_executable (benchmark_2dsimple_fixedK benchmarks/benchmark_tro_2dsimple_fixedK.cpp)
+add_executable (fixedK benchmarks/benchmark_fixedK.cpp)
 
-target_link_libraries (benchmark_2dsimple_fixedK
+target_link_libraries (fixedK
     rrbt_lib
     ${OMPL_LIBRARIES}
     ${Boost_LIBRARIES}
     yaml-cpp
 )
-
-# add_executable (euc src/euclidean_main.cpp)
-
-# target_link_libraries (euc
-#     rrbt_lib
-#     ${OMPL_LIBRARIES}
-#     ${Boost_LIBRARIES}
-# )
-
-# add_executable(createobstacles scenario1_create.cpp)

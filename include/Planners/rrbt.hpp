@@ -49,12 +49,14 @@
 #include <utility>
 #include <list>
 
-#include "../Spaces/R2BeliefSpace.h"
+#include "Spaces/R2BeliefSpace.h"
+#include "Spaces/R3BeliefSpace.h"
 #include "ompl/control/spaces/RealVectorControlSpace.h"
 
 #include <eigen3/Eigen/Dense>
 
 typedef Eigen::Matrix<double, 2, 2, Eigen::DontAlign> Mat;
+typedef Eigen::Matrix<double, 3, 3, Eigen::DontAlign> Mat3;
 
 namespace ompl
 {
@@ -377,8 +379,14 @@ namespace ompl
                 measurementRegion_ = measurementRegion;
             }
 
+            void setDimensions(double dim)
+            {
+                dimensions_ = dim;
+            }
 
             Eigen::Matrix2d A_ol_, B_ol_, A_cl_, B_cl_, A_cl_d_, B_cl_d_;
+
+            Eigen::Matrix3d A_ol_3_, B_ol_3_, A_cl_3_, B_cl_3_, A_cl_d_3_, B_cl_d_3_;
 
             unsigned int n_obstacles_;
             std::vector<Eigen::Matrix<float, 6, 3> > A_list_;
@@ -419,6 +427,8 @@ namespace ompl
 
                 double y;
 
+                double z;
+
                 Belief *parent{nullptr};
                 
                 Motion *motion{nullptr};
@@ -429,8 +439,8 @@ namespace ompl
 
                 bool inGoal{false};
 
-                Eigen::Matrix2d sigma_;
-                Eigen::Matrix2d lambda_{Eigen::Matrix2d::Zero()};
+                Eigen::MatrixXd sigma_;
+                Eigen::MatrixXd lambda_;
 
                 bool deleted = false;
 
@@ -557,6 +567,8 @@ namespace ompl
 
             bool checkMotion(Motion * nmotion, base::State* state);
 
+            bool checkMotion3D(Motion * nmotion, base::State* state);
+
             unsigned int mypropagateWhileValid(const Belief* belief, const Control *control,
                                                                   int steps, Belief* result) const;
 
@@ -565,7 +577,11 @@ namespace ompl
 
             void mypropagate(const Belief *belief, const control::Control* control, const double duration, Belief *result) const;
 
+            void mypropagate3D(const Belief *belief, const control::Control* control, const double duration, Belief *result) const;
+
             bool myisValid(const Belief *state) const;
+
+            bool myisValid3D(const Belief *state) const;
 
             bool inCollision(const Belief *belief, 
                          double X1, double Y1, 
@@ -690,11 +706,17 @@ namespace ompl
             double R_{0.1};
             double R_bad_{0.3};
 
+            int dimensions_{2};
+
             std::vector<std::vector<double>> measurementRegion_;
 
             Eigen::Matrix2d I = Eigen::MatrixXd::Identity(2, 2);
             Eigen::Matrix2d H = Eigen::MatrixXd::Identity(2, 2);
             Eigen::Matrix2d F = Eigen::MatrixXd::Identity(2, 2);
+
+            Eigen::Matrix3d I3 = Eigen::MatrixXd::Identity(2, 2);
+            Eigen::Matrix3d H3 = Eigen::MatrixXd::Identity(2, 2);
+            Eigen::Matrix3d F3 = Eigen::MatrixXd::Identity(2, 2);
 
             Eigen::MatrixXd Q;
 

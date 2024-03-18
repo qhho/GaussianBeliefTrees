@@ -3,11 +3,12 @@
  *
  * Description:
  */
-#include "3DUnicyclePropagator.h"
+#include "StatePropagators/3DUnicyclePropagator.h"
 #include <boost/math/special_functions/erf.hpp>
 
-DynUnicycleControlSpace3D::DynUnicycleControlSpace3D(const oc::SpaceInformationPtr &si, const double process_noise) : oc::StatePropagator(si) {
+DynUnicycleControlSpace3D::DynUnicycleControlSpace3D(const oc::SpaceInformationPtr &si, double processNoise, double R, double R_bad, double K_default, std::vector<std::vector<double > > measurement_regions) : oc::StatePropagator(si) {
     
+    myK_ = K_default;
     // std::cout << "trying this" << std::endl;
     forward_acceleration_bounds_.push_back(-1.0);
     forward_acceleration_bounds_.push_back(1.0);
@@ -96,7 +97,6 @@ DynUnicycleControlSpace3D::DynUnicycleControlSpace3D(const oc::SpaceInformationP
 
     A << -0, -1000, 0, 1000, 0, 0, -0, 1000, 0, -1000, -0, 0, 0, 0, -10000, -0, 0, 10000; A_list_.push_back(A);
     B << 0, 100000, 100000, 0, -100000, 200000; B_list_.push_back(B);
-    // erf_inv_result_ = 
 
     // set a 2 by 2 matrix for sigma uncertainty propagation
     A_cl_d_33_.resize(3, 3);
@@ -109,10 +109,10 @@ DynUnicycleControlSpace3D::DynUnicycleControlSpace3D(const oc::SpaceInformationP
     A_cl_d_33_(1, 2) = A_cl_d_(2, 4);
     A_cl_d_33_(2, 1) = A_cl_d_(4, 2);
     A_cl_d_33_(2, 2) = A_cl_d_(4, 4);
-    // std::cout << "trying this" << std::endl;
+
     // extract uncertainty propagation Cxx, Cyy, Czz (eq 3.12 MSc)
-    double processNoise = process_noise*duration_; //process noise is 0.0 for scenario
-    Q = pow(processNoise, 2) * Eigen::MatrixXd::Identity(dimensions_, dimensions_);
+    // double processNoise = process_noise*duration_; //process noise is 0.0 for scenario
+    // Q = pow(processNoise, 2) * Eigen::MatrixXd::Identity(dimensions_, dimensions_);
 
     A_BK_(0,0) = 0.9;
     A_BK_(1,1) = 0.9;
@@ -123,7 +123,12 @@ DynUnicycleControlSpace3D::DynUnicycleControlSpace3D(const oc::SpaceInformationP
     A_BK_(1,2) = 0.0;
     A_BK_(2,0) = 0.0;
     A_BK_(2,1) = 0.0;
-    // std::cout << "trying this" << std::endl;
+
+    Q = pow(processNoise, 2) * Eigen::MatrixXd::Identity(dimensions_, dimensions_);
+    R_ = R*R;
+    R_bad_ = R_bad*R_bad;
+
+    measurementRegions_ = measurement_regions;
 }
 
 void saturate3d(double &value, const double &min_value, const double &max_value) {
@@ -194,14 +199,11 @@ void DynUnicycleControlSpace3D::propagate(const ob::State *start, const oc::Cont
     yaw_reference = control_css->as<oc::RealVectorControlSpace::ControlType>(1)->values[0];
     surge_reference = control_css->as<oc::RealVectorControlSpace::ControlType>(2)->values[0];
     heave_reference = control_css->as<oc::RealVectorControlSpace::ControlType>(3)->values[0];
+    double K_sample = control_css->as<oc::RealVectorControlSpace::ControlType>(4)->values[0];
 
     //=========================================================================
     // Compute control inputs (dot(dot(x)) dot(dot(y)) dot(dot(z))) with PD controller
     //=========================================================================
-    // does it make sense to try to achieve the velocity of the randomly sampled state?
-    // u_0 = B_cl_d_(0, 0) * (x_pose_reference - x_pose) + B_cl_d_(0, 1) * (surge_reference * cos(yaw_reference) - surge * cos_y);
-    // u_1 = B_cl_d_(2, 2) * (y_pose_reference - y_pose) + B_cl_d_(2, 3) * (surge_reference * sin(yaw_reference) - surge * sin_y);
-    // u_2 = B_cl_d_(4, 4) * (z_pose_reference - z_pose) + B_cl_d_(4, 5) * (heave_reference - heave);
 
     u_0 = B_cl_d_(0, 0) * (x_pose_reference - x_pose) + B_cl_d_(0, 1) * (surge_reference * cos(yaw_reference) - surge * cos_y);
     u_1 = B_cl_d_(2, 2) * (y_pose_reference - y_pose) + B_cl_d_(2, 3) * (surge_reference * sin(yaw_reference) - surge * sin_y);
@@ -242,11 +244,6 @@ void DynUnicycleControlSpace3D::propagate(const ob::State *start, const oc::Cont
     result_css->as<ob::RealVectorStateSpace::StateType>(2)->values[0] = surge_final;
     result_css->as<ob::RealVectorStateSpace::StateType>(3)->values[0] = heave_final;
 
-    // if (z_pose > 10.0){
-    //     std::cout << z_pose << std::endl;
-    // }
-    // std::cout << z_pose + duration * heave_final << std::endl;
-
     //=========================================================================
     // Propagate covariance in the equivalent closed loop system
     //=========================================================================
@@ -257,24 +254,32 @@ void DynUnicycleControlSpace3D::propagate(const ob::State *start, const oc::Cont
     Eigen::Matrix3d sigma_pred = A_cl_d_33_*sigma_from*A_cl_d_33_ + Q;
 
     // std::cout << A_cl_d_33_ << std::endl;
-    Mat K, lambda_pred;
+    Mat3 K, lambda_pred;
 
     Eigen::Matrix3f PX; PX.setZero();
     PX(0,0) = sigma_pred(0,0);
     PX(1,1) = sigma_pred(1,1);
     PX(2,2) = sigma_pred(2,2);
 
+    Eigen::Matrix3d A_cl_sample; A_cl_sample.setZero();
+    A_cl_sample(0, 0) = K_sample;
+    A_cl_sample(1, 1) = K_sample;
+    A_cl_sample(2, 2) = K_sample;
+
     if (TheHyperplaneCCValidityChecker(A_list_.at(0), B_list_.at(0), result_css_rvs_pose->getX(), result_css_rvs_pose->getY(), result_css_rvs_pose->getZ(), PX)) {
     // if (result_css_rvs_pose->getZ() > 11.0){ //scenario 2
-        Mat R = 0.5*Eigen::Matrix3d::Identity();
+        Mat3 R = R_*Eigen::Matrix3d::Identity();
         Eigen::Matrix3d S = (H * sigma_pred * H.transpose())+ R;
         K = (sigma_pred * H.transpose()) * S.inverse();
-        lambda_pred = A_BK_*lambda_from*A_BK_;
-        // std::cout << "measurement!" << std::endl;
+        lambda_pred = A_cl_sample*lambda_from*A_cl_sample;
     }
     else{
-        K = Eigen::Matrix3d::Zero(dimensions_, dimensions_);
-        lambda_pred = lambda_from;
+        Mat3 R = R_bad_*Eigen::Matrix3d::Identity();
+        Eigen::Matrix3d S = (H * sigma_pred * H.transpose())+ R;
+        K = (sigma_pred * H.transpose()) * S.inverse();
+        lambda_pred = A_cl_sample*lambda_from*A_cl_sample;
+        // K = Eigen::Matrix3d::Zero(dimensions_, dimensions_);
+        // lambda_pred = lambda_from;
     }
     Eigen::Matrix3d sigma_to = (I - (K*H)) * sigma_pred;
     Eigen::Matrix3d lambda_to = lambda_pred + K*H*sigma_pred;

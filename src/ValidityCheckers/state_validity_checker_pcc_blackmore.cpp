@@ -1,6 +1,6 @@
 #include "ValidityCheckers/state_validity_checker_pcc_blackmore.hpp"
 
-StateValidityCheckerPCCBlackmore::StateValidityCheckerPCCBlackmore(const std::string &scene_id, const ob::SpaceInformationPtr &si, const double p_safe) :
+StateValidityCheckerPCCBlackmore::StateValidityCheckerPCCBlackmore(const std::string &scene_id, const ob::SpaceInformationPtr &si, const double p_safe, int sysType) :
 	ob::StateValidityChecker(si) {
 	si_ = si;
 	p_collision_ = 1 - p_safe;
@@ -8,6 +8,8 @@ StateValidityCheckerPCCBlackmore::StateValidityCheckerPCCBlackmore(const std::st
 	OMPL_INFORM("Using P collision of %f", p_collision_);
 
 	Scene scene_ = Scene(scene_id);
+
+	sysType_ = sysType;
 
 	n_obstacles_ = scene_.n_obstacles_;
 	A_list_.resize(n_obstacles_); A_list_ = scene_.A_list_;
@@ -71,28 +73,60 @@ bool StateValidityCheckerPCCBlackmore::isValid(const ob::State *state) const {
 	// 	return false;
 	// }
 
-    const double x = state->as<R2BeliefSpace::StateType>()->getX();
-    const double y = state->as<R2BeliefSpace::StateType>()->getY();
-    if (x > 100.0 || x < 0.0 || y < 0.0 || y > 100.0){
-        return false;
-    }
-
-	//=========================================================================
-	// Extract the component of the state and cast it to what we expect
-	//=========================================================================
 	double x_pose, y_pose, z_pose;
 	Eigen::MatrixXf PX(3, 3); PX.setZero();
 
-	x_pose = state->as<R2BeliefSpace::StateType>()->getX();
-	y_pose = state->as<R2BeliefSpace::StateType>()->getY();
-	z_pose = 4.0;
-    PX(0,0) = state->as<R2BeliefSpace::StateType>()->getCovariance()(0,0);
-    PX(1,1) = state->as<R2BeliefSpace::StateType>()->getCovariance()(1,1);
-    PX(2,2) = 0.000001;
-
-	//=========================================================================
-	// Probabilistic collision checker
-	//=========================================================================
+	if (sysType_ == 0)
+	{
+		const double x = state->as<R2BeliefSpace::StateType>()->getX();
+		const double y = state->as<R2BeliefSpace::StateType>()->getY();
+		if (x > 100.0 || x < 0.0 || y < 0.0 || y > 100.0){
+			return false;
+		}
+		x_pose = state->as<R2BeliefSpace::StateType>()->getX();
+		y_pose = state->as<R2BeliefSpace::StateType>()->getY();
+		z_pose = 4.0;
+		PX(0,0) = state->as<R2BeliefSpace::StateType>()->getCovariance()(0,0);
+		PX(1,1) = state->as<R2BeliefSpace::StateType>()->getCovariance()(1,1);
+		PX(2,2) = 0.000001;
+	}
+	else if (sysType_ == 1)
+	{
+		x_pose = state->as<R3BeliefSpace::StateType>()->getX();
+		y_pose = state->as<R3BeliefSpace::StateType>()->getY();
+		z_pose = state->as<R3BeliefSpace::StateType>()->getZ();
+		if (x_pose > 100.0 || x_pose < 0.0 || y_pose < 0.0 || y_pose > 100.0 || z_pose < 0.0 || z_pose > 100.0){
+			return false;
+		}
+		PX(0,0) = state->as<R3BeliefSpace::StateType>()->getCovariance()(0,0);
+		PX(1,1) = state->as<R3BeliefSpace::StateType>()->getCovariance()(1,1);
+		PX(2,2) = state->as<R3BeliefSpace::StateType>()->getCovariance()(1,1);
+	}
+	else if (sysType_ == 2)
+	{
+		x_pose = state->as<ob::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getX();
+		y_pose = state->as<ob::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getY();
+		if (x_pose > 100.0 || x_pose < 0.0 || y_pose < 0.0 || y_pose > 100.0){
+			return false;
+		}
+		PX(0,0) = state->as<ob::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getCovariance()(0,0);
+		PX(1,1) = state->as<ob::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getCovariance()(1,1);
+		PX(2,2) = 0.00000001;
+	}
+	else if (sysType_ == 3)
+	{
+		x_pose = state->as<ob::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getX();
+		y_pose = state->as<ob::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getY();
+		z_pose = state->as<ob::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getZ();
+		if (x_pose > 100.0 || x_pose < 0.0 || y_pose < 0.0 || y_pose > 100.0 || z_pose < 0.0 || z_pose > 100.0){
+			return false;
+		}
+		PX(0,0) = state->as<ob::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getCovariance()(0,0);
+		PX(1,1) = state->as<ob::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getCovariance()(1,1);
+		PX(2,2) = state->as<ob::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getCovariance()(2,2);
+	}
+	else
+		OMPL_ERROR("Unknown system type");
 	bool valid = false;
 
 	if (n_obstacles_ == 0) {

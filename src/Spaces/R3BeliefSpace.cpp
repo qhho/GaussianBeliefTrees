@@ -1,4 +1,4 @@
-#include "R3BeliefSpace.h"
+#include "Spaces/R3BeliefSpace.h"
 #include <unsupported/Eigen/MatrixFunctions>
 
 double R3BeliefSpace::StateType::meanNormWeight_  = -1;
@@ -59,6 +59,9 @@ double R3BeliefSpace::distance(const State* state1, const State *state2) const /
     // return pow(dx*dx+dy*dy, 0.5);
     Eigen::Matrix3d cov1 = state1->as<StateType>()->getCovariance();
     Eigen::Matrix3d cov2 = state2->as<StateType>()->getCovariance();
+
+    if (sqrt(dx*dx+dy*dy+dz*dz + (cov1 + cov2 - 2*(cov2.sqrt()*cov1*cov2.sqrt()).sqrt()).trace()) < 1e-5)
+        return 0.0;
     return sqrt(dx*dx+dy*dy+dz*dz + (cov1 + cov2 - 2*(cov2.sqrt()*cov1*cov2.sqrt()).sqrt()).trace());
 }
 

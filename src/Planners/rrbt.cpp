@@ -36,6 +36,7 @@
 
 #include "Planners/rrbt.hpp"
 #include <algorithm>
+#include <initializer_list>
 #include <boost/math/constants/constants.hpp>
 #include <limits>
 #include <vector>
@@ -276,11 +277,12 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
             si_->copyState(motion->state, st);
             siC_->nullControl(motion->control_);
             motion->cost = opt_->identityCost();
-            // std::cout << "belief" << std::endl;
+            
             auto *nbelief = new Belief();
             nbelief->motion = motion;
-            nbelief->sigma_ = 2.0*Eigen::MatrixXd::Identity(2,2);
-            nbelief->lambda_ = 0.0*Eigen::MatrixXd::Identity(2,2);
+
+            nbelief->sigma_ = 2.0*Eigen::MatrixXd::Identity(dimensions_,dimensions_);
+            nbelief->lambda_ = 0.0*Eigen::MatrixXd::Identity(dimensions_,dimensions_);
             nbelief->cost = motion->cost;
             nbelief->x = motion->state->as<ob::RealVectorStateSpace::StateType>()->values[0];
             nbelief->y = motion->state->as<ob::RealVectorStateSpace::StateType>()->values[1];
@@ -408,7 +410,15 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
 
         // std::cout << "NEW MOTION CANDIDATE " << dstate->as<ob::RealVectorStateSpace::StateType>()->values[0] << " " << dstate->as<ob::RealVectorStateSpace::StateType>()->values[1] << std::endl;
         // Check if the motion between the nearest state and the state to add is valid
-        if (checkMotion(nmotion, dstate))
+
+
+        bool checked = false;
+        if (dimensions_ == 2)
+            checked = checkMotion(nmotion, dstate);
+        else
+            checked = checkMotion3D(nmotion, dstate);
+
+        if (checked)
         {
             // create a motion
             auto *motion = new Motion(siC_);
@@ -494,20 +504,36 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
                         si_->copyState(motion->state, belief->motion->state);
                         double duration = 0.0;
                         Control *rctrl = motion->control_;
-                        const ompl::base::RealVectorBounds &bounds = siC_->getControlSpace()->as<ompl::control::RealVectorControlSpace>()->getBounds();
-                        const double diff_x = nbh_queue[i]->state->as<ob::RealVectorStateSpace::StateType>()->values[0] - belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[0];
-                        const double diff_y = nbh_queue[i]->state->as<ob::RealVectorStateSpace::StateType>()->values[1] - belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[1];
+                        unsigned int cd;
 
-                        unsigned int cd = ceil(std::max(abs(diff_x), abs(diff_y))/(bounds.high[0]*stepSize_));
+                        if (dimensions_ == 2)
+                        {
+                            const ompl::base::RealVectorBounds &bounds = siC_->getControlSpace()->as<ompl::control::RealVectorControlSpace>()->getBounds();
+                            const double diff_x = nbh_queue[i]->state->as<ob::RealVectorStateSpace::StateType>()->values[0] - belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[0];
+                            const double diff_y = nbh_queue[i]->state->as<ob::RealVectorStateSpace::StateType>()->values[1] - belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[1];
+                            cd = ceil(std::max(abs(diff_x), abs(diff_y))/(bounds.high[0]*stepSize_));
 
-                        // std::cout << cd << std::endl;
-
-                        if (cd > siC_->getMaxControlDuration() || std::max(abs(diff_x), abs(diff_y)) > maxDistance_){
+                            if (cd > siC_->getMaxControlDuration() || std::max(abs(diff_x), abs(diff_y)) > maxDistance_){
                             continue;
+                            }
+                            rctrl->as<RealVectorControlSpace::ControlType>()->values[0] = diff_x/(cd*stepSize_);
+                            rctrl->as<RealVectorControlSpace::ControlType>()->values[1] = diff_y/(cd*stepSize_);
                         }
+                        else if (dimensions_ == 3)
+                        {
+                            const ompl::base::RealVectorBounds &bounds = siC_->getControlSpace()->as<ompl::control::RealVectorControlSpace>()->getBounds();
+                            const double diff_x = nbh_queue[i]->state->as<ob::RealVectorStateSpace::StateType>()->values[0] - belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[0];
+                            const double diff_y = nbh_queue[i]->state->as<ob::RealVectorStateSpace::StateType>()->values[1] - belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[1];
+                            const double diff_z = nbh_queue[i]->state->as<ob::RealVectorStateSpace::StateType>()->values[2] - belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[2];
+                            cd = ceil(std::max({abs(diff_x), abs(diff_y), abs(diff_z)})/(bounds.high[0]*stepSize_));
+                            rctrl->as<RealVectorControlSpace::ControlType>()->values[0] = diff_x/(cd*stepSize_);
+                            rctrl->as<RealVectorControlSpace::ControlType>()->values[1] = diff_y/(cd*stepSize_);
+                            rctrl->as<RealVectorControlSpace::ControlType>()->values[2] = diff_z/(cd*stepSize_);
+                        }
+                        else
+                            OMPL_ERROR("Invalid dimensions");
 
-                        rctrl->as<RealVectorControlSpace::ControlType>()->values[0] = diff_x/(cd*stepSize_);
-                        rctrl->as<RealVectorControlSpace::ControlType>()->values[1] = diff_y/(cd*stepSize_);
+
 
                         Belief *dbelief = new Belief();
 
@@ -528,6 +554,10 @@ ompl::base::PlannerStatus ompl::control::RRBT::solve(const base::PlannerTerminat
                             //TODO: something wrong with propagation...
                             dbelief->x = dbelief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[0];
                             dbelief->y = dbelief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[1];
+
+                            if (dimensions_ == 3)
+                                dbelief->z = dbelief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[2];
+
                             // dbelief->incCost = opt_->motionCost(dbelief->motion->state, belief->motion->state); //update inccost of new belief
                             dbelief->incCost = Cost(cost);
                             dbelief->cost = opt_->combineCosts(belief->cost, dbelief->incCost); //update cost of new belief
@@ -906,6 +936,47 @@ bool ompl::control::RRBT::checkMotion(Motion * nmotion, State* dstate)
     return false;
 }
 
+
+bool ompl::control::RRBT::checkMotion3D(Motion * nmotion, State* dstate)
+{
+    double x = dstate->as<ob::RealVectorStateSpace::StateType>()->values[0];
+    double y = dstate->as<ob::RealVectorStateSpace::StateType>()->values[1];
+    double z = dstate->as<ob::RealVectorStateSpace::StateType>()->values[2];
+    if (x > 100.0 || x < 0.0 || y < 0.0 || y > 100.0 || z < 0.0 || z > 100.0){
+        return false;
+    }
+
+    const ompl::base::RealVectorBounds &bounds = siC_->getControlSpace()->as<ompl::control::RealVectorControlSpace>()->getBounds();
+    const double diff_x = (dstate->as<ob::RealVectorStateSpace::StateType>()->values[0] - nmotion->state->as<ob::RealVectorStateSpace::StateType>()->values[0]);
+    const double diff_y = (dstate->as<ob::RealVectorStateSpace::StateType>()->values[1] - nmotion->state->as<ob::RealVectorStateSpace::StateType>()->values[1]);
+    const double diff_z = (dstate->as<ob::RealVectorStateSpace::StateType>()->values[2] - nmotion->state->as<ob::RealVectorStateSpace::StateType>()->values[2]);
+
+    unsigned int cd = ceil(std::max({abs(diff_x), abs(diff_y), abs(diff_z)})/(bounds.high[0]*stepSize_));
+    auto *motion = new Motion(siC_);
+    siC_->nullControl(motion->control_);
+    Control *rctrl = motion->control_;
+    rctrl->as<RealVectorControlSpace::ControlType>()->values[0] = diff_x/(cd*stepSize_);
+    rctrl->as<RealVectorControlSpace::ControlType>()->values[1]= diff_y/(cd*stepSize_);
+    rctrl->as<RealVectorControlSpace::ControlType>()->values[2]= diff_z/(cd*stepSize_);
+    auto *result = new Belief();
+    for (auto it:nmotion->beliefs){
+        // std::cout << "propagating from: "<< it->x << " " << it->y << " to " << dstate->as<ob::RealVectorStateSpace::StateType>()->values[0] << " " << dstate->as<ob::RealVectorStateSpace::StateType>()->values[1] << std::endl;
+        unsigned int propCd = mypropagateWhileValid(it, rctrl, cd, result);
+        // result->x  = dstate->as<ob::RealVectorStateSpace::StateType>()->values[0];
+        // result->y = dstate->as<ob::RealVectorStateSpace::StateType>()->values[1];
+        if (propCd == cd && myisValid(result)){
+            return true;
+        }
+    }
+
+    delete result;
+    si_->freeState(motion->state);
+    siC_->freeControl(motion->control_);
+    delete motion;
+
+    return false;
+}
+
 unsigned int ompl::control::RRBT::mypropagateWhileValid(const Belief* belief, const Control *control,
                                                                   int steps, Belief* result) const
 {
@@ -922,7 +993,9 @@ unsigned int ompl::control::RRBT::mypropagateWhileValid(const Belief* belief, co
     double signedStepSize = steps > 0 ? stepSize_ : -stepSize_;
     steps = abs(steps);
 
-    // perform the first step of propagation
+    if (dimensions_ == 2)
+    {
+        // perform the first step of propagation
     mypropagate(belief, control, signedStepSize, result);
 
     // if we found a valid state after one step, we can go on
@@ -965,6 +1038,56 @@ unsigned int ompl::control::RRBT::mypropagateWhileValid(const Belief* belief, co
         result->incCost = belief->incCost;
         result->sigma_ = belief->sigma_;
         result->lambda_ = belief->lambda_;
+    }
+    
+    }
+    else if (dimensions_ == 3)
+    {
+        // perform the first step of propagation
+
+        mypropagate3D(belief, control, signedStepSize, result);
+
+        // if we found a valid state after one step, we can go on
+        if (myisValid3D(result))
+        {
+            Belief *temp1 = result;
+            Belief *temp2 = new Belief();
+            Belief *toDelete = temp2;
+            unsigned int r = steps;
+
+            // for the remaining number of steps
+            for (int i = 1; i < steps; ++i)
+            {
+                mypropagate3D(temp1, control, signedStepSize, temp2);
+                if (myisValid3D(temp2))
+                    std::swap(temp1, temp2);
+                else
+                {
+                    // the last valid state is temp1;
+                    r = i;
+                    break;
+                }
+            }
+
+            // if we finished the for-loop without finding an invalid state, the last valid state is temp1
+            // make sure result contains that information
+            if (result->x != temp1->x && result->y != temp1->y){
+                result->x = temp1->x;
+                result->y = temp1->y;
+            }
+            // free the temporary memory
+            delete toDelete;
+
+            return r;
+        }
+        // if the first propagation step produced an invalid step, return 0 steps
+        // the last valid state is the starting one (assumed to be valid)
+        if (result->x != belief->x && result->y != belief->y && result->z != belief->z){
+            result->cost = belief->cost;
+            result->incCost = belief->incCost;
+            result->sigma_ = belief->sigma_;
+            result->lambda_ = belief->lambda_;
+        }
     }
     return 0;
 }
@@ -988,68 +1111,134 @@ unsigned int ompl::control::RRBT::mypropagateAndCostWhileValid(const Belief* bel
     double signedStepSize = steps > 0 ? stepSize_ : -stepSize_;
     steps = abs(steps);
 
-    // perform the first step of propagation
-    mypropagate(belief, control, signedStepSize, result);
-
-    cost += expectedPathLengthmotionCost(belief, result);
-
-    // std::cout << "INITIAL BELIEF: " << belief->x << " " << belief->y << std::endl;
-    // std::cout << "Steps: " << steps << std::endl;
-
-    // if we found a valid state after one step, we can go on
-    if (myisValid(result))
+    if (dimensions_ == 2)
     {
-        Belief *temp1 = result;
-        Belief *temp2 = new Belief();
-        Belief *toDelete = temp2;
-        unsigned int r = steps;
+        // perform the first step of propagation
+        mypropagate(belief, control, signedStepSize, result);
 
-        // for the remaining number of steps
-        for (int i = 1; i < steps; ++i)
+        cost += expectedPathLengthmotionCost(belief, result);
+
+        // std::cout << "INITIAL BELIEF: " << belief->x << " " << belief->y << std::endl;
+        // std::cout << "Steps: " << steps << std::endl;
+
+        // if we found a valid state after one step, we can go on
+        if (myisValid(result))
         {
-            mypropagate(temp1, control, signedStepSize, temp2);
-            // std::cout << temp2->x << " " << temp2->y << std::endl;
-            if (myisValid(temp2))
-            {
-                // std::cout << "valid" << std::endl;
-                cost += expectedPathLengthmotionCost(temp1, temp2);
-                std::swap(temp1, temp2);
-            }
-            else
-            {
-                // the last valid state is temp1;
-                r = i;
-                // std::cout << "breaking" << std::endl;
-                break;
-            }
-        }
+            Belief *temp1 = result;
+            Belief *temp2 = new Belief();
+            Belief *toDelete = temp2;
+            unsigned int r = steps;
 
-        // if we finished the for-loop without finding an invalid state, the last valid state is temp1
-        // make sure result contains that information
-        if (result->x != temp1->x && result->y != temp1->y){
-            // std::cout << temp1->x << " " << temp1->y << std::endl;
-            result->x = temp1->x;
-            result->y = temp1->y;
+            // for the remaining number of steps
+            for (int i = 1; i < steps; ++i)
+            {
+                mypropagate(temp1, control, signedStepSize, temp2);
+                // std::cout << temp2->x << " " << temp2->y << std::endl;
+                if (myisValid(temp2))
+                {
+                    // std::cout << "valid" << std::endl;
+                    cost += expectedPathLengthmotionCost(temp1, temp2);
+                    std::swap(temp1, temp2);
+                }
+                else
+                {
+                    // the last valid state is temp1;
+                    r = i;
+                    // std::cout << "breaking" << std::endl;
+                    break;
+                }
+            }
+
+            // if we finished the for-loop without finding an invalid state, the last valid state is temp1
+            // make sure result contains that information
+            if (result->x != temp1->x && result->y != temp1->y){
+                // std::cout << temp1->x << " " << temp1->y << std::endl;
+                result->x = temp1->x;
+                result->y = temp1->y;
+                // std::cout << result->x << " " << result->y << std::endl;
+            }
+            // free the temporary memory
+            delete toDelete;
             // std::cout << result->x << " " << result->y << std::endl;
+            // if (r == steps)
+            // {
+            // std::cout << "FINAL BELIEF: " << result->x << " " << result->y << std::endl;
+            //     std::cout << "COST " << cost << std::endl;
+            // }
+            return r;
         }
-        // free the temporary memory
-        delete toDelete;
-        // std::cout << result->x << " " << result->y << std::endl;
-        // if (r == steps)
-        // {
-        // std::cout << "FINAL BELIEF: " << result->x << " " << result->y << std::endl;
-        //     std::cout << "COST " << cost << std::endl;
-        // }
-        return r;
+        // if the first propagation step produced an invalid step, return 0 steps
+        // the last valid state is the starting one (assumed to be valid)
+        if (result->x != belief->x && result->y != belief->y){
+            result->cost = belief->cost;
+            result->incCost = belief->incCost;
+            result->sigma_ = belief->sigma_;
+            result->lambda_ = belief->lambda_;
+        }
     }
-    // if the first propagation step produced an invalid step, return 0 steps
-    // the last valid state is the starting one (assumed to be valid)
-    if (result->x != belief->x && result->y != belief->y){
-        result->cost = belief->cost;
-        result->incCost = belief->incCost;
-        result->sigma_ = belief->sigma_;
-        result->lambda_ = belief->lambda_;
+    else
+    {
+        // perform the first step of propagation
+        mypropagate3D(belief, control, signedStepSize, result);
+
+        cost += expectedPathLengthmotionCost(belief, result);
+
+        // if we found a valid state after one step, we can go on
+        if (myisValid3D(result))
+        {
+            Belief *temp1 = result;
+            Belief *temp2 = new Belief();
+            Belief *toDelete = temp2;
+            unsigned int r = steps;
+
+            // for the remaining number of steps
+            for (int i = 1; i < steps; ++i)
+            {
+                mypropagate3D(temp1, control, signedStepSize, temp2);
+                // std::cout << temp2->x << " " << temp2->y << std::endl;
+                if (myisValid3D(temp2))
+                {
+                    // std::cout << "valid" << std::endl;
+                    cost += expectedPathLengthmotionCost(temp1, temp2);
+                    std::swap(temp1, temp2);
+                }
+                else
+                {
+                    // the last valid state is temp1;
+                    r = i;
+                    break;
+                }
+            }
+
+            // if we finished the for-loop without finding an invalid state, the last valid state is temp1
+            // make sure result contains that information
+            if (result->x != temp1->x && result->y != temp1->y && result->z != temp1->z){ //TODO: check if this is correct
+                // std::cout << temp1->x << " " << temp1->y << std::endl;
+                result->x = temp1->x;
+                result->y = temp1->y;
+                result->z = temp1->z;
+                // std::cout << result->x << " " << result->y << std::endl;
+            }
+            // free the temporary memory
+            delete toDelete;
+            // std::cout << result->x << " " << result->y << std::endl;
+            // if (r == steps)
+            // {
+            // std::cout << "FINAL BELIEF: " << result->x << " " << result->y << std::endl;
+            //     std::cout << "COST " << cost << std::endl;
+            // }
+            return r;
+        }
+        // if the first propagation step produced an invalid step, return 0 steps
+        // the last valid state is the starting one (assumed to be valid)
+        if (result->x != belief->x && result->y != belief->y && result->z != belief->z){
+            result->cost = belief->cost;
+            result->incCost = belief->incCost;
+            result->sigma_ = belief->sigma_;
+            result->lambda_ = belief->lambda_;
+        }
     }
+    
     return 0;
 }
 
@@ -1122,6 +1311,49 @@ void ompl::control::RRBT::mypropagate(const Belief *belief, const control::Contr
     }
     Mat sigma_to = (I - (K*H)) * sigma_pred;
     Mat lambda_to = lambda_pred + K*H*sigma_pred;
+    result->sigma_ = sigma_to;
+    result->lambda_ = lambda_to;
+}
+
+
+void ompl::control::RRBT::mypropagate3D(const Belief *belief, const control::Control* control, const double duration, Belief *result) const
+{
+    double x_pose = belief->x;
+    double y_pose = belief->y;
+    double z_pose = belief->z;
+
+    double u_0 = control->as<oc::RealVectorControlSpace::ControlType>()->values[0];
+    double u_1 = control->as<oc::RealVectorControlSpace::ControlType>()->values[1];
+    double u_2 = control->as<oc::RealVectorControlSpace::ControlType>()->values[2];
+
+    double x_new = x_pose + duration * u_0;
+    double y_new = y_pose + duration * u_1;
+    double z_new = z_pose + duration * u_2;
+    result->x = x_new;
+    result->y = y_new;
+    result->z = z_new;
+
+    Eigen::Matrix3d sigma_from = belief->sigma_;
+    Eigen::Matrix3d lambda_from = belief->lambda_;
+    Eigen::Matrix3d sigma_pred = F3*sigma_from*F3 + Q;
+
+    Mat3 lambda_pred, K;
+
+    if (x_new > measurementRegion_[0][0] && x_new < measurementRegion_[0][1] && y_new < measurementRegion_[1][1] && y_new < measurementRegion_[1][1] && z_new < measurementRegion_[2][0] && z_new < measurementRegion_[2][1])
+    {
+        Mat3 R = R_*Eigen::MatrixXd::Identity(3, 3);
+        Mat3 S = (H3 * sigma_pred * H3.transpose()) + R;
+        K = (sigma_pred * H3.transpose()) * S.inverse();
+        lambda_pred = A_cl_3_*lambda_from*A_cl_3_;
+    }
+    else{
+        Mat3 R = R_bad_*Eigen::MatrixXd::Identity(3, 3);
+        Mat3 S = (H3 * sigma_pred * H3.transpose()) + R;
+        K = (sigma_pred * H3.transpose()) * S.inverse();
+        lambda_pred = A_cl_3_*lambda_from*A_cl_3_;
+    }
+    Mat3 sigma_to = (I3 - (K*H3)) * sigma_pred;
+    Mat3 lambda_to = lambda_pred + K*H3*sigma_pred;
     result->sigma_ = sigma_to;
     result->lambda_ = lambda_to;
 }
@@ -1226,6 +1458,54 @@ bool ompl::control::RRBT::myisValid(const Belief *state) const
 	return valid;
 
     // return !(inCollision(state));
+}
+
+bool ompl::control::RRBT::myisValid3D(const Belief *state) const
+{
+    // for each obstacles
+    // check if mean + 2sigma is in collision
+    // return validity
+    // return true;
+    double x = state->x;
+    double y = state->y;
+    double z = state->z;
+    if (x > 100.0 || x < 0.0 || y < 0.0 || y > 100.0 || z < 0.0 || z > 100.0){
+        return false;
+    }
+
+    //=========================================================================
+	// Extract the component of the state and cast it to what we expect
+	//=========================================================================
+	// double z_pose;
+	Eigen::MatrixXf PX(3, 3); PX.setZero();
+
+    PX(0,0) = state->lambda_(0,0) + state->sigma_(0,0);
+    PX(1,1) = state->lambda_(1,1) + state->sigma_(1,1);
+    PX(2,2) = state->lambda_(2,2) + state->sigma_(2,2);
+	// PX(0,0) = state->as<ob::CompoundStateSpace::StateType>()->as<ob::RealVectorStateSpace::StateType>(4)->values[0];
+	// PX(1,1) = state->as<ob::CompoundStateSpace::StateType>()->as<ob::RealVectorStateSpace::StateType>(4)->values[1];
+	// PX(2,2) = state->as<ob::CompoundStateSpace::StateType>()->as<ob::RealVectorStateSpace::StateType>(4)->values[2];
+
+
+	//=========================================================================
+	// Probabilistic collision checker
+	//=========================================================================
+	bool valid = false;
+
+    if (n_obstacles_ == 0) {
+		valid = true;
+		goto exit_switch;
+	}
+
+	for (int o = 0; o < n_obstacles_; o++) {
+		if (not HyperplaneCCValidityChecker(A_list_.at(o), B_list_.at(o), x, y, z, PX)) {
+			goto exit_switch;
+		}
+	}
+	valid = true;
+
+	exit_switch:;
+	return valid;
 }
 
 bool ompl::control::RRBT::HyperplaneCCValidityChecker(const Eigen::MatrixXf &A, const Eigen::MatrixXf &B, const double &x_pose, const double &y_pose, const double &z_pose, const Eigen::MatrixXf &PX) const {
@@ -1847,17 +2127,27 @@ bool ompl::control::RRBT::dominates(Belief *a, Belief*b) const{
 
 double ompl::control::RRBT::expectedPathLengthmotionCost(const Belief *s1, const Belief *s2) const
 {
-    double x_diff = s1->x - s2->x;
-    double y_diff = s1->y - s2->y;
 
-    double diff_sq = x_diff*x_diff + y_diff*y_diff;
+    double diff_sq;
 
-    // std::cout << s1->x << " " << s1->y << "---" << s2->x << " " << s2->y << std::endl;
+    if (dimensions_ == 2)
+    {
+        double x_diff = s1->x - s2->x;
+        double y_diff = s1->y - s2->y;
 
-    // std::cout << x_diff << " " << y_diff << std::endl;
+        diff_sq = x_diff*x_diff + y_diff*y_diff;
 
-    // std::cout << s1->sigma_.trace() << " " << s1->lambda_.trace() << " " << s2->sigma_.trace() << " " << s2->lambda_.trace() << std::endl;
+        // return sqrt(diff_sq + s1->sigma_.trace() + s2->sigma_.trace() + s1->lambda_.trace() + s2->lambda_.trace());
+    }
+    else
+    {
+        double x_diff = s1->x - s2->x;
+        double y_diff = s1->y - s2->y;
+        double z_diff = s1->z - s2->z;
 
+        diff_sq = x_diff*x_diff + y_diff*y_diff + z_diff*z_diff;
+        
+    }
     return sqrt(diff_sq + s1->sigma_.trace() + s2->sigma_.trace() + s1->lambda_.trace() + s2->lambda_.trace());
 }
 
@@ -1883,10 +2173,17 @@ double ompl::control::RRBT::expectedPathLengthmotionCost(const Belief *s1, const
 // };
 
 double ompl::control::RRBT::distanceGoal(const oc::RRBT::Belief *st) const
-{
+{   
     double dx = st->x - goal_[0];
     double dy = st->y - goal_[1];
+    double dz;
     double radius = st->sigma_(0,0) + st->lambda_(0,0);
     radius = t_crit_*sqrt(radius);
+    if (dimensions_ == 3)
+    {
+        dz = st->z - goal_[2];
+        return sqrt(dx*dx + dy*dy + dz*dz + radius);
+    }
+
     return sqrt(dx*dx + dy*dy) + radius;
 }
