@@ -37,6 +37,7 @@ add_library (rrbt_lib
     src/Planners/SSBT.cpp
     src/Planners/mod_rrt.cpp
     src/Scene/Scene.cpp
+    src/System/System.cpp
     src/ValidityCheckers/StateValidityCheckerBlackmore.cpp
 )
 

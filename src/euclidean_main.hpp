@@ -39,6 +39,7 @@
 
 #include <limits>
 #include "Scene/Scene.h"
+#include "System/System.h"
 
 namespace ob = ompl::base;
 namespace og = ompl::geometric;
@@ -46,7 +47,7 @@ namespace oc = ompl::control;
 
 class EuclideanMain {
   public:
-    EuclideanMain(const std::string& scene_config);
+    EuclideanMain(const std::string& scene_config, const std::string& system_config);
     // ~EuclideanMain();
 
     ob::StateSpacePtr constructCSpace();
@@ -64,13 +65,14 @@ class EuclideanMain {
     void SaveSolutionPath(oc::PathControl path_control, ob::StateSpacePtr space, std::string pathstring);
 
     Scene scene_;
+    System system_;
 
 
   private:
     std::string scene_id_;
     bool SVC_first_iteration_;
     double planning_depth_, watchdog_period_, solving_time_, discretisation_time_, min_control_duration_, max_control_duration_, p_safe_, goal_tolerance_, confidence_level_;
-    std::vector<double> planning_bounds_x_, planning_bounds_y_, planning_bounds_z_, start_configuration_, goal_configuration_, controller_parameters_, surge_bounds_, heave_bounds_, forward_acceleration_bounds_, turning_rate_bounds_, heave_acceleration_bounds_, system_noise_;
+    std::vector<double> controller_parameters_, surge_bounds_, heave_bounds_, forward_acceleration_bounds_, turning_rate_bounds_, heave_acceleration_bounds_, system_noise_;
 
     Eigen::Matrix<double, 2, 2, Eigen::DontAlign> initial_covariance_;
 

@@ -8,29 +8,29 @@
 Scene::Scene(const std::string& scene_config)
 {
     YAML::Node sceneConfig = YAML::LoadFile(scene_config);
-    x_min_ = sceneConfig["scene"]["x_min"].as<double>();
-    x_max_ = sceneConfig["scene"]["x_max"].as<double>();
-    y_min_ = sceneConfig["scene"]["y_min"].as<double>();
-    y_max_ = sceneConfig["scene"]["y_max"].as<double>();
-    z_min_ = sceneConfig["scene"]["z_min"].as<double>();
-    z_max_ = sceneConfig["scene"]["z_max"].as<double>();
+    YAML::Node sceneNode = sceneConfig["scene"];
+    YAML::Node boundsNode = sceneNode["bounds"];
+
     if (sceneConfig["scene"]["obstacles"].IsSequence()) {
         for (const auto& obstacle : sceneConfig["scene"]["obstacles"]) {
             define_cube_as_constraints(obstacle["fx"].as<double>(), obstacle["tx"].as<double>(), obstacle["fy"].as<double>(), obstacle["ty"].as<double>(), obstacle["fz"].as<double>(), obstacle["tz"].as<double>());
             n_obstacles_++;
         }
     }
+
+    if (boundsNode.IsSequence()) {
+        for (const YAML::Node& bound : boundsNode) {
+            if (bound.IsSequence() && bound.size() == 2) {
+                std::pair<double, double> boundsPair(bound[0].as<double>(), bound[1].as<double>());
+                scene_bounds_.push_back(boundsPair);
+            }
+        }
+    }
+    
 }
 
 Scene::Scene()
-{
-    x_min_ = 0;
-    x_max_ = 0;
-    y_min_ = 0;
-    y_max_ = 0;
-    z_min_ = 0;
-    z_max_ = 0;
-    
+{   
 }
 
 Scene::~Scene()
