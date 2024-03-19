@@ -45,6 +45,9 @@
 
 #include <limits>
 
+#include "StateSamplers/BeliefStateSampler.h"
+#include "StateSamplers/CompoundBeliefStateSampler.h"
+
 namespace ob = ompl::base;
 namespace og = ompl::geometric;
 namespace oc = ompl::control;

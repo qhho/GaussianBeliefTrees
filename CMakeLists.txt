@@ -40,6 +40,8 @@ add_library (rrbt_lib
     src/Planners/rrbt_unicycle.cpp
     # src/Planners/rrbt_fixedwing.cpp
     src/Scene/Scene.cpp
+    src/StateSamplers/BeliefStateSampler.cpp
+    src/StateSamplers/CompoundBeliefStateSampler.cpp
 )
 
 

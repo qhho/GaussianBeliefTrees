@@ -1,27 +1,34 @@
-include "StateSamplers/CompoundBeliefStateSampler.h"
+#include "StateSamplers/CompoundBeliefStateSampler.h"
 
-ob::StateSamplerPtr AllocBeliefSampler(const ob::StateSpace *space, const std::vector<ob::State*> &start_states, const double &radius, const int &bias_type, const double &bias_p) {
-	CompoundBeliefSampler *sampler = new CompoundBeliefSampler(space, space->allocDefaultStateSampler(), start_states, radius, bias_type, bias_p);
-	return ob::StateSamplerPtr(sampler);
+CompoundBeliefStateSampler::CompoundBeliefStateSampler(const ompl::base::StateSpace *ss) :
+    StateSampler(ss), sampler_(ss->allocDefaultStateSampler()), dimension_(2), bias_p(0.2)
+{
+    params_.declareParam<double>("bias",
+                                 std::bind(&CompoundBeliefStateSampler::setBias, this, std::placeholders::_1),
+                                 std::bind(&CompoundBeliefStateSampler::getBias, this));
+
+    params_.declareParam<int>("dimension",
+                                 std::bind(&CompoundBeliefStateSampler::setDimension, this, std::placeholders::_1),
+                                 std::bind(&CompoundBeliefStateSampler::getDimension, this));
 }
 
-void CompoundBeliefSampler::sampleUniform(ob::State *state) {
+void CompoundBeliefStateSampler::sampleUniform(ob::State *state) {
 
 
 }
 
-void CompoundBeliefSampler::sampleBias(ob::State *state) {
+void CompoundBeliefStateSampler::sampleBias(ob::State *state, const double eigenvalue) {
 
 }
 
-void CompoundBeliefSampler::sample(ob::State *state, double eigenvalue){
+void CompoundBeliefStateSampler::sample(ob::State *state, const double eigenvalue){
 
-    if (sampleBias_)
-        sampleBias(state);
+    if (rng_.uniform01() < bias_p)
+        sampleBias(state, eigenvalue);
     else
         sampleUniform(state);
 }
 
-void CompoundBeliefSampler::sample(ob::State *state){
+void CompoundBeliefStateSampler::sample(ob::State *state){
     sampleUniform(state);
 }
