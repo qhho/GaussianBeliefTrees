@@ -413,9 +413,9 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     val_checker = ob::StateValidityCheckerPtr(new StateValidityCheckerPCCBlackmore(scene, simple_setup_->getSpaceInformation(), p_safe, sysType));
     simple_setup_->setStateValidityChecker(val_checker);
 
-    simple_setup_->getSpaceInformation()->getStateSpace()->setStateSamplerAllocator([](const ob::StateSpace *space) { return std::make_shared<BeliefStateSampler>(space); });
 
-    // BeliefStateSampler *sampler = new BeliefStateSampler();
+    BeliefStateSampler *sampler = new BeliefStateSampler(&(*simple_setup_->getStateSpace()));
+    simple_setup_->getSpaceInformation()->getStateSpace()->allocStateSampler(ob::StateSamplerPtr(sampler));
 
     // simple_setup_->getStateSpace()->setStateSamplerAllocator(std::bind(&BeliefStateSampler, std::placeholders::_1));
 
