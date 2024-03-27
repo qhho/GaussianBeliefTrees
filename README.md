@@ -136,10 +136,13 @@ make
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Open source
-- [ ] Add more flexibility with different systems
-- [ ] 
-- [ ] Add ROS functionality
+- [ ] LTL functionality
+- [ ] Spot functionality
+- [ ] Plotting of scene and solutions
+- [ ] Add more flexibility with different systems (use any linear system)
+- [ ] Non-diagonal covariances
+- [ ] Open source
+- [ ] ROS functionality
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
