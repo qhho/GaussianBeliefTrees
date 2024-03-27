@@ -31,7 +31,6 @@
 *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
-/* Author: Ali-akbar Agha-mohammadi, Saurav Agarwal */
 
 #ifndef TWODPOINT_STATE_PROPAGATOR_
 #define TWODPOINT_STATE_PROPAGATOR_
@@ -39,8 +38,8 @@
 // #include "SpaceInformation/SpaceInformation.h"
 #include "ompl/control/SpaceInformation.h"
 #include <ompl/control/spaces/RealVectorControlSpace.h>
-#include "../Spaces/R2BeliefSpace.h"
-#include "../Spaces/R2BeliefSpaceEuclidean.h"
+#include "Spaces/R2BeliefSpace.h"
+#include "Spaces/R2BeliefSpaceEuclidean.h"
 
 namespace ob = ompl::base;
 namespace oc = ompl::control;
@@ -54,7 +53,7 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     /** \brief Construct representation of a unicycle state propagator.
     */
-    SimpleStatePropagator(const oc::SpaceInformationPtr &si);
+    SimpleStatePropagator(const oc::SpaceInformationPtr &si, double Q, double R, double R_bad, double K_default, std::vector<std::vector<double > > measurement_Regions);
 
     virtual ~SimpleStatePropagator(void)
     {
@@ -92,7 +91,12 @@ private:
 
     Eigen::Matrix2d sigma_pred, lambda_pred, K, Q, Ak;
 
-    double K_ = 0.1;
+    double K_;
+    // double Q_;
+    double R_;
+    double R_bad_;
+
+    std::vector<std::vector<double>> measurementRegions_;
 
     mutable const R2BeliefSpace::StateType *result_css;
     ob::RealVectorStateSpace::StateType *result_css_rvs_pose;

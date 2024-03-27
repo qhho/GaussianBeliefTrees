@@ -34,8 +34,8 @@
 
 /* Authors: Qi Heng Ho (adapted from Saurav Agarwal) */
 
-#ifndef R2BELIEF_SPACE_EUCLIDEAN_H_
-#define R2BELIEF_SPACE_EUCLIDEAN_H_
+#ifndef R3BELIEF_SPACE_H_
+#define R3BELIEF_SPACE_H_
 
 // OMPL includes
 #include "ompl/base/spaces/RealVectorStateSpace.h"
@@ -46,27 +46,23 @@
 //Eigen
 #include <eigen3/Eigen/Dense>
 
-#define EUCLIDEAN = 1
-#define WASSERSTEIN = 2
-
 using namespace ompl::base;
-class R2BeliefSpaceEuclidean : public ompl::base::RealVectorStateSpace
+class R3BeliefSpace : public ompl::base::RealVectorStateSpace
 {
 
     public:
 
-        /** \brief A belief in R(2): (x, y, covariance) */
+        /** \brief A belief in R(3): (x, y, z, covariance) */
         class StateType : public RealVectorStateSpace::StateType
         {
         public:
             EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-            StateType(void) : RealVectorStateSpace::StateType()
+            StateType(double sigma_init = 5.0) : RealVectorStateSpace::StateType()
             {
               
-              sigma_ = 5.0*Eigen::MatrixXd::Identity(2,2);
-              this->setLambda(Eigen::Matrix2d::Zero());
-
+              sigma_ = sigma_init*Eigen::MatrixXd::Identity(3,3);
+              this->setLambda(Eigen::Matrix3d::Zero());
             }
 
             /** \brief Get the X component of the state */
@@ -81,23 +77,29 @@ class R2BeliefSpaceEuclidean : public ompl::base::RealVectorStateSpace
                 return this->values[1];
             }
 
-            const Eigen::Vector2d getXY(void) const
+            /** \brief Get the Y component of the state */
+            double getZ(void) const
             {
-                const Eigen::Vector2d stateVec(getX(), getY());
+                return this->values[2];
+            }
+
+            const Eigen::Vector3d getXYZ(void) const
+            {
+                const Eigen::Vector3d stateVec(getX(), getY(), getZ());
                 return stateVec;
             }
 
-            Eigen::Matrix2d getSigma(void) const
+            Eigen::Matrix3d getSigma(void) const
             {    
                 return sigma_;
             }
 
-            Eigen::Matrix2d getLambda(void) const
+            Eigen::Matrix3d getLambda(void) const
             {
                 return lambda_;
             }
 
-            Eigen::Matrix2d getCovariance(void) const
+            Eigen::Matrix3d getCovariance(void) const
             {
                 return sigma_ + lambda_;
             }
@@ -114,17 +116,25 @@ class R2BeliefSpaceEuclidean : public ompl::base::RealVectorStateSpace
                 this->values[1] = y;
             }
 
+             /** \brief Set the Z component of the state */
+            void setZ(double z)
+            {
+                this->values[2] = z;
+            }
+
             /** \brief Set the X and Y components of the state */
-            void setXY(double x, double y)
+            void setXYZ(double x, double y, double z)
             {
                 setX(x);
                 setY(y);
+                setZ(z);
             }    
 
-            void setMatrixData(const Eigen::Vector2d &x)
+            void setMatrixData(const Eigen::Vector3d &x)
             {
                 setX(x[0]);
                 setY(x[1]);
+                setZ(x[2]);
             }
 
             void setSigmaX(double val){
@@ -135,21 +145,25 @@ class R2BeliefSpaceEuclidean : public ompl::base::RealVectorStateSpace
                 sigma_(1,1) = val;
             }
 
-            void setSigma(Eigen::Matrix2d cov){
+            void setSigmaZ(double val){
+                sigma_(2,2) = val;
+            }
+
+            void setSigma(Eigen::Matrix3d cov){
                 sigma_ = cov;
             }
 
             void setSigma(double val){
-                sigma_ = val*Eigen::MatrixXd::Identity(2,2);
+                sigma_ = val*Eigen::MatrixXd::Identity(3,3);
             }
 
-            void setLambda(Eigen::Matrix2d cov){
+            void setLambda(Eigen::Matrix3d cov){
                 lambda_ = cov;
             }
 
-            Eigen::Vector2d getMatrixData(void) const
+            Eigen::Vector3d getMatrixData(void) const
             {
-                Eigen::Vector2d stateVec(getX(), getY());
+                Eigen::Vector3d stateVec(getX(), getY(), getZ());
                 return stateVec;
             }
 
@@ -169,37 +183,44 @@ class R2BeliefSpaceEuclidean : public ompl::base::RealVectorStateSpace
             int DISTANCE_FUNCTION_TYPE_;
             
         private:
-              Eigen::Matrix2d sigma_;
-              Eigen::Matrix2d lambda_;
-              int dimensions_ = 2;
+              Eigen::Matrix3d sigma_;
+              Eigen::Matrix3d lambda_;
+              int dimensions_ = 3;
               double cost_;
+              double sigma_init_ = 5.0;
 
         };
 
-        R2BeliefSpaceEuclidean(void) : RealVectorStateSpace(2)
+        R3BeliefSpace(double sigma_init = 5.0) : RealVectorStateSpace(3)
         {
-            setName("R2_BELIEF" + getName());
+            setName("R3_BELIEF" + getName());
             type_ = STATE_SPACE_REAL_VECTOR;
+            sigma_init_ = sigma_init;
         }
 
-        virtual ~R2BeliefSpaceEuclidean(void)
+        virtual ~R3BeliefSpace(void)
         {
         }
 
-        virtual State* allocState(void) const;
+        virtual State* allocState(void) const override;
 
-        virtual void copyState(State *destination,const State *source) const;
+        virtual void copyState(State *destination,const State *source) const override;
 
-        virtual void freeState(State *state) const;
+        virtual void freeState(State *state) const override;
 
         //virtual void registerProjections(void);
         virtual double distance(const State* state1, const State *state2) const override;
+
+        // virtual double distance(State* state1, State *state2)override;
 
         // gets the relative vector between "from" and "to"
         // equivalent to result = vectorA-vectorB
         void getRelativeState(const State *from, const State *to, State *state);
 
         void printBeliefState(const State *state);
+        
+        protected:
+            double sigma_init_;
 
 };
 #endif

@@ -136,8 +136,10 @@ make
 <!-- ROADMAP -->
 ## Roadmap
 
-- [] Open source
-- [ ] Add flexibility with different systems
+- [x] Open source
+- [ ] Add more flexibility with different systems
+- [ ] 
+- [ ] Add ROS functionality
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
