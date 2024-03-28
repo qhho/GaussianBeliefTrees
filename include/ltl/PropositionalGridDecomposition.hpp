@@ -32,7 +32,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
   
- /* Author: Qi Heng */
+ /* Author: Qi Heng Ho */
   
  #ifndef OMPL_EXTENSIONS_Grid_PROPOSITIONALGridDECOMPOSITION_
  #define OMPL_EXTENSIONS_Grid_PROPOSITIONALGridDECOMPOSITION_

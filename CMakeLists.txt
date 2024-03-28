@@ -19,21 +19,12 @@ find_package(yaml-cpp REQUIRED)
 include_directories(include ${EIGEN3_INCLUDE_DIRS} ${BOOST_INCLUDE_DIRS} ${ompl_INCLUDE_DIRS}  ${CMAKE_SOURCE_DIR}/src)
 
 
-add_library (rrbt_lib
+add_library (gbt_lib
     src/Spaces/RealVectorBeliefSpace.cpp
     src/Spaces/R2BeliefSpace.cpp
-    src/Spaces/R2BeliefSpaceEuclidean.cpp
-    scenes/scene3.cpp
-    scenes/scene4.cpp
-    scenes/scenereplanning.cpp
-    scenes/scenereplanning2.cpp
     src/StatePropagators/SimpleStatePropagator.cpp
-    src/StatePropagators/SimpleStatePropagatorEuclidean.cpp
     src/OptimizationObjectives/state_cost_objective.cpp
-    src/ValidityCheckers/state_validity_checker_pcc_blackmore.cpp
-    src/ValidityCheckers/state_validity_checker_pcc_blackmore_euclidean.cpp
     src/Benchmarking/MyBenchmark.cpp
-    src/Benchmarking/MyBenchmarkRRBT.cpp
     src/Planners/SSBT.cpp
     src/Planners/mod_rrt.cpp
     src/Scene/Scene.cpp
@@ -42,7 +33,7 @@ add_library (rrbt_lib
 )
 
 
-target_link_libraries (rrbt_lib
+target_link_libraries (gbt_lib
     ${Boost_LIBRARIES}
     ${EIGEN3_LIBRARIES}
     ${OMPL_LIBRARIES}
@@ -50,27 +41,16 @@ target_link_libraries (rrbt_lib
     yaml-cpp
 )
 
-target_include_directories(rrbt_lib
+target_include_directories(gbt_lib
     PUBLIC
     ${OMPL_INCLUDE_DIRS}
 )
 
-add_executable (main src/simple_main.cpp)
+add_executable (main demos/gbt.cpp)
 
 target_link_libraries (main
-    rrbt_lib
+    gbt_lib
     ${OMPL_LIBRARIES}
     ${Boost_LIBRARIES}
     yaml-cpp
 )
-
-
-# add_executable (euc src/euclidean_main.cpp)
-
-# target_link_libraries (euc
-#     rrbt_lib
-#     ${OMPL_LIBRARIES}
-#     ${Boost_LIBRARIES}
-# )
-
-# add_executable(createobstacles scenario1_create.cpp)

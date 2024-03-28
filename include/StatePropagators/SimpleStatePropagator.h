@@ -39,7 +39,6 @@
 #include "ompl/control/SpaceInformation.h"
 #include <ompl/control/spaces/RealVectorControlSpace.h>
 #include "Spaces/R2BeliefSpace.h"
-#include "Spaces/R2BeliefSpaceEuclidean.h"
 
 namespace ob = ompl::base;
 namespace oc = ompl::control;
@@ -53,7 +52,7 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     /** \brief Construct representation of a unicycle state propagator.
     */
-    SimpleStatePropagator(const oc::SpaceInformationPtr &si, double Q, double R, double R_bad, double K_default, std::vector<std::vector<double > > measurement_Regions);
+    SimpleStatePropagator(const oc::SpaceInformationPtr &si, double Q, double R);
 
     virtual ~SimpleStatePropagator(void)
     {

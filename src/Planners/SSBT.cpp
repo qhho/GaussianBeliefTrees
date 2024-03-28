@@ -46,7 +46,6 @@
 #include <ompl/base/spaces/RealVectorStateSpace.h>
 #include <ompl/control/spaces/RealVectorControlSpace.h>
 #include "Spaces/R2BeliefSpace.h"
-#include "Spaces/R2BeliefSpaceEuclidean.h"
 
 ompl::control::SSBT::SSBT(const SpaceInformationPtr &si) : base::Planner(si, "SSBT")
 {
@@ -260,7 +259,6 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
     unsigned iterations = 0;
 
     max_eigenvalue_ = 10.0;
-
     while (ptc == false)
     {
         /* sample random state (with goal biasing) */
@@ -271,7 +269,7 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
 
         if (DISTANCE_FUNC_ == 1){
             if (rng_.uniform01() < samplingBias_){
-                rmotion->state_->as<R2BeliefSpace::StateType>()->setSigma(0.5);
+                rmotion->state_->as<R2BeliefSpace::StateType>()->setSigma(0.5); //TODO: fix this
             }
             else{
                 rmotion->state_->as<R2BeliefSpace::StateType>()->setSigmaX(rng_.uniform01()*max_eigenvalue_);
@@ -285,16 +283,46 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
         /* sample a random control that attempts to go towards the random state, and also sample a control duration */
         controlSampler_->sample(rctrl);
         unsigned int cd = rng_.uniformInt(siC_->getMinControlDuration(), siC_->getMaxControlDuration());
-        unsigned int propCd = siC_->propagateWhileValid(nmotion->state_, rctrl, cd, rstate);
+        // unsigned int propCd = siC_->propagateWhileValid(nmotion->state_, rctrl, cd, rstate);
 
+        std::vector<base::State *> pstates;
+        unsigned int propCd = siC_->propagateWhileValid(nmotion->state_, rctrl, cd, pstates, true);
         if (propCd == cd)
         {
-            base::Cost incCost = opt_->motionCost(nmotion->state_, rstate);
-            base::Cost cost = opt_->combineCosts(nmotion->accCost_, incCost);
+            base::State *laststate = nmotion->state_;
+            // si_->freeState(rmotion->state_);
+            // rmotion->state_ = pstates.back();
+            si_->copyState(rmotion->state_, pstates.back());
+            bool solved = false;
+            size_t p = 0;
+            base::Cost totalIncCost = opt_->identityCost();
+            
+            for (; p < pstates.size(); ++p)
+            {
+                base::Cost incCost = opt_->motionCost(laststate, pstates[p]);
+                totalIncCost = opt_->combineCosts(totalIncCost, incCost);
+                // std::cout << "freeing" << laststate << std::endl;
+                if (p > 0)
+                {
+                    si_->freeState(laststate);
+                }
+                laststate = pstates[p];
+                // si_->freeState(pstates[p]);
+            }
+            if (p > 0)
+            {
+                si_->freeState(laststate);
+            }
+
+            base::Cost cost = opt_->combineCosts(nmotion->accCost_, totalIncCost);
+
+            // std::cout << incCost.value() << std::endl;
+            // std::cout << cost.value() << std::endl;
             Witness *closestWitness = findClosestWitness(rmotion);
 
             if (closestWitness->rep_ == rmotion || opt_->isCostBetterThan(cost, closestWitness->rep_->accCost_))
             {
+
                 Motion *oldRep = closestWitness->rep_;
                 /* create a motion */
                 auto *motion = new Motion(siC_);
@@ -309,29 +337,20 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
 
                 nn_->add(motion);
 
-                if (DISTANCE_FUNC_ == 0){
-                    if (motion->state_->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(0,0) > max_eigenvalue_)
-                    {
-                        max_eigenvalue_ = motion->state_->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(0,0);
-                    }
-                    else if (motion->state_->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(1,1) > max_eigenvalue_)
-                    {
-                        max_eigenvalue_ = motion->state_->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(1,1);
-                    }
+                // std::cout << nmotion->state_->as<R2BeliefSpace::StateType>()->getX() << " " << nmotion->state_->as<R2BeliefSpace::StateType>()->getY() << " " << nmotion->accCost_.value() << " " << motion->state_->as<R2BeliefSpace::StateType>()->getX() << " " <<  motion->state_->as<R2BeliefSpace::StateType>()->getY() << " " << motion->accCost_.value()<< std::endl;
+
+                if (motion->state_->as<R2BeliefSpace::StateType>()->getCovariance()(0,0) > max_eigenvalue_)
+                {
+                    max_eigenvalue_ = motion->state_->as<R2BeliefSpace::StateType>()->getCovariance()(0,0);
                 }
-                else if (DISTANCE_FUNC_ == 1){
-                    if (motion->state_->as<R2BeliefSpace::StateType>()->getCovariance()(0,0) > max_eigenvalue_)
-                    {
-                        max_eigenvalue_ = motion->state_->as<R2BeliefSpace::StateType>()->getCovariance()(0,0);
-                    }
-                    else if (motion->state_->as<R2BeliefSpace::StateType>()->getCovariance()(1,1) > max_eigenvalue_)
-                    {
-                        max_eigenvalue_ = motion->state_->as<R2BeliefSpace::StateType>()->getCovariance()(1,1);
-                    }
+                else if (motion->state_->as<R2BeliefSpace::StateType>()->getCovariance()(1,1) > max_eigenvalue_)
+                {
+                    max_eigenvalue_ = motion->state_->as<R2BeliefSpace::StateType>()->getCovariance()(1,1);
                 }
 
                 double dist = 0.0;
                 bool solv = goal->isSatisfied(motion->state_, &dist);
+                std::cout << dist << std::endl;
                 if (solv && opt_->isCostBetterThan(motion->accCost_, prevSolutionCost_))
                 {
                     approxdif = dist;
@@ -359,6 +378,8 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
                     prevSolutionCost_ = solution->accCost_;
 
                     OMPL_INFORM("Found solution with cost %.2f", solution->accCost_.value());
+                    OMPL_INFORM("Solution state:%f %f ", solution->state_->as<R2BeliefSpace::StateType>()->getX(), solution->state_->as<R2BeliefSpace::StateType>()->getY());
+
                     sufficientlyShort = opt_->isSatisfied(solution->accCost_);
                     if (sufficientlyShort)
                         break;
@@ -411,6 +432,10 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
                 }
             }
         }
+        else
+            for (auto &pstate : pstates)
+                si_->freeState(pstate);
+
         iterations++;
     }
 

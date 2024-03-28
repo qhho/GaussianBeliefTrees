@@ -52,8 +52,7 @@
 #include <ompl/base/spaces/SO2StateSpace.h>
 #include <ompl/base/spaces/RealVectorStateSpace.h>
 #include <ompl/control/spaces/RealVectorControlSpace.h>
-#include "../Spaces/R2BeliefSpace.h"
-#include "../Spaces/R2BeliefSpaceEuclidean.h"
+#include "Spaces/R2BeliefSpace.h"
 
 namespace ompl
 {

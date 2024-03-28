@@ -1,4 +1,4 @@
-#include "System.h"
+#include "System/System.h"
 #include <iostream>
 #include <yaml-cpp/yaml.h>
 #include <filesystem>
@@ -24,6 +24,8 @@ System::System(const std::string& system_config)
     sampling_bias_ = systemConfig["system"]["planner"]["sampling_bias"].as<double>();
     goal_bias_ = systemConfig["system"]["planner"]["goal_bias"].as<double>();
     propagation_size_ = systemConfig["system"]["planner"]["propagation_size"].as<double>();
+    Q_ = systemConfig["system"]["planner"]["Q"].as<double>();
+    R_ = systemConfig["system"]["planner"]["R"].as<double>();
     
     if (initialConfigurationNode.IsSequence()) {
         for (YAML::const_iterator it = initialConfigurationNode.begin(); it != initialConfigurationNode.end(); ++it) {

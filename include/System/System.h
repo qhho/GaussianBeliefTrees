@@ -20,6 +20,8 @@ class System
         double sampling_bias_;
         double goal_bias_;
         double cost_threshold_;
+        double Q_;
+        double R_;
         std::vector<double> starting_configuration_;
         std::vector<double> goal_configuration_;
         std::vector<double> surge_bounds_;
