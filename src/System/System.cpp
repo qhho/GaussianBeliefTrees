@@ -24,9 +24,10 @@ System::System(const std::string& system_config)
     sampling_bias_ = systemConfig["system"]["planner"]["sampling_bias"].as<double>();
     goal_bias_ = systemConfig["system"]["planner"]["goal_bias"].as<double>();
     propagation_size_ = systemConfig["system"]["planner"]["propagation_size"].as<double>();
-    Q_ = systemConfig["system"]["planner"]["Q"].as<double>();
-    R_ = systemConfig["system"]["planner"]["R"].as<double>();
-    
+    std::cout << "Q" << std::endl;
+    Q_ = systemConfig["system"]["system"]["Q"].as<double>();
+    R_ = systemConfig["system"]["system"]["R"].as<double>();
+    std::cout << "R" << std::endl;
     if (initialConfigurationNode.IsSequence()) {
         for (YAML::const_iterator it = initialConfigurationNode.begin(); it != initialConfigurationNode.end(); ++it) {
             starting_configuration_.push_back(it->as<double>());

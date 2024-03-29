@@ -72,16 +72,16 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
 
     Mat lambda_pred, K;
 
-    if (x_new > measurementRegions_[0][0] && x_new < measurementRegions_[0][1] && y_new < measurementRegions_[1][1] && y_new < measurementRegions_[1][1]){
-        Mat R = R_*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
-        Mat S = (H * sigma_pred * H.transpose())+ R;
-        K = (sigma_pred * H.transpose()) * S.inverse();
-        lambda_pred = (A_ol_ - B_ol_ * K_sample)*lambda_from*(A_ol_ - B_ol_ * K_sample);
-    }
-    else{
-        K = Eigen::MatrixXd::Zero(dimensions_, dimensions_);
-        lambda_pred = lambda_from;
-    }
+    // if (x_new > measurementRegions_[0][0] && x_new < measurementRegions_[0][1] && y_new < measurementRegions_[1][1] && y_new < measurementRegions_[1][1]){
+    Mat R = R_*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
+    Mat S = (H * sigma_pred * H.transpose())+ R;
+    K = (sigma_pred * H.transpose()) * S.inverse();
+    lambda_pred = (A_ol_ - B_ol_ * K_sample)*lambda_from*(A_ol_ - B_ol_ * K_sample);
+    // }
+    // else{
+        // K = Eigen::MatrixXd::Zero(dimensions_, dimensions_);
+        // lambda_pred = lambda_from;
+    // }
     Mat sigma_to = (I - (K*H)) * sigma_pred;
     Mat lambda_to = lambda_pred + K*H*sigma_pred;
 

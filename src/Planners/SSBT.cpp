@@ -350,7 +350,7 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
 
                 double dist = 0.0;
                 bool solv = goal->isSatisfied(motion->state_, &dist);
-                std::cout << dist << std::endl;
+                // std::cout << dist << std::endl;
                 if (solv && opt_->isCostBetterThan(motion->accCost_, prevSolutionCost_))
                 {
                     approxdif = dist;
