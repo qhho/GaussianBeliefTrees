@@ -14,6 +14,17 @@ Scene::Scene(const std::string& scene_config)
     if (sceneConfig["scene"]["obstacles"].IsSequence()) {
         for (const auto& obstacle : sceneConfig["scene"]["obstacles"]) {
             define_cube_as_constraints(obstacle["fx"].as<double>(), obstacle["tx"].as<double>(), obstacle["fy"].as<double>(), obstacle["ty"].as<double>(), obstacle["fz"].as<double>(), obstacle["tz"].as<double>());
+            std::array<float, 3> min_point = {
+                obstacle["fx"].as<float>(),
+                obstacle["fy"].as<float>(),
+                obstacle["fz"].as<float>()
+            };
+            std::array<float, 3> max_point = {
+                obstacle["tx"].as<float>(),
+                obstacle["ty"].as<float>(),
+                obstacle["tz"].as<float>()
+            };
+            obstacles_limits_.push_back(std::make_pair(min_point, max_point));
             n_obstacles_++;
         }
     }

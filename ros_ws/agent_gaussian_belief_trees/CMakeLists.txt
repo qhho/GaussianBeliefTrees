@@ -14,27 +14,54 @@ find_package(visualization_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(agent_helpers REQUIRED)
 find_package(yaml-cpp REQUIRED)
+find_package(ompl REQUIRED)
+find_package(Threads REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(Boost REQUIRED COMPONENTS filesystem system)
 
-# Include C++ directories
-include_directories(include)
+include_directories(
+  include
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../include
+  ${OMPL_INCLUDE_DIRS}
+  ${BOOST_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIRS}
+)
 
 # Declare a C++ executable
-add_executable(obstacle_publisher src/GaussianBeliefTrees.cpp)
+add_executable(timer_callback 
+  src/GaussianBeliefTrees.cpp
+  src/Spaces/RealVectorBeliefSpace.cpp
+  src/Spaces/R2BeliefSpace.cpp
+  src/StatePropagators/SimpleStatePropagator.cpp
+  src/OptimizationObjectives/state_cost_objective.cpp
+  src/Benchmarking/MyBenchmark.cpp
+  src/Planners/SSBT.cpp
+  src/Planners/mod_rrt.cpp
+  src/Scene/Scene.cpp
+  src/System/System.cpp
+  src/ValidityCheckers/StateValidityCheckerBlackmore.cpp
+)
 
 # Specify libraries to link a library or executable target against
-ament_target_dependencies(obstacle_publisher
+ament_target_dependencies(timer_callback
   rclcpp
   visualization_msgs
   geometry_msgs
   agent_helpers
+  ompl
+  Boost
 )
-target_link_libraries(obstacle_publisher
+target_link_libraries(timer_callback
   yaml-cpp
+  ${OMPL_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ${EIGEN3_LIBRARIES}
+  ${CMAKE_THREAD_LIBS_INIT}
 )
 
 # Install the executable
 install(TARGETS
-  obstacle_publisher
+  timer_callback
   DESTINATION lib/${PROJECT_NAME}
 )
 

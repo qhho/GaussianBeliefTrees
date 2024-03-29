@@ -28,41 +28,41 @@ System::System(const std::string& system_config)
     Q_ = systemConfig["system"]["system"]["Q"].as<double>();
     R_ = systemConfig["system"]["system"]["R"].as<double>();
     std::cout << "R" << std::endl;
-    if (initialConfigurationNode.IsSequence()) {
-        for (YAML::const_iterator it = initialConfigurationNode.begin(); it != initialConfigurationNode.end(); ++it) {
-            starting_configuration_.push_back(it->as<double>());
-        }
-    }
+    // if (initialConfigurationNode.IsSequence()) {
+    //     for (YAML::const_iterator it = initialConfigurationNode.begin(); it != initialConfigurationNode.end(); ++it) {
+    //         starting_configuration_.push_back(it->as<double>());
+    //     }
+    // }
 
-    if (goalConfigurationNode.IsSequence()) {
-        for (YAML::const_iterator it = goalConfigurationNode.begin(); it != goalConfigurationNode.end(); ++it) {
-            goal_configuration_.push_back(it->as<double>());
-        }
-    }
+    // if (goalConfigurationNode.IsSequence()) {
+    //     for (YAML::const_iterator it = goalConfigurationNode.begin(); it != goalConfigurationNode.end(); ++it) {
+    //         goal_configuration_.push_back(it->as<double>());
+    //     }
+    // }
 
-    if (surgeBoundsNode.IsSequence()) {
-        for (YAML::const_iterator it = surgeBoundsNode.begin(); it != surgeBoundsNode.end(); ++it) {
-            surge_bounds_.push_back(it->as<double>());
-        }
-    }
+    // if (surgeBoundsNode.IsSequence()) {
+    //     for (YAML::const_iterator it = surgeBoundsNode.begin(); it != surgeBoundsNode.end(); ++it) {
+    //         surge_bounds_.push_back(it->as<double>());
+    //     }
+    // }
 
-    if (controlDurationNode.IsSequence()){
-        for(const YAML::Node& duration : controlDurationNode){
-            if(duration.IsSequence() && duration.size() == 2){
-                control_duration_.first = duration[0].as<double>();
-                control_duration_.second = duration[1].as<double>();
-            }
-        }
-    }
+    // if (controlDurationNode.IsSequence()){
+    //     for(const YAML::Node& duration : controlDurationNode){
+    //         if(duration.IsSequence() && duration.size() == 2){
+    //             control_duration_.first = duration[0].as<double>();
+    //             control_duration_.second = duration[1].as<double>();
+    //         }
+    //     }
+    // }
 
-    if (controlBoundsNode.IsSequence()) {
-        for (const YAML::Node& bound : controlBoundsNode) {
-            if (bound.IsSequence() && bound.size() == 2) {
-                std::pair<double, double> boundsPair(bound[0].as<double>(), bound[1].as<double>());
-                control_bounds_.push_back(boundsPair);
-            }
-        }
-    }
+    // if (controlBoundsNode.IsSequence()) {
+    //     for (const YAML::Node& bound : controlBoundsNode) {
+    //         if (bound.IsSequence() && bound.size() == 2) {
+    //             std::pair<double, double> boundsPair(bound[0].as<double>(), bound[1].as<double>());
+    //             control_bounds_.push_back(boundsPair);
+    //         }
+    //     }
+    // }
 }
 
 System::System()

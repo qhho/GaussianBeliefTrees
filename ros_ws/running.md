@@ -7,9 +7,10 @@ ros2 run tf2_ros static_transform_publisher 0 0 0 0 0 0 1 world map
 ## Step 2: 
 
 ```bash
-colcon build --packages-select agent_gaussian_belief_trees
-source install/setup.bash
-ros2 run agent_gaussian_belief_trees obstacle_publisher
+colcon build
+source /opt/ros/foxy/setup.bash
+source ~/dev/research/GaussianBeliefTrees/ros_ws/install/setup.bash
+ros2 run agent_gaussian_belief_trees timer_callback
 ```
 
 ## Step 3:

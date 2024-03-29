@@ -22,11 +22,16 @@ find_package(Eigen3 REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(yaml-cpp REQUIRED)
+find_package(ompl REQUIRED)
+find_package(Boost REQUIRED COMPONENTS filesystem system)
+find_package(Threads REQUIRED)
 
 
 # Include directories
 include_directories(include
 ${YAML_CPP_INCLUDE_DIR}
+${OMPL_INCLUDE_DIRS}
+${BOOST_INCLUDE_DIRS}
 )
 
 # Add a library
@@ -42,7 +47,7 @@ ament_target_dependencies(agent_helpers
   geometry_msgs
 )
 
-target_link_libraries(agent_helpers ${YAML_CPP_LIBRARIES})
+target_link_libraries(agent_helpers ${YAML_CPP_LIBRARIES} ${OMPL_LIBRARIES} ${BOOST_INCLUDE_DIRS})
 
 # Install header files and library
 install(DIRECTORY include/${PROJECT_NAME}/ DESTINATION include/${PROJECT_NAME})

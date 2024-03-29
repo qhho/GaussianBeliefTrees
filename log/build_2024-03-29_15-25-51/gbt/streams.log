@@ -1,0 +1,4 @@
+[0.274s] Invoking command in '/home/nic/dev/research/GaussianBeliefTrees/build/gbt': /usr/local/bin/cmake --build /home/nic/dev/research/GaussianBeliefTrees/build/gbt -- -j32 -l32
+[0.330s] [ 84%] Built target gbt_lib
+[0.345s] [100%] Built target main
+[0.349s] Invoked command in '/home/nic/dev/research/GaussianBeliefTrees/build/gbt' returned '0': /usr/local/bin/cmake --build /home/nic/dev/research/GaussianBeliefTrees/build/gbt -- -j32 -l32

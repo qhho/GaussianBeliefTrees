@@ -13,6 +13,8 @@
   <depend>visualization_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>agent_helpers</depend>
+  <depend>ompl</depend>
+  <depend>boost</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
