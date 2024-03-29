@@ -18,7 +18,6 @@
 #include <ompl/base/spaces/SE2StateSpace.h>
 #include <ompl/geometric/SimpleSetup.h>
 #include "Spaces/R2BeliefSpace.h"
-#include "Spaces/R2BeliefSpaceEuclidean.h"
 
 // scenes
 #include "../scenes/scene3.hpp"
