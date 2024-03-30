@@ -1,0 +1,183 @@
+[0.000000] (-) TimerEvent: {}
+[0.000302] (gbt) JobQueued: {'identifier': 'gbt', 'dependencies': OrderedDict()}
+[0.000320] (gbt) JobStarted: {'identifier': 'gbt'}
+[0.099916] (-) TimerEvent: {}
+[0.164705] (gbt) JobProgress: {'identifier': 'gbt', 'progress': 'cmake'}
+[0.164777] (gbt) Command: {'cmd': ['/usr/local/bin/cmake', '/home/nic/dev/research/GaussianBeliefTrees', '-DCMAKE_INSTALL_PREFIX=/home/nic/dev/research/GaussianBeliefTrees/install/gbt'], 'cwd': '/home/nic/dev/research/GaussianBeliefTrees/build/gbt', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'nic'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('HOME', '/home/nic'), ('OLDPWD', '/home/nic/dev/research/GaussianBeliefTrees/ros_ws'), ('ROS_PYTHON_VERSION', '3'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('WSL_DISTRO_NAME', 'Ubuntu-20.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'nic'), ('NAME', 'legion9'), ('WSL_INTEROP', '/run/WSL/900_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/home/nic/.local/bin:/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/Program Files/MATLAB/R2023b/bin:/mnt/c/Program Files/usbipd-win/:/mnt/c/Users/nicol/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/nicol/AppData/Local/Programs/Microsoft VS Code/bin:/snap/bin'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/home/nic/dev/research/GaussianBeliefTrees/build/gbt'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', '')]), 'shell': False}
+[0.200014] (-) TimerEvent: {}
+[0.300293] (-) TimerEvent: {}
+[0.322088] (gbt) StdoutLine: {'line': b'-- The C compiler identification is GNU 9.4.0\n'}
+[0.400415] (-) TimerEvent: {}
+[0.500732] (-) TimerEvent: {}
+[0.601055] (-) TimerEvent: {}
+[0.627874] (gbt) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 9.4.0\n'}
+[0.701196] (-) TimerEvent: {}
+[0.801475] (-) TimerEvent: {}
+[0.896309] (gbt) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[0.901567] (-) TimerEvent: {}
+[1.001847] (-) TimerEvent: {}
+[1.102199] (-) TimerEvent: {}
+[1.102448] (gbt) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[1.109621] (gbt) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc - skipped\n'}
+[1.110402] (gbt) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[1.111207] (gbt) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[1.142630] (gbt) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[1.202296] (-) TimerEvent: {}
+[1.228666] (gbt) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[1.234542] (gbt) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[1.234692] (gbt) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[1.235034] (gbt) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[1.249260] (gbt) StdoutLine: {'line': b'-- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.71.0/BoostConfig.cmake (found version "1.71.0")  \n'}
+[1.251637] (gbt) StdoutLine: {'line': b'-- Found ompl: /opt/ros/foxy/include/ompl-1.5;/usr/include/eigen3  \n'}
+[1.253047] (gbt) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD\n'}
+[1.302399] (-) TimerEvent: {}
+[1.318091] (gbt) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed\n'}
+[1.318390] (gbt) StdoutLine: {'line': b'-- Looking for pthread_create in pthreads\n'}
+[1.369834] (gbt) StdoutLine: {'line': b'-- Looking for pthread_create in pthreads - not found\n'}
+[1.369977] (gbt) StdoutLine: {'line': b'-- Looking for pthread_create in pthread\n'}
+[1.402701] (-) TimerEvent: {}
+[1.425616] (gbt) StdoutLine: {'line': b'-- Looking for pthread_create in pthread - found\n'}
+[1.426426] (gbt) StdoutLine: {'line': b'-- Found Threads: TRUE  \n'}
+[1.428772] (gbt) StdoutLine: {'line': b'-- Configuring done (1.3s)\n'}
+[1.433740] (gbt) StdoutLine: {'line': b'-- Generating done (0.0s)\n'}
+[1.434139] (gbt) StdoutLine: {'line': b'-- Build files have been written to: /home/nic/dev/research/GaussianBeliefTrees/build/gbt\n'}
+[1.436642] (gbt) CommandEnded: {'returncode': 0}
+[1.436954] (gbt) JobProgress: {'identifier': 'gbt', 'progress': 'build'}
+[1.438260] (gbt) Command: {'cmd': ['/usr/local/bin/cmake', '--build', '/home/nic/dev/research/GaussianBeliefTrees/build/gbt', '--', '-j32', '-l32'], 'cwd': '/home/nic/dev/research/GaussianBeliefTrees/build/gbt', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'nic'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('HOME', '/home/nic'), ('OLDPWD', '/home/nic/dev/research/GaussianBeliefTrees/ros_ws'), ('ROS_PYTHON_VERSION', '3'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('WSL_DISTRO_NAME', 'Ubuntu-20.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'nic'), ('NAME', 'legion9'), ('WSL_INTEROP', '/run/WSL/900_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/home/nic/.local/bin:/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/Program Files/MATLAB/R2023b/bin:/mnt/c/Program Files/usbipd-win/:/mnt/c/Users/nicol/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/nicol/AppData/Local/Programs/Microsoft VS Code/bin:/snap/bin'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/home/nic/dev/research/GaussianBeliefTrees/build/gbt'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', '')]), 'shell': False}
+[1.450711] (gbt) StdoutLine: {'line': b'[  7%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Spaces/RealVectorBeliefSpace.cpp.o\x1b[0m\n'}
+[1.450860] (gbt) StdoutLine: {'line': b'[ 15%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Spaces/R2BeliefSpace.cpp.o\x1b[0m\n'}
+[1.450909] (gbt) StdoutLine: {'line': b'[ 23%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/StatePropagators/SimpleStatePropagator.cpp.o\x1b[0m\n'}
+[1.451836] (gbt) StdoutLine: {'line': b'[ 30%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/OptimizationObjectives/state_cost_objective.cpp.o\x1b[0m\n'}
+[1.453126] (gbt) StdoutLine: {'line': b'[ 38%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Benchmarking/MyBenchmark.cpp.o\x1b[0m\n'}
+[1.455185] (gbt) StdoutLine: {'line': b'[ 46%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Planners/SSBT.cpp.o\x1b[0m\n'}
+[1.455302] (gbt) StdoutLine: {'line': b'[ 53%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Planners/mod_rrt.cpp.o\x1b[0m\n'}
+[1.457673] (gbt) StdoutLine: {'line': b'[ 61%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/System/System.cpp.o\x1b[0m\n'}
+[1.460780] (gbt) StdoutLine: {'line': b'[ 69%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Scene/Scene.cpp.o\x1b[0m\n'}
+[1.460906] (gbt) StdoutLine: {'line': b'[ 76%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/ValidityCheckers/StateValidityCheckerBlackmore.cpp.o\x1b[0m\n'}
+[1.502975] (-) TimerEvent: {}
+[1.603793] (-) TimerEvent: {}
+[1.704349] (-) TimerEvent: {}
+[1.805087] (-) TimerEvent: {}
+[1.905483] (-) TimerEvent: {}
+[2.005882] (-) TimerEvent: {}
+[2.106397] (-) TimerEvent: {}
+[2.206986] (-) TimerEvent: {}
+[2.307537] (-) TimerEvent: {}
+[2.408043] (-) TimerEvent: {}
+[2.508522] (-) TimerEvent: {}
+[2.609009] (-) TimerEvent: {}
+[2.709566] (-) TimerEvent: {}
+[2.810318] (-) TimerEvent: {}
+[2.911061] (-) TimerEvent: {}
+[3.011532] (-) TimerEvent: {}
+[3.112206] (-) TimerEvent: {}
+[3.212701] (-) TimerEvent: {}
+[3.313147] (-) TimerEvent: {}
+[3.413544] (-) TimerEvent: {}
+[3.514006] (-) TimerEvent: {}
+[3.614415] (-) TimerEvent: {}
+[3.714904] (-) TimerEvent: {}
+[3.815503] (-) TimerEvent: {}
+[3.916030] (-) TimerEvent: {}
+[4.016534] (-) TimerEvent: {}
+[4.117095] (-) TimerEvent: {}
+[4.217686] (-) TimerEvent: {}
+[4.318193] (-) TimerEvent: {}
+[4.418631] (-) TimerEvent: {}
+[4.519037] (-) TimerEvent: {}
+[4.619415] (-) TimerEvent: {}
+[4.719763] (-) TimerEvent: {}
+[4.820336] (-) TimerEvent: {}
+[4.920795] (-) TimerEvent: {}
+[5.021282] (-) TimerEvent: {}
+[5.121660] (-) TimerEvent: {}
+[5.222069] (-) TimerEvent: {}
+[5.322391] (-) TimerEvent: {}
+[5.422715] (-) TimerEvent: {}
+[5.523023] (-) TimerEvent: {}
+[5.623452] (-) TimerEvent: {}
+[5.723967] (-) TimerEvent: {}
+[5.824441] (-) TimerEvent: {}
+[5.924811] (-) TimerEvent: {}
+[6.025272] (-) TimerEvent: {}
+[6.125777] (-) TimerEvent: {}
+[6.226163] (-) TimerEvent: {}
+[6.326549] (-) TimerEvent: {}
+[6.427154] (-) TimerEvent: {}
+[6.527583] (-) TimerEvent: {}
+[6.627867] (-) TimerEvent: {}
+[6.728218] (-) TimerEvent: {}
+[6.828626] (-) TimerEvent: {}
+[6.928906] (-) TimerEvent: {}
+[7.029196] (-) TimerEvent: {}
+[7.129504] (-) TimerEvent: {}
+[7.229959] (-) TimerEvent: {}
+[7.330239] (-) TimerEvent: {}
+[7.430650] (-) TimerEvent: {}
+[7.531104] (-) TimerEvent: {}
+[7.631573] (-) TimerEvent: {}
+[7.731951] (-) TimerEvent: {}
+[7.832249] (-) TimerEvent: {}
+[7.932512] (-) TimerEvent: {}
+[8.032919] (-) TimerEvent: {}
+[8.133514] (-) TimerEvent: {}
+[8.233901] (-) TimerEvent: {}
+[8.334175] (-) TimerEvent: {}
+[8.434488] (-) TimerEvent: {}
+[8.534912] (-) TimerEvent: {}
+[8.635330] (-) TimerEvent: {}
+[8.735657] (-) TimerEvent: {}
+[8.835977] (-) TimerEvent: {}
+[8.936383] (-) TimerEvent: {}
+[9.036809] (-) TimerEvent: {}
+[9.137185] (-) TimerEvent: {}
+[9.237514] (-) TimerEvent: {}
+[9.337897] (-) TimerEvent: {}
+[9.438283] (-) TimerEvent: {}
+[9.539237] (-) TimerEvent: {}
+[9.639532] (-) TimerEvent: {}
+[9.739934] (-) TimerEvent: {}
+[9.840262] (-) TimerEvent: {}
+[9.940560] (-) TimerEvent: {}
+[10.040984] (-) TimerEvent: {}
+[10.141495] (-) TimerEvent: {}
+[10.241922] (-) TimerEvent: {}
+[10.305330] (gbt) StdoutLine: {'line': b'[ 84%] \x1b[32m\x1b[1mLinking CXX static library libgbt_lib.a\x1b[0m\n'}
+[10.323563] (gbt) StdoutLine: {'line': b'[ 84%] Built target gbt_lib\n'}
+[10.332153] (gbt) StdoutLine: {'line': b'[ 92%] \x1b[32mBuilding CXX object CMakeFiles/main.dir/demos/gbt.cpp.o\x1b[0m\n'}
+[10.342200] (-) TimerEvent: {}
+[10.442698] (-) TimerEvent: {}
+[10.543271] (-) TimerEvent: {}
+[10.643550] (-) TimerEvent: {}
+[10.743942] (-) TimerEvent: {}
+[10.844214] (-) TimerEvent: {}
+[10.944535] (-) TimerEvent: {}
+[11.044861] (-) TimerEvent: {}
+[11.145170] (-) TimerEvent: {}
+[11.245503] (-) TimerEvent: {}
+[11.345757] (-) TimerEvent: {}
+[11.446064] (-) TimerEvent: {}
+[11.546392] (-) TimerEvent: {}
+[11.646702] (-) TimerEvent: {}
+[11.747045] (-) TimerEvent: {}
+[11.847361] (-) TimerEvent: {}
+[11.947714] (-) TimerEvent: {}
+[12.048225] (-) TimerEvent: {}
+[12.148754] (-) TimerEvent: {}
+[12.249086] (-) TimerEvent: {}
+[12.349390] (-) TimerEvent: {}
+[12.449832] (-) TimerEvent: {}
+[12.550462] (-) TimerEvent: {}
+[12.662685] (-) TimerEvent: {}
+[12.763063] (-) TimerEvent: {}
+[12.863445] (-) TimerEvent: {}
+[12.963815] (-) TimerEvent: {}
+[13.064192] (-) TimerEvent: {}
+[13.151157] (gbt) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking CXX executable main\x1b[0m\n'}
+[13.164312] (-) TimerEvent: {}
+[13.264621] (-) TimerEvent: {}
+[13.267955] (gbt) StdoutLine: {'line': b'[100%] Built target main\n'}
+[13.271824] (gbt) CommandEnded: {'returncode': 0}
+[13.364806] (-) TimerEvent: {}
+[13.446933] (gbt) JobEnded: {'identifier': 'gbt', 'rc': 0}
+[13.447473] (-) EventReactorShutdown: {}
