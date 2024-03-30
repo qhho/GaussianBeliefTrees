@@ -24,10 +24,13 @@ class Visualizer : public rclcpp::Node
         // fields:
         Scene scene_;
         System system_;
-        rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr publisher_;
+        rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr obstacle_publisher_;
+        rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr agent_publisher_;
         rclcpp::TimerBase::SharedPtr timer_;
-        uint64_t offboardSetpointCounter_;
-        
+        std::vector<Eigen::Vector3d> agent_positions_;
+        int current_pos_ind_ = 0;
+
         // methods:
         void timer_callback();
+        void read_agent_positions(const std::string& solution_path);
 };
