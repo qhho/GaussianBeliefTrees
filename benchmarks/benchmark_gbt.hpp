@@ -34,6 +34,7 @@
 
 #include "ValidityCheckers/state_validity_checker_pcc_blackmore.hpp" // simple validity checker
 #include "StatePropagators/SimpleStatePropagator.h"
+#include "StatePropagators/SimpleStatePropagatorFull.h"
 #include "StatePropagators/2DUnicyclePropagator.h"
 #include "StatePropagators/3DSimpleStatePropagator.h"
 #include "StatePropagators/3DUnicyclePropagator.h"

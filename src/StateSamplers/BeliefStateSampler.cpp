@@ -1,8 +1,8 @@
 #include "StateSamplers/BeliefStateSampler.h"
 
 
-BeliefStateSampler::BeliefStateSampler(const ompl::base::StateSpace *ss) :
-    StateSampler(ss), sampler_(ss->allocDefaultStateSampler()), dimension_(2), bias_p(0.2)
+BeliefStateSampler::BeliefStateSampler(const ompl::base::SpaceInformation *si) :
+    ValidStateSampler(si), sampler_(si->allocStateSampler()), dimension_(2), bias_p(0.2)
 {
     params_.declareParam<double>("bias",
                                  std::bind(&BeliefStateSampler::setBias, this, std::placeholders::_1),
@@ -22,25 +22,29 @@ void BeliefStateSampler::sampleBias(ob::State *state, const double eigenvalue) {
 
 }
 
-void BeliefStateSampler::sample(ob::State *state, const double eigenvalue){
+bool BeliefStateSampler::sample(ob::State *state, const double eigenvalue){
 
     if (rng_.uniform01() < bias_p)
         sampleBias(state, eigenvalue);
     else
         sampleUniform(state);
+
+    return true;
 }
 
-void BeliefStateSampler::sample(ob::State *state){
+bool BeliefStateSampler::sample(ob::State *state){
     sampleUniform(state);
+    return true;
 }
 
-void BeliefStateSampler::sampleNear(ompl::base::State *state){
-
+bool BeliefStateSampler::sampleNear(ompl::base::State *state, const ompl::base::State *near, double distance){
+    throw ompl::Exception("MyValidStateSampler::sampleNear", "not implemented");
+    return false;
 }
 
-void BeliefStateSampler::sampleGaussian(ompl::base::State *state, const State *mean, double stdDev){
+// void BeliefStateSampler::sampleGaussian(ompl::base::State *state, const State *mean, double stdDev){
 
-}
-void BeliefStateSampler::sampleUniformNear(ompl::base::State *state, const State *near, double distance){
+// }
+// void BeliefStateSampler::sampleUniformNear(ompl::base::State *state, const State *near, double distance){
 
-}
+// }

@@ -1,0 +1,24 @@
+Info:    Beginning benchmark
+Info:    Preparing for run 0 of control_SSBT
+Warning: SSBT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   SSBT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   SSBT: There are no valid initial states!
+         at line 239 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/SSBT.cpp
+Info:    Preparing for run 0 of control_mod_RRT
+Warning: mod_RRT: Skipping invalid start state (invalid bounds)
+         at line 257 in /home/qiheng/Downloads/ompl-1.5.2/src/ompl/base/src/Planner.cpp
+Debug:   mod_RRT: Discarded start state Compound state [
+RealVectorState [1 1]
+SO2State [0]
+RealVectorState [1]
+]
+
+Error:   mod_RRT: There are no valid initial states!
+         at line 109 in /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/src/Planners/mod_rrt.cpp
+Info:    Benchmark complete

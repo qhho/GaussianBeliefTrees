@@ -13,6 +13,10 @@
 #include <string>
 #include <bits/stdc++.h>
 #include "benchmark_gbt.hpp"
+#include "StatePropagators/SimpleStatePropagatorfixedK.h"
+#include "StatePropagators/2DUnicyclePropagatorfixedK.h"
+#include "StatePropagators/3DSimpleStatePropagatorfixedK.h"
+#include "StatePropagators/3DUnicyclePropagatorfixedK.h"
 
 namespace ob = ompl::base;
 namespace oc = ompl::control;
@@ -393,9 +397,9 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     //=======================================================================
 
     if (dimension == 2)
-        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new SimpleStatePropagator(si, Q, R, R_bad, K, measurement_region)));
+        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new SimpleStatePropagatorFixedK(si, Q, R, R_bad, K, measurement_region)));
     else if (dimension == 3)
-        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new ThreeDSimpleStatePropagator(si, Q, R, R_bad, K, measurement_region)));
+        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new ThreeDSimpleStatePropagatorFixedK(si, Q, R, R_bad, K, measurement_region)));
 
 	simple_setup_->getProblemDefinition()->setOptimizationObjective(getExpectedPathLengthObjective(si));
     ob::StateValidityCheckerPtr val_checker;
@@ -540,7 +544,7 @@ int main(int argc, char **argv)
     std::vector<std::string> Boundsplt = split(Boundstr, ":"); // Split rows
     std::vector<std::string>::iterator iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> bounds_state;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());
@@ -556,7 +560,7 @@ int main(int argc, char **argv)
     Boundsplt = split(Boundstr, ":"); // Split rows
     iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> bounds_control;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());
@@ -571,7 +575,7 @@ int main(int argc, char **argv)
     Boundsplt = split(Boundstr, ":"); // Split rows
     iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> measurement_region;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());

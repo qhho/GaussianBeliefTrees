@@ -275,7 +275,7 @@ int main(int argc, char **argv)
     std::vector<std::string> Boundsplt = split(Boundstr, ":"); // Split rows
     std::vector<std::string>::iterator iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> bounds_state;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());
@@ -291,7 +291,7 @@ int main(int argc, char **argv)
     Boundsplt = split(Boundstr, ":"); // Split rows
     iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> bounds_control;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());
@@ -306,7 +306,7 @@ int main(int argc, char **argv)
     Boundsplt = split(Boundstr, ":"); // Split rows
     iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> measurement_region;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());

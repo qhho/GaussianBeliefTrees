@@ -326,6 +326,12 @@ void OfflinePlannerUncertainty::planWithUnicycle(int sysType, double plan_time, 
     this->solve(plan_time, goal_bias, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 1, file, false);
 }
 
+ob::ValidStateSamplerPtr allocValidStateSampler(const ob::SpaceInformation *si)
+{
+    return std::make_shared<BeliefStateSampler>(si);
+}
+
+
 void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_time, double dt, double p_safe, double Q, double R, double R_bad, double K, std::string scene,  std::vector<std::vector<double>> measurement_region, std::vector<std::vector<double>> bounds_state, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file)
 {
     //=======================================================================
@@ -370,6 +376,8 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
         bounds.setLow(i, bounds_control[i][0]);
         bounds.setHigh(i, bounds_control[i][1]);
     }
+    bounds.setLow(dimension, bounds_control[dimension][0]);
+    bounds.setHigh(dimension, bounds_control[dimension][1]);
     cspace->setBounds(bounds);
     
     //=======================================================================
@@ -413,11 +421,9 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     val_checker = ob::StateValidityCheckerPtr(new StateValidityCheckerPCCBlackmore(scene, simple_setup_->getSpaceInformation(), p_safe, sysType));
     simple_setup_->setStateValidityChecker(val_checker);
 
-
-    BeliefStateSampler *sampler = new BeliefStateSampler(&(*simple_setup_->getStateSpace()));
-    simple_setup_->getSpaceInformation()->getStateSpace()->allocStateSampler(ob::StateSamplerPtr(sampler));
-
-    // simple_setup_->getStateSpace()->setStateSamplerAllocator(std::bind(&BeliefStateSampler, std::placeholders::_1));
+    // simple_setup_->getSpaceInformation()->
+    // BeliefStateSampler *sampler = new BeliefStateSampler(&(*simple_setup_->getSpaceInformation()));
+    simple_setup_->getSpaceInformation()->setValidStateSamplerAllocator(allocValidStateSampler);
 
     //=======================================================================
     // Perform setup steps for the planner
@@ -557,7 +563,7 @@ int main(int argc, char **argv)
     std::vector<std::string> Boundsplt = split(Boundstr, ":"); // Split rows
     std::vector<std::string>::iterator iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> bounds_state;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());
@@ -573,7 +579,7 @@ int main(int argc, char **argv)
     Boundsplt = split(Boundstr, ":"); // Split rows
     iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> bounds_control;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());
@@ -588,7 +594,7 @@ int main(int argc, char **argv)
     Boundsplt = split(Boundstr, ":"); // Split rows
     iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> measurement_region;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());

@@ -100,27 +100,27 @@ void ThreeDSimpleStatePropagatorFixedK::propagate(const base::State *state, cons
 
     // std::cout << A_cl_d_ << std::endl;
 
-    Mat lambda_pred, K;
+    Mat3 lambda_pred, K;
     // std::cout << x_pose << " " << y_pose << " " << z_pose << std::endl;
     // std::cout << x_pose_reference << " " << y_pose_reference << " " << z_pose_reference << " " << z_pose + duration * u_2 << std::endl;
 
     // if (z_pose + duration * u_2 > 11.0){ //ICRA23 scenario
     if (x_new > measurementRegions_[0][0] && x_new < measurementRegions_[0][1] && y_new > measurementRegions_[1][0] && y_new < measurementRegions_[1][1] && z_new > measurementRegions_[2][0] && z_new < measurementRegions_[2][1]){ 
-        Mat R = R_*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
-        Mat S = (H * sigma_pred * H.transpose())+ R;
+        Mat3 R = R_*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
+        Mat3 S = (H * sigma_pred * H.transpose())+ R;
         K = (sigma_pred * H.transpose()) * S.inverse();
         lambda_pred = A_cl_*lambda_from*A_cl_; //lambda_pred = A_cl_*lambda_from*A_cl_;
     }
     else{
-        Mat R = R_bad_*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
-        Mat S = (H * sigma_pred * H.transpose()) + R;
+        Mat3 R = R_bad_*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
+        Mat3 S = (H * sigma_pred * H.transpose()) + R;
         K = (sigma_pred * H.transpose()) * S.inverse();
         lambda_pred =  A_cl_*lambda_from*A_cl_;
         // K = Eigen::MatrixXd::Zero(dimensions_, dimensions_);
         // lambda_pred = lambda_from;
     }
-    Mat sigma_to = (I - (K*H)) * sigma_pred;
-    Mat lambda_to = lambda_pred + K*H*sigma_pred;
+    Mat3 sigma_to = (I - (K*H)) * sigma_pred;
+    Mat3 lambda_to = lambda_pred + K*H*sigma_pred;
 
     result->as<R3BeliefSpace::StateType>()->setSigma(sigma_to);
     result->as<R3BeliefSpace::StateType>()->setLambda(lambda_to);

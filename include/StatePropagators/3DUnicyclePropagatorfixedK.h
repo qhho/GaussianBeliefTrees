@@ -17,7 +17,7 @@
 namespace ob = ompl::base;
 namespace oc = ompl::control;
 
-typedef Eigen::Matrix<double, 3, 3, Eigen::DontAlign> Mat;
+typedef Eigen::Matrix<double, 3, 3, Eigen::DontAlign> Mat3;
 typedef Eigen::Matrix<double, 4, 4, Eigen::DontAlign> Mat44;
 typedef Eigen::Matrix<double, 2, 4, Eigen::DontAlign> Mat24;
 typedef Eigen::Matrix<double, 4, 2, Eigen::DontAlign> Mat42;
