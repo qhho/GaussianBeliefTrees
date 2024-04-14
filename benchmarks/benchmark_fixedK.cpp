@@ -301,9 +301,9 @@ void OfflinePlannerUncertainty::planWithUnicycle(int sysType, double plan_time, 
     simple_setup_->setGoal(std::make_shared<MyUnicycleGoalRegion>(si, p_safe, goal_state, goal_r, t_crit, dimension));
 
     if (dimension == 2)
-        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new DynUnicycleControlSpace(si, Q, R, R_bad, K, measurement_region))); //TODO: measurement
+        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new DynUnicycleControlSpaceFixedK(si, Q, R, R_bad, K, measurement_region))); //TODO: measurement
     else if (dimension == 3)
-        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new DynUnicycleControlSpace3D(si, Q, R, R_bad, K, measurement_region)));
+        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new DynUnicycleControlSpace3DFixedK(si, Q, R, R_bad, K, measurement_region)));
     else
         OMPL_ERROR("Invalid dimension. Must be 2 or 3");
 

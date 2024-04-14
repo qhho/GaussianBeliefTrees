@@ -176,7 +176,7 @@ void ompl::control::RRBT::setup()
 
     Q = Q_ * Eigen::MatrixXd::Identity(2, 2);
 
-    std::cout << scene_id_ << std::endl;
+    // std::cout << scene_id_ << std::endl;
     Scene scene_ = Scene(scene_id_);
 
 	n_obstacles_ = scene_.n_obstacles_;

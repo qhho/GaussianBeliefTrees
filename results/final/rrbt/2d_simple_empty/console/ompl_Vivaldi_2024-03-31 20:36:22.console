@@ -1,0 +1,51 @@
+Info:    Beginning benchmark
+Info:    Preparing for run 0 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 0 of control_RRBT
+Info:    Preparing for run 0 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 0.00000.
+Info:    RRBT: Initial k-nearest value of 25
+Info:    RRBT: Found an initial solution with a cost of 299.38 in 192 iterations (117 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 265.36 in 192 iterations (117 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 263.43 in 192 iterations (117 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 261.77 in 204 iterations (129 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 261.71 in 212 iterations (137 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 261.65 in 212 iterations (137 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 258.13 in 222 iterations (147 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 258.08 in 222 iterations (147 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 257.67 in 260 iterations (185 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 257.38 in 260 iterations (185 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 255.56 in 411 iterations (336 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 255.45 in 498 iterations (423 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 253.75 in 1997 iterations (1922 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 251.53 in 2027 iterations (1952 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 250.76 in 2092 iterations (2017 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 250.14 in 2092 iterations (2017 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 250.09 in 2094 iterations (2019 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 248.27 in 2095 iterations (2020 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 245.71 in 2203 iterations (2128 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 243.91 in 2253 iterations (2178 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 243.82 in 7044 iterations (6969 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 243.78 in 7044 iterations (6969 vertices in the graph)
+Info:    RRBT: Created 56907 new states. Checked 0 rewire options. 1201 goal states in tree. Final solution cost 243.780
+Info:    Preparing for run 1 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 1 of control_RRBT
+Info:    Preparing for run 1 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 0.00000.
+Info:    RRBT: Initial k-nearest value of 25
+Info:    RRBT: Found an initial solution with a cost of 295.58 in 549 iterations (463 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 287.66 in 549 iterations (463 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 273.01 in 549 iterations (463 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 251.10 in 549 iterations (463 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 245.25 in 549 iterations (463 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 245.02 in 904 iterations (818 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 244.97 in 904 iterations (818 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 244.92 in 1722 iterations (1636 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 244.76 in 1722 iterations (1636 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 242.69 in 2160 iterations (2074 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 242.64 in 2160 iterations (2074 vertices in the graph)

@@ -714,9 +714,9 @@ namespace ompl
             Eigen::Matrix2d H = Eigen::MatrixXd::Identity(2, 2);
             Eigen::Matrix2d F = Eigen::MatrixXd::Identity(2, 2);
 
-            Eigen::Matrix3d I3 = Eigen::MatrixXd::Identity(2, 2);
-            Eigen::Matrix3d H3 = Eigen::MatrixXd::Identity(2, 2);
-            Eigen::Matrix3d F3 = Eigen::MatrixXd::Identity(2, 2);
+            Eigen::Matrix3d I3 = Eigen::MatrixXd::Identity(3, 3);
+            Eigen::Matrix3d H3 = Eigen::MatrixXd::Identity(3, 3);
+            Eigen::Matrix3d F3 = Eigen::MatrixXd::Identity(3, 3);
 
             Eigen::MatrixXd Q;
 
