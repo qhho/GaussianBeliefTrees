@@ -12,12 +12,10 @@ To get a local copy up and running follow these simple example steps.
 ### Prerequisites
 
 * [Open Motion Planning Library](https://ompl.kavrakilab.org/installation.html)
-* Eigen
-* Spot library
-* ROS2
+* [Spot](https://spot.lre.epita.fr/)
+* [ROS2](https://docs.ros.org/en/iron/index.html)
 
 ### Installation
-
 
 1. Clone the repository
    ```sh
@@ -134,8 +132,9 @@ Update yaml file in configurations/systems/specifications:
     formula: ""
 ```
 
+### Run motion planner
 
-`./main`
+```./main```
 
 ## Visualization
 
