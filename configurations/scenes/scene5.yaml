@@ -20,4 +20,11 @@ scene:
       fz: 0
       tz: 10
 
-
+  Propositions:
+    
+    - fx: 90
+      tx: 10
+      fy: 90
+      ty: 10
+      fz: 0
+      tz: 100

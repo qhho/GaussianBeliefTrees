@@ -34,7 +34,7 @@
 
 /* Author: Matt Maly, Keliang He */
 
-#include "STLAutomaton.hpp"
+#include "LTLAutomaton.hpp"
 #include "ompl/control/planners/ltl/World.h"
 #if OMPL_HAVE_SPOT
 #include <spot/tl/parse.hh>
@@ -256,7 +256,7 @@ void ompl::control::Automaton::addTransition(unsigned int src, const World &w, u
 }
 
 bool ompl::control::Automaton::run(const std::vector<World> &trace) const
-{ //FIX THIS
+{
     int current = startState_;
     for (const auto &w : trace)
     {
@@ -267,7 +267,6 @@ bool ompl::control::Automaton::run(const std::vector<World> &trace) const
     return true;
 }
 
-//FIX THIS BROKEN!
 std::vector<int > ompl::control::Automaton::step(int state, const World &w) const
 {   
     std::vector< int> states;

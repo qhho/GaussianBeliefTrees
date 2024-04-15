@@ -32,11 +32,11 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-/* Author: Matt Maly */
+/* Author: Matt Maly, Qi Heng Ho */
 
 #include "ompl/control/PathControl.h"
-#include "STLProblemDefinition.hpp"
-#include "STLSpaceInformation.h"
+#include "LTLProblemDefinition.hpp"
+#include "LTLSpaceInformation.h"
 #include "ompl/base/ProblemDefinition.h"
 
 namespace ob = ompl::base;

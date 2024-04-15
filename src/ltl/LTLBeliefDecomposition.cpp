@@ -1,4 +1,4 @@
-#include "STLBeliefDecomposition.h"
+#include "LTLBeliefDecomposition.h"
 
 double square(double value){
     return value*value;
@@ -191,8 +191,6 @@ bool ompl::control::BeliefDecomposition::HyperplaneCCValidityChecker(const Eigen
             return valid;
 		}
 	}
-    // std::cout << valid << std::endl;
-    // exit(0);
 	return valid;
 }
 

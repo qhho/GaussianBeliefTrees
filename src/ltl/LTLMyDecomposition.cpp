@@ -1,4 +1,4 @@
-#include "STLMyDecomposition.h"
+#include "LTLMyDecomposition.h"
 
 double square(double value){
     return value*value;

@@ -32,6 +32,26 @@ add_library (gbt_lib
     src/ValidityCheckers/StateValidityCheckerBlackmore.cpp
 )
 
+add_library (ltl_lib
+    src/Scenarios/2d_unicycle_regions.cpp
+    src/Scenarios/3d_unicycle_regions.cpp
+    src/StateSamplers/guided_state_sampler.cpp
+    src/extension/TriangularDecomposition.cpp
+    src/extension/PropositionalTriangularDecomposition.cpp
+    src/ltl/LTLAutomaton.cpp
+    src/stl/LTLProblemDefinition.cpp
+    src/stl/LTLProductGraph.cpp
+    src/stl/LTLSpaceInformation.cpp
+    src/Planners/simba/Planners/STLPlanning.cpp
+    src/Planners/simba/Planners/STLRRT.cpp
+    src/Planners/simba/Planners/STLRRTStrict.cpp
+    src/Planners/simba/Planners/STLRRTUnicycle_final.cpp
+    src/Planners/simba/Planners/STLRRTUnicycle_final3D.cpp
+    src/stl/LTLMyDecomposition.cpp
+    src/stl/LTLBeliefDecomposition.cpp
+    src/stl/LTLBeliefDecomposition3D.cpp
+    src/Planners/GBT_SST.cpp
+)
 
 target_link_libraries (gbt_lib
     ${Boost_LIBRARIES}

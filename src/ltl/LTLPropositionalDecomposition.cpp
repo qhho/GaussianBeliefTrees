@@ -34,76 +34,54 @@
 
 /* Author: Matt Maly */
 
-#include "STLWorld.h"
-#include "ompl/util/Console.h"
-#include "ompl/util/Hash.h"
-#include <unordered_map>
-#include <string>
+#include "LTLPropositionalDecomposition.h"
+#include "ompl/base/State.h"
+#include "ompl/control/planners/syclop/Decomposition.h"
+#include "ompl/control/planners/ltl/World.h"
+#include "ompl/util/ClassForward.h"
+#include "ompl/util/RandomNumbers.h"
+#include "ompl/base/StateSampler.h"
+#include <vector>
 
-ompl::control::STLWorld::STLWorld(unsigned int np) : numProps_(np)
+ompl::control::STLPropositionalDecomposition::STLPropositionalDecomposition(const DecompositionPtr &decomp)
+  : Decomposition(decomp->getDimension(), decomp->getBounds()), decomp_(decomp)
 {
 }
 
-bool ompl::control::STLWorld::operator[](unsigned int i) const
+ompl::control::STLPropositionalDecomposition::~STLPropositionalDecomposition() = default;
+
+int ompl::control::STLPropositionalDecomposition::getNumRegions() const
 {
-    auto p = props_.find(i);
-    if (p == props_.end())
-        OMPL_ERROR("Proposition %u is not set in world", i);
-    return p->second;
+    return decomp_->getNumRegions();
 }
 
-bool &ompl::control::STLWorld::operator[](unsigned int i)
+double ompl::control::STLPropositionalDecomposition::getRegionVolume(int rid)
 {
-    return props_[i];
+    return decomp_->getRegionVolume(rid);
 }
 
-unsigned int ompl::control::STLWorld::numProps() const
+int ompl::control::STLPropositionalDecomposition::locateRegion(const base::State *s) const
 {
-    return numProps_;
+    return decomp_->locateRegion(s);
 }
 
-bool ompl::control::STLWorld::satisfies(const STLWorld &w) const
+void ompl::control::STLPropositionalDecomposition::project(const base::State *s, std::vector<double> &coord) const
 {
-    std::unordered_map<unsigned int, bool>::const_iterator q;
-    for (const auto &p : w.props_)
-    {
-        q = props_.find(p.first);
-        if (q == props_.end() || *q != p)
-            return false;
-    }
+    return decomp_->project(s, coord);
 }
 
-std::string ompl::control::STLWorld::formula() const
+void ompl::control::STLPropositionalDecomposition::getNeighbors(int rid, std::vector<int> &neighbors) const
 {
-    if (props_.empty())
-        return "true";
-    auto p = props_.begin();
-    std::string f = std::string(p->second ? "p" : "!p") + std::to_string(p->first);
-    ++p;
-    for (; p != props_.end(); ++p)
-        f += std::string(p->second ? " & p" : " & !p") + std::to_string(p->first);
-    return f;
+    decomp_->getNeighbors(rid, neighbors);
 }
 
-const std::unordered_map<unsigned int, bool> &ompl::control::World::props() const
+void ompl::control::STLPropositionalDecomposition::sampleFromRegion(int rid, RNG &rng, std::vector<double> &coord) const
 {
-    return props_;
+    decomp_->sampleFromRegion(rid, rng, coord);
 }
 
-bool ompl::control::World::operator==(const World &w) const
+void ompl::control::STLPropositionalDecomposition::sampleFullState(const base::StateSamplerPtr &sampler,
+                                                                const std::vector<double> &coord, base::State *s) const
 {
-    return numProps_ == w.numProps_ && props_ == w.props_;
-}
-
-void ompl::control::World::clear()
-{
-    props_.clear();
-}
-
-size_t std::hash<ompl::control::World>::operator()(const ompl::control::World &w) const
-{
-    std::size_t hash = 0;
-    for (const auto &p : w.props_)
-        ompl::hash_combine(hash, p);
-    return hash;
+    decomp_->sampleFullState(sampler, coord, s);
 }

@@ -1,6 +1,6 @@
 #include <utility>
 
-#include "STLSpaceInformation.h"
+#include "LTLSpaceInformation.h"
 #include "ompl/control/SpaceInformation.h"
 #include "ompl/control/StatePropagator.h"
 #include "STLProductGraph.h"
