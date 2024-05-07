@@ -1,15 +1,15 @@
-/*
-
- */
-
+#include "agent_gbt/GBT.h"
+#include <chrono>
+#include <functional>
 #include <iostream>
 #include <vector>
 #include <boost/bind.hpp>
 #include <fstream>
-#include "gbt.hpp"
 #include <filesystem>
-#include <ompl/util/Console.h>
+#include <fstream>
+#include <sstream>
 
+using namespace std::chrono_literals;
 namespace ob = ompl::base;
 namespace oc = ompl::control;
 namespace og = ompl::geometric;
@@ -45,17 +45,7 @@ public:
 };
 
 
-GaussianBeliefTrees::GaussianBeliefTrees(const std::string& scene_config, const std::string& system_config)
-{   
-    
-    scene_ = Scene(scene_config);
-    system_ = System(system_config);
-
-    // TODO: Should this be hardcoded to a 2x2? Will need to change when we make R^n.
-    initial_covariance_ = 1.0*Eigen::MatrixXd::Identity(2, 2);
-}
-
-void GaussianBeliefTrees::SaveSolutionPath(oc::PathControl path_control, ob::StateSpacePtr space, std::string stringpath)
+void GBT::SaveSolutionPath(oc::PathControl path_control, ob::StateSpacePtr space, std::string stringpath)
 {   
     std::ofstream outputsolution;
 
@@ -84,8 +74,9 @@ void GaussianBeliefTrees::SaveSolutionPath(oc::PathControl path_control, ob::Sta
 
 }
 
-void GaussianBeliefTrees::planWithSimpleSetup()
+std::string GBT::planWithSimpleSetup()
 {
+    std::cout<<"TEST"<<std::endl;
     ob::StateSpacePtr space(constructStateSpace()); //space should probably be a class attribute
     ob::RealVectorBounds bounds_se_n(scene_.scene_bounds_.size());
     for(int i = 0; i < scene_.scene_bounds_.size(); i++)
@@ -93,7 +84,6 @@ void GaussianBeliefTrees::planWithSimpleSetup()
         bounds_se_n.setLow(i, scene_.scene_bounds_[i].first);
         bounds_se_n.setHigh(i, scene_.scene_bounds_[i].second);
     }
-
     space->as<R2BeliefSpace>()->setBounds(bounds_se_n); //TODO: currently setup for se2 how to make se^n?
     auto cspace(std::make_shared<oc::RealVectorControlSpace>(space, system_.control_bounds_.size()));
     ob::RealVectorBounds bounds(system_.control_bounds_.size());
@@ -149,7 +139,9 @@ void GaussianBeliefTrees::planWithSimpleSetup()
 
     planner->setProblemDefinition(pdef);
     planner->setup();
-    planner->solve(1);
+
+    return "solution_60sec_fixedK_03.csv";
+    // planner->solve(system_.planning_time_);
 
     // ob::PlannerData planner_data(si);
     // planner->getPlannerData(planner_data);
@@ -174,17 +166,15 @@ void GaussianBeliefTrees::planWithSimpleSetup()
     // if (planner->getProblemDefinition()->hasExactSolution()){
     //     const ompl::base::PathPtr &path_5sec = planner->getProblemDefinition()->getSolutionPath(); 
     //     oc::PathControl path_control = static_cast<oc::PathControl&>(*path_5sec);
-    //     // this->SaveSolutionPath(path_control, space, "solution_60sec_fixedK_03.csv");
+    //     this->SaveSolutionPath(path_control, space, "solution_60sec_fixedK_03.csv");
+    //     return "solution_60sec_fixedK_03.csv";
     // }
     // else{
     //     std::cout << "No solution for 10 secs" << std::endl;
     // }
-    planner->clear();
-    pdef->clearGoal();
-    si->clearValidStateSamplerAllocator();
 }
 
-void GaussianBeliefTrees::solve(ob::PlannerPtr planner)
+void GBT::solve(ob::PlannerPtr planner)
 {
     //=======================================================================
     // Attempt to solve the problem
@@ -248,8 +238,10 @@ void GaussianBeliefTrees::solve(ob::PlannerPtr planner)
         //=======================================================================
         // Clear previous solution path
         //=======================================================================
+        std::cout << "clearing" << std::endl;
+        planner->clear();
 
-        // exit(0);
+        exit(0);
     }
     else
     {
@@ -274,21 +266,43 @@ void GaussianBeliefTrees::solve(ob::PlannerPtr planner)
 
         path_controls_.clear();
         path_controls_.reserve(path_control_controls.size());
-        // exit(0);
+        return;
     }
 }
 
-int main(int argc, char **argv)
-{   
+GBT::GBT(const std::string& scene_config, const std::string& system_config)
+: Node("gbt_publisher")
+{
+    rmw_qos_profile_t qos_profile = rmw_qos_profile_sensor_data;
+    auto qos = rclcpp::QoS(rclcpp::QoSInitialization(qos_profile.history, 5), qos_profile);
+    scene_ = Scene(scene_config);
+    system_ = System(system_config);
+    initial_covariance_ = 1.0*Eigen::MatrixXd::Identity(2, 2);
+    obstacle_publisher_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("visualization_marker_array/obstacles", 10);
+    agent_publisher_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("visualization_marker_array/agent", 10);
+    timer_ = create_wall_timer(std::chrono::milliseconds(50), std::bind(&GBT::timer_callback, this));
+    planWithSimpleSetup();
+    std::cout<<"PLANNING DONE"<<std::endl;
+}
+
+void GBT::timer_callback()
+{       
+    std::cout<<"TEST"<<std::endl;
+    // planWithSimpleSetup();
+}
+
+int main(int argc, char** argv)
+{
     std::filesystem::path currentPath = std::filesystem::current_path();
     std::filesystem::path scene_config = currentPath  / ".." / "configurations" / "scenes" / "scene5.yaml";
     std::filesystem::path system_config = currentPath  / ".." / "configurations" / "systems" / "system1.yaml";
-    ompl::msg::setLogLevel(ompl::msg::LOG_DEBUG);  // Set the desired log level
-    OMPL_INFORM("OMPL version: %s", OMPL_VERSION);
-    OMPL_DEBUG("Debugging query optimization process.");
-    OMPL_WARN("Warning: Using default parameters.");
-    OMPL_ERROR("Error: Invalid configuration detected.");
-    GaussianBeliefTrees GaussianBeliefTrees(scene_config, system_config);
-    GaussianBeliefTrees.planWithSimpleSetup();
-    return 0;
+    std::filesystem::path solution_path = currentPath  / ".." / "build" / "solution_60sec_fixedK_03.csv";
+    std::cout << "Scene Path: " << scene_config << std::endl;
+    std::cout << "System Path: " << system_config << std::endl;
+    std::cout << "Starting GBT planner node..." << std::endl;
+    setvbuf(stdout, NULL, _IONBF, BUFSIZ);
+    rclcpp::init(argc, argv);
+	rclcpp::spin(std::make_shared<GBT>(scene_config, system_config));
+	rclcpp::shutdown();
+	return 0;
 }

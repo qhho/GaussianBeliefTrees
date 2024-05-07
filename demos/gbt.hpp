@@ -42,7 +42,6 @@ namespace oc = ompl::control;
 class GaussianBeliefTrees {
   public:
         GaussianBeliefTrees(const std::string& scene_config, const std::string& system_config);
-        // ~GaussianBeliefTrees();
         ob::StateSpacePtr constructCSpace();
         void boundCSpace(ob::StateSpacePtr c_space);
         oc::ControlSpacePtr constructCtrlSpace(ob::StateSpacePtr c_space);

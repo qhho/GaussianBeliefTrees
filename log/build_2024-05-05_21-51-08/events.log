@@ -1,0 +1,62 @@
+[0.000000] (-) TimerEvent: {}
+[0.000150] (gbt) JobQueued: {'identifier': 'gbt', 'dependencies': OrderedDict()}
+[0.000225] (gbt) JobStarted: {'identifier': 'gbt'}
+[0.100172] (-) TimerEvent: {}
+[0.163619] (gbt) JobProgress: {'identifier': 'gbt', 'progress': 'cmake'}
+[0.165029] (gbt) JobProgress: {'identifier': 'gbt', 'progress': 'build'}
+[0.165075] (gbt) Command: {'cmd': ['/usr/local/bin/cmake', '--build', '/home/nic/dev/research/GaussianBeliefTrees/build/gbt', '--', '-j32', '-l32'], 'cwd': '/home/nic/dev/research/GaussianBeliefTrees/build/gbt', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'nic'), ('GIT_ASKPASS', '/home/nic/.vscode-server/bin/b58957e67ee1e712cebf466b995adf4c5307b2bd/extensions/git/dist/askpass.sh'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('MOTD_SHOWN', 'update-motd'), ('HOME', '/home/nic'), ('OLDPWD', '/home/nic/dev/research/GaussianBeliefTrees/ros_ws'), ('TERM_PROGRAM_VERSION', '1.89.0'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1000/vscode-ipc-0d6f7ad0-474d-4c69-bf87-6dcd3164caad.sock'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/home/nic/.vscode-server/bin/b58957e67ee1e712cebf466b995adf4c5307b2bd/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/home/nic/.vscode-server/bin/b58957e67ee1e712cebf466b995adf4c5307b2bd/node'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-20.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'nic'), ('NAME', 'Code'), ('WSL_INTEROP', '/run/WSL/83042_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/home/nic/.vscode-server/bin/b58957e67ee1e712cebf466b995adf4c5307b2bd/bin/remote-cli:/home/nic/.local/bin:/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/Program Files/MATLAB/R2023b/bin:/mnt/c/Program Files/usbipd-win/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/mnt/c/Users/nicol/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/nicol/AppData/Local/Programs/Microsoft VS Code/bin:/snap/bin'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-91649d80d3.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/home/nic/dev/research/GaussianBeliefTrees/build/gbt'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'ELECTRON_RUN_AS_NODE/w:')]), 'shell': False}
+[0.179748] (gbt) StdoutLine: {'line': b'-- Configuring done (0.0s)\n'}
+[0.184972] (gbt) StdoutLine: {'line': b'-- Generating done (0.0s)\n'}
+[0.185648] (gbt) StdoutLine: {'line': b'-- Build files have been written to: /home/nic/dev/research/GaussianBeliefTrees/build/gbt\n'}
+[0.200238] (-) TimerEvent: {}
+[0.220997] (gbt) StdoutLine: {'line': b'[  7%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Spaces/RealVectorBeliefSpace.cpp.o\x1b[0m\n'}
+[0.221262] (gbt) StdoutLine: {'line': b'[ 15%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Spaces/R2BeliefSpace.cpp.o\x1b[0m\n'}
+[0.221496] (gbt) StdoutLine: {'line': b'[ 23%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/StatePropagators/SimpleStatePropagator.cpp.o\x1b[0m\n'}
+[0.222020] (gbt) StdoutLine: {'line': b'[ 30%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/OptimizationObjectives/state_cost_objective.cpp.o\x1b[0m\n'}
+[0.227767] (gbt) StdoutLine: {'line': b'[ 38%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Benchmarking/MyBenchmark.cpp.o\x1b[0m\n'}
+[0.230247] (gbt) StdoutLine: {'line': b'[ 46%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Planners/SSBT.cpp.o\x1b[0m\n'}
+[0.231687] (gbt) StdoutLine: {'line': b'[ 53%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Planners/mod_rrt.cpp.o\x1b[0m\n'}
+[0.232188] (gbt) StdoutLine: {'line': b'[ 61%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Scene/Scene.cpp.o\x1b[0m\n'}
+[0.233555] (gbt) StdoutLine: {'line': b'[ 69%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/System/System.cpp.o\x1b[0m\n'}
+[0.234366] (gbt) StdoutLine: {'line': b'[ 76%] \x1b[32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/ValidityCheckers/StateValidityCheckerBlackmore.cpp.o\x1b[0m\n'}
+[0.300729] (-) TimerEvent: {}
+[0.401167] (-) TimerEvent: {}
+[0.501605] (-) TimerEvent: {}
+[0.602191] (-) TimerEvent: {}
+[0.702783] (-) TimerEvent: {}
+[0.803396] (-) TimerEvent: {}
+[0.903852] (-) TimerEvent: {}
+[1.004382] (-) TimerEvent: {}
+[1.104862] (-) TimerEvent: {}
+[1.205293] (-) TimerEvent: {}
+[1.305724] (-) TimerEvent: {}
+[1.406155] (-) TimerEvent: {}
+[1.506661] (-) TimerEvent: {}
+[1.607288] (-) TimerEvent: {}
+[1.707870] (-) TimerEvent: {}
+[1.808420] (-) TimerEvent: {}
+[1.909068] (-) TimerEvent: {}
+[2.009746] (-) TimerEvent: {}
+[2.110289] (-) TimerEvent: {}
+[2.210964] (-) TimerEvent: {}
+[2.311553] (-) TimerEvent: {}
+[2.412200] (-) TimerEvent: {}
+[2.512806] (-) TimerEvent: {}
+[2.613415] (-) TimerEvent: {}
+[2.640724] (gbt) StderrLine: {'line': b'make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:90: CMakeFiles/gbt_lib.dir/src/Spaces/R2BeliefSpace.cpp.o] Interrupt\n'}
+[2.641798] (gbt) StderrLine: {'line': b'make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:76: CMakeFiles/gbt_lib.dir/src/Spaces/RealVectorBeliefSpace.cpp.o] Interrupt\n'}
+[2.642051] (gbt) StderrLine: {'line': b'make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:104: CMakeFiles/gbt_lib.dir/src/StatePropagators/SimpleStatePropagator.cpp.o] Interrupt\n'}
+[2.642112] (gbt) StderrLine: {'line': b'make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:118: CMakeFiles/gbt_lib.dir/src/OptimizationObjectives/state_cost_objective.cpp.o] Interrupt\n'}
+[2.642166] (gbt) StderrLine: {'line': b'make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:132: CMakeFiles/gbt_lib.dir/src/Benchmarking/MyBenchmark.cpp.o] Interrupt\n'}
+[2.642211] (gbt) StderrLine: {'line': b'make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:160: CMakeFiles/gbt_lib.dir/src/Planners/mod_rrt.cpp.o] Interrupt\n'}
+[2.642250] (gbt) StderrLine: {'line': b'make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:174: CMakeFiles/gbt_lib.dir/src/Scene/Scene.cpp.o] Interrupt\n'}
+[2.642287] (gbt) StderrLine: {'line': b'make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:188: CMakeFiles/gbt_lib.dir/src/System/System.cpp.o] Interrupt\n'}
+[2.642325] (gbt) StderrLine: {'line': b'make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:202: CMakeFiles/gbt_lib.dir/src/ValidityCheckers/StateValidityCheckerBlackmore.cpp.o] Interrupt\n'}
+[2.642364] (gbt) StderrLine: {'line': b'make[2]: *** wait: No child processes.  Stop.\n'}
+[2.642402] (gbt) StderrLine: {'line': b'make[2]: *** Waiting for unfinished jobs....\n'}
+[2.642438] (gbt) StderrLine: {'line': b'make[2]: *** wait: No child processes.  Stop.\n'}
+[2.642475] (gbt) StderrLine: {'line': b'make[1]: *** [CMakeFiles/Makefile2:85: CMakeFiles/gbt_lib.dir/all] Error 2\n'}
+[2.642510] (gbt) StderrLine: {'line': b'make: *** [Makefile:91: all] Interrupt\n'}
+[2.669488] (gbt) CommandEnded: {'returncode': -2}
+[2.669873] (gbt) JobEnded: {'identifier': 'gbt', 'rc': 'SIGINT'}
+[2.680038] (-) EventReactorShutdown: {}

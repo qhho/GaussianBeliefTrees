@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="3">
-  <name>agent_visualizer</name>
+  <name>agent_gbt</name>
   <version>0.0.1</version>
   <description>A package for visualizing agents and obstacles in RViz2</description>
 

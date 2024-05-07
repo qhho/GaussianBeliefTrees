@@ -1,0 +1,27 @@
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/nic/dev/research/GaussianBeliefTrees/build/gbt
+[  7%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Spaces/RealVectorBeliefSpace.cpp.o[0m
+[ 15%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Spaces/R2BeliefSpace.cpp.o[0m
+[ 23%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/StatePropagators/SimpleStatePropagator.cpp.o[0m
+[ 30%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/OptimizationObjectives/state_cost_objective.cpp.o[0m
+[ 38%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Benchmarking/MyBenchmark.cpp.o[0m
+[ 46%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Planners/SSBT.cpp.o[0m
+[ 53%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Planners/mod_rrt.cpp.o[0m
+[ 61%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Scene/Scene.cpp.o[0m
+[ 69%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/System/System.cpp.o[0m
+[ 76%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/ValidityCheckers/StateValidityCheckerBlackmore.cpp.o[0m
+make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:90: CMakeFiles/gbt_lib.dir/src/Spaces/R2BeliefSpace.cpp.o] Interrupt
+make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:76: CMakeFiles/gbt_lib.dir/src/Spaces/RealVectorBeliefSpace.cpp.o] Interrupt
+make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:104: CMakeFiles/gbt_lib.dir/src/StatePropagators/SimpleStatePropagator.cpp.o] Interrupt
+make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:118: CMakeFiles/gbt_lib.dir/src/OptimizationObjectives/state_cost_objective.cpp.o] Interrupt
+make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:132: CMakeFiles/gbt_lib.dir/src/Benchmarking/MyBenchmark.cpp.o] Interrupt
+make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:160: CMakeFiles/gbt_lib.dir/src/Planners/mod_rrt.cpp.o] Interrupt
+make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:174: CMakeFiles/gbt_lib.dir/src/Scene/Scene.cpp.o] Interrupt
+make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:188: CMakeFiles/gbt_lib.dir/src/System/System.cpp.o] Interrupt
+make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:202: CMakeFiles/gbt_lib.dir/src/ValidityCheckers/StateValidityCheckerBlackmore.cpp.o] Interrupt
+make[2]: *** wait: No child processes.  Stop.
+make[2]: *** Waiting for unfinished jobs....
+make[2]: *** wait: No child processes.  Stop.
+make[1]: *** [CMakeFiles/Makefile2:85: CMakeFiles/gbt_lib.dir/all] Error 2
+make: *** [Makefile:91: all] Interrupt

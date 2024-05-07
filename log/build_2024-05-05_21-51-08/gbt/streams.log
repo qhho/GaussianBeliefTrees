@@ -1,0 +1,29 @@
+[0.167s] Invoking command in '/home/nic/dev/research/GaussianBeliefTrees/build/gbt': WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/local/bin/cmake --build /home/nic/dev/research/GaussianBeliefTrees/build/gbt -- -j32 -l32
+[0.180s] -- Configuring done (0.0s)
+[0.185s] -- Generating done (0.0s)
+[0.185s] -- Build files have been written to: /home/nic/dev/research/GaussianBeliefTrees/build/gbt
+[0.221s] [  7%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Spaces/RealVectorBeliefSpace.cpp.o[0m
+[0.221s] [ 15%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Spaces/R2BeliefSpace.cpp.o[0m
+[0.221s] [ 23%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/StatePropagators/SimpleStatePropagator.cpp.o[0m
+[0.222s] [ 30%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/OptimizationObjectives/state_cost_objective.cpp.o[0m
+[0.228s] [ 38%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Benchmarking/MyBenchmark.cpp.o[0m
+[0.230s] [ 46%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Planners/SSBT.cpp.o[0m
+[0.232s] [ 53%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Planners/mod_rrt.cpp.o[0m
+[0.232s] [ 61%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Scene/Scene.cpp.o[0m
+[0.233s] [ 69%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/System/System.cpp.o[0m
+[0.234s] [ 76%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/ValidityCheckers/StateValidityCheckerBlackmore.cpp.o[0m
+[2.641s] make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:90: CMakeFiles/gbt_lib.dir/src/Spaces/R2BeliefSpace.cpp.o] Interrupt
+[2.642s] make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:76: CMakeFiles/gbt_lib.dir/src/Spaces/RealVectorBeliefSpace.cpp.o] Interrupt
+[2.642s] make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:104: CMakeFiles/gbt_lib.dir/src/StatePropagators/SimpleStatePropagator.cpp.o] Interrupt
+[2.642s] make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:118: CMakeFiles/gbt_lib.dir/src/OptimizationObjectives/state_cost_objective.cpp.o] Interrupt
+[2.642s] make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:132: CMakeFiles/gbt_lib.dir/src/Benchmarking/MyBenchmark.cpp.o] Interrupt
+[2.642s] make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:160: CMakeFiles/gbt_lib.dir/src/Planners/mod_rrt.cpp.o] Interrupt
+[2.642s] make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:174: CMakeFiles/gbt_lib.dir/src/Scene/Scene.cpp.o] Interrupt
+[2.642s] make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:188: CMakeFiles/gbt_lib.dir/src/System/System.cpp.o] Interrupt
+[2.642s] make[2]: *** [CMakeFiles/gbt_lib.dir/build.make:202: CMakeFiles/gbt_lib.dir/src/ValidityCheckers/StateValidityCheckerBlackmore.cpp.o] Interrupt
+[2.642s] make[2]: *** wait: No child processes.  Stop.
+[2.642s] make[2]: *** Waiting for unfinished jobs....
+[2.642s] make[2]: *** wait: No child processes.  Stop.
+[2.642s] make[1]: *** [CMakeFiles/Makefile2:85: CMakeFiles/gbt_lib.dir/all] Error 2
+[2.642s] make: *** [Makefile:91: all] Interrupt
+[2.669s] Invoked command in '/home/nic/dev/research/GaussianBeliefTrees/build/gbt' returned '-2': WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/local/bin/cmake --build /home/nic/dev/research/GaussianBeliefTrees/build/gbt -- -j32 -l32

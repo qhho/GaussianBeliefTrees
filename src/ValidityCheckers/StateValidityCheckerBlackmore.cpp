@@ -18,7 +18,6 @@ bool StateValidityCheckerBlackmore::isValid(const ob::State *state) const {
 	// Bounds checker
 	//=========================================================================
 	if (!si_->satisfiesBounds(state)) {
-		// std::cout << "state refused! Reason: out of bounds!" << std::endl;
 		return false;
 	}
 

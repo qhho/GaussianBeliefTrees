@@ -20,7 +20,7 @@ system:
     R : 0.1
 
   planner:
-    planning_time: 60.0
+    planning_time: 10.0
     p_safe: 0.95
     goal_radius: 10
     cost_threshold: 45.0

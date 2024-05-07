@@ -1,4 +1,4 @@
-#include "Scene.h"
+#include "Scene/Scene.h"
 #include <iostream>
 #include <yaml-cpp/yaml.h>
 #include <filesystem>

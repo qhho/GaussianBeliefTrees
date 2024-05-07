@@ -1,0 +1,13 @@
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/nic/dev/research/GaussianBeliefTrees/build/gbt
+[  7%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Spaces/RealVectorBeliefSpace.cpp.o[0m
+[ 15%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Spaces/R2BeliefSpace.cpp.o[0m
+[ 23%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/StatePropagators/SimpleStatePropagator.cpp.o[0m
+[ 30%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/OptimizationObjectives/state_cost_objective.cpp.o[0m
+[ 38%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Benchmarking/MyBenchmark.cpp.o[0m
+[ 46%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Planners/SSBT.cpp.o[0m
+[ 53%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Planners/mod_rrt.cpp.o[0m
+[ 61%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/Scene/Scene.cpp.o[0m
+[ 69%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/System/System.cpp.o[0m
+[ 76%] [32mBuilding CXX object CMakeFiles/gbt_lib.dir/src/ValidityCheckers/StateValidityCheckerBlackmore.cpp.o[0m

@@ -1,0 +1,2 @@
+Invoking command in '/home/nic/dev/research/GaussianBeliefTrees/build/gbt': WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/local/bin/cmake --build /home/nic/dev/research/GaussianBeliefTrees/build/gbt -- -j32 -l32
+Invoked command in '/home/nic/dev/research/GaussianBeliefTrees/build/gbt' returned '-2': WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/local/bin/cmake --build /home/nic/dev/research/GaussianBeliefTrees/build/gbt -- -j32 -l32

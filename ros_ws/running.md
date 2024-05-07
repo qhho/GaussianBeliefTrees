@@ -39,3 +39,12 @@ In RViz:
 - Click `Add` in the bottom left.
 - Add a MarkerArray and change the topic to `visualization_marker_array/obstacles`.
 - Add another MarkerArray and change the topic to `visualization_marker_array/agent`.
+
+
+
+```bash
+colcon build
+source /opt/ros/foxy/setup.bash
+source install/local_setup.bash
+ros2 launch agent_bringup agent_gbt.launch.py
+```
