@@ -61,6 +61,8 @@ ompl::control::SSBT::SSBT(const SpaceInformationPtr &si) : base::Planner(si, "SS
     Planner::declareParam<double>("selection_radius", this, &SSBT::setSelectionRadius, &SSBT::getSelectionRadius, "0.:.1:"
                                                                                                                 "100");
     Planner::declareParam<double>("pruning_radius", this, &SSBT::setPruningRadius, &SSBT::getPruningRadius, "0.:.1:100");
+
+    addPlannerProgressProperty("best cost REAL", [this] { return bestCostProperty(); });
 }
 
 ompl::control::SSBT::~SSBT()
@@ -302,7 +304,6 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
             {
                 base::Cost incCost = opt_->motionCost(laststate, pstates[p]);
                 totalIncCost = opt_->combineCosts(totalIncCost, incCost);
-                // std::cout << "freeing" << laststate << std::endl;
                 if (p > 0)
                 {
                     si_->freeState(laststate);
@@ -338,8 +339,6 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
 
                 nn_->add(motion);
 
-                // std::cout << nmotion->state_->as<R2BeliefSpace::StateType>()->getX() << " " << nmotion->state_->as<R2BeliefSpace::StateType>()->getY() << " " << nmotion->accCost_.value() << " " << motion->state_->as<R2BeliefSpace::StateType>()->getX() << " " <<  motion->state_->as<R2BeliefSpace::StateType>()->getY() << " " << motion->accCost_.value()<< std::endl;
-
                 if (DISTANCE_FUNC_ == 0){
                     if (motion->state_->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(0,0) > max_eigenvalue_)
                     {
@@ -363,7 +362,7 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
 
                 double dist = 0.0;
                 bool solv = goal->isSatisfied(motion->state_, &dist);
-                std::cout << dist << std::endl;
+                // std::cout << dist << std::endl;
                 if (solv && opt_->isCostBetterThan(motion->accCost_, prevSolutionCost_))
                 {
                     approxdif = dist;
@@ -391,6 +390,7 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
                     prevSolutionCost_ = solution->accCost_;
 
                     OMPL_INFORM("Found solution with cost %.2f", solution->accCost_.value());
+                    std::cout << "Found solution with cost " << solution->accCost_.value() << std::endl;
                     OMPL_INFORM("Solution state:%f %f ", solution->state_->as<R2BeliefSpace::StateType>()->getX(), solution->state_->as<R2BeliefSpace::StateType>()->getY());
 
                     sufficientlyShort = opt_->isSatisfied(solution->accCost_);

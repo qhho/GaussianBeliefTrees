@@ -1,0 +1,1077 @@
+Info:    Beginning benchmark
+Info:    Preparing for run 0 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 0 of control_RRBT
+Info:    Preparing for run 0 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 537.41 in 718 iterations (303 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 511.85 in 718 iterations (303 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 507.48 in 718 iterations (303 vertices in the graph)
+Info:    RRBT: Created 302 new states. Checked 0 rewire options. 3 goal states in tree. Final solution cost 507.479
+Info:    Preparing for run 1 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 1 of control_RRBT
+Info:    Preparing for run 1 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 502.72 in 1761 iterations (1012 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 501.11 in 1761 iterations (1012 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 491.60 in 1761 iterations (1012 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 464.22 in 1761 iterations (1012 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 456.86 in 1761 iterations (1012 vertices in the graph)
+Info:    RRBT: Created 1011 new states. Checked 0 rewire options. 7 goal states in tree. Final solution cost 456.865
+Info:    Preparing for run 2 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 2 of control_RRBT
+Info:    Preparing for run 2 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 511.53 in 990 iterations (622 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 494.57 in 990 iterations (622 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 478.97 in 990 iterations (622 vertices in the graph)
+Info:    RRBT: Created 621 new states. Checked 0 rewire options. 4 goal states in tree. Final solution cost 478.968
+Info:    Preparing for run 3 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 3 of control_RRBT
+Info:    Preparing for run 3 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 473.32 in 1630 iterations (792 vertices in the graph)
+Info:    RRBT: Created 791 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 473.318
+Info:    Preparing for run 4 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 4 of control_RRBT
+Info:    Preparing for run 4 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 783 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 5 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 5 of control_RRBT
+Info:    Preparing for run 5 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 511.16 in 758 iterations (331 vertices in the graph)
+Info:    RRBT: Created 330 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 511.156
+Info:    Preparing for run 6 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 6 of control_RRBT
+Info:    Preparing for run 6 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 463.80 in 1001 iterations (522 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 456.97 in 1001 iterations (522 vertices in the graph)
+Info:    RRBT: Created 521 new states. Checked 0 rewire options. 2 goal states in tree. Final solution cost 456.972
+Info:    Preparing for run 7 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 7 of control_RRBT
+Info:    Preparing for run 7 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 486.34 in 1395 iterations (619 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 480.31 in 1395 iterations (619 vertices in the graph)
+Info:    RRBT: Created 618 new states. Checked 0 rewire options. 2 goal states in tree. Final solution cost 480.309
+Info:    Preparing for run 8 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 8 of control_RRBT
+Info:    Preparing for run 8 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 491.50 in 864 iterations (494 vertices in the graph)
+Info:    RRBT: Created 493 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 491.504
+Info:    Preparing for run 9 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 9 of control_RRBT
+Info:    Preparing for run 9 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 476.82 in 963 iterations (459 vertices in the graph)
+Info:    RRBT: Created 458 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 476.819
+Info:    Preparing for run 10 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 10 of control_RRBT
+Info:    Preparing for run 10 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 466.20 in 1022 iterations (538 vertices in the graph)
+Info:    RRBT: Created 537 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 466.201
+Info:    Preparing for run 11 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 11 of control_RRBT
+Info:    Preparing for run 11 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 740 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 12 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 12 of control_RRBT
+Info:    Preparing for run 12 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 797 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 13 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 13 of control_RRBT
+Info:    Preparing for run 13 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 492.36 in 966 iterations (630 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 478.44 in 966 iterations (630 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 467.13 in 966 iterations (630 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 457.65 in 966 iterations (630 vertices in the graph)
+Info:    RRBT: Created 629 new states. Checked 0 rewire options. 5 goal states in tree. Final solution cost 457.651
+Info:    Preparing for run 14 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 14 of control_RRBT
+Info:    Preparing for run 14 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 464.73 in 1293 iterations (775 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 460.16 in 1293 iterations (775 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 459.27 in 1293 iterations (775 vertices in the graph)
+Info:    RRBT: Created 774 new states. Checked 0 rewire options. 3 goal states in tree. Final solution cost 459.270
+Info:    Preparing for run 15 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 15 of control_RRBT
+Info:    Preparing for run 15 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 812 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 16 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 16 of control_RRBT
+Info:    Preparing for run 16 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 463.60 in 1040 iterations (620 vertices in the graph)
+Info:    RRBT: Created 619 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 463.596
+Info:    Preparing for run 17 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 17 of control_RRBT
+Info:    Preparing for run 17 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 508.67 in 464 iterations (285 vertices in the graph)
+Info:    RRBT: Created 284 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 508.670
+Info:    Preparing for run 18 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 18 of control_RRBT
+Info:    Preparing for run 18 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 470.64 in 820 iterations (493 vertices in the graph)
+Info:    RRBT: Created 492 new states. Checked 0 rewire options. 2 goal states in tree. Final solution cost 470.641
+Info:    Preparing for run 19 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 19 of control_RRBT
+Info:    Preparing for run 19 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 464.31 in 1004 iterations (595 vertices in the graph)
+Info:    RRBT: Created 594 new states. Checked 0 rewire options. 2 goal states in tree. Final solution cost 464.313
+Info:    Preparing for run 20 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 20 of control_RRBT
+Info:    Preparing for run 20 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 489.86 in 1089 iterations (572 vertices in the graph)
+Info:    RRBT: Created 571 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 489.859
+Info:    Preparing for run 21 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 21 of control_RRBT
+Info:    Preparing for run 21 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 471.22 in 615 iterations (416 vertices in the graph)
+Info:    RRBT: Created 415 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 471.218
+Info:    Preparing for run 22 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 22 of control_RRBT
+Info:    Preparing for run 22 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 499.14 in 936 iterations (501 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 467.40 in 936 iterations (501 vertices in the graph)
+Info:    RRBT: Created 500 new states. Checked 0 rewire options. 2 goal states in tree. Final solution cost 467.401
+Info:    Preparing for run 23 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 23 of control_RRBT
+Info:    Preparing for run 23 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 488.29 in 868 iterations (442 vertices in the graph)
+Info:    RRBT: Created 441 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 488.291
+Info:    Preparing for run 24 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 24 of control_RRBT
+Info:    Preparing for run 24 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 822 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 25 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 25 of control_RRBT
+Info:    Preparing for run 25 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 502.77 in 1317 iterations (711 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 486.60 in 1317 iterations (711 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 481.64 in 1317 iterations (711 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 476.65 in 1317 iterations (711 vertices in the graph)
+Info:    RRBT: Created 710 new states. Checked 0 rewire options. 4 goal states in tree. Final solution cost 476.646
+Info:    Preparing for run 26 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 26 of control_RRBT
+Info:    Preparing for run 26 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 459.29 in 1289 iterations (688 vertices in the graph)
+Info:    RRBT: Created 687 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 459.293
+Info:    Preparing for run 27 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 27 of control_RRBT
+Info:    Preparing for run 27 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 484.02 in 1237 iterations (598 vertices in the graph)
+Info:    RRBT: Created 597 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 484.023
+Info:    Preparing for run 28 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 28 of control_RRBT
+Info:    Preparing for run 28 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 467.47 in 1290 iterations (579 vertices in the graph)
+Info:    RRBT: Created 578 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 467.474
+Info:    Preparing for run 29 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 29 of control_RRBT
+Info:    Preparing for run 29 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 490.55 in 1019 iterations (515 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 469.92 in 1019 iterations (515 vertices in the graph)
+Info:    RRBT: Created 514 new states. Checked 0 rewire options. 2 goal states in tree. Final solution cost 469.924
+Info:    Preparing for run 30 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 30 of control_RRBT
+Info:    Preparing for run 30 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 485.19 in 768 iterations (471 vertices in the graph)
+Info:    RRBT: Created 470 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 485.186
+Info:    Preparing for run 31 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 31 of control_RRBT
+Info:    Preparing for run 31 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 484.97 in 915 iterations (557 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 482.32 in 915 iterations (557 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 478.09 in 915 iterations (557 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 472.60 in 915 iterations (557 vertices in the graph)
+Info:    RRBT: Created 556 new states. Checked 0 rewire options. 5 goal states in tree. Final solution cost 472.600
+Info:    Preparing for run 32 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 32 of control_RRBT
+Info:    Preparing for run 32 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 904 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 33 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 33 of control_RRBT
+Info:    Preparing for run 33 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 766 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 34 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 34 of control_RRBT
+Info:    Preparing for run 34 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 477.21 in 884 iterations (460 vertices in the graph)
+Info:    RRBT: Created 459 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 477.212
+Info:    Preparing for run 35 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 35 of control_RRBT
+Info:    Preparing for run 35 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 484.92 in 918 iterations (532 vertices in the graph)
+Info:    RRBT: Created 531 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 484.919
+Info:    Preparing for run 36 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 36 of control_RRBT
+Info:    Preparing for run 36 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 473.23 in 1339 iterations (469 vertices in the graph)
+Info:    RRBT: Created 468 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 473.227
+Info:    Preparing for run 37 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 37 of control_RRBT
+Info:    Preparing for run 37 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 463.00 in 1593 iterations (818 vertices in the graph)
+Info:    RRBT: Created 817 new states. Checked 0 rewire options. 2 goal states in tree. Final solution cost 463.001
+Info:    Preparing for run 38 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 38 of control_RRBT
+Info:    Preparing for run 38 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 530.46 in 638 iterations (408 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 523.53 in 638 iterations (408 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 501.09 in 638 iterations (408 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 498.72 in 638 iterations (408 vertices in the graph)
+Info:    RRBT: Created 407 new states. Checked 0 rewire options. 4 goal states in tree. Final solution cost 498.723
+Info:    Preparing for run 39 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 39 of control_RRBT
+Info:    Preparing for run 39 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 497.48 in 1114 iterations (396 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 490.39 in 1114 iterations (396 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 486.77 in 1114 iterations (396 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 478.76 in 1114 iterations (396 vertices in the graph)
+Info:    RRBT: Created 395 new states. Checked 0 rewire options. 4 goal states in tree. Final solution cost 478.758
+Info:    Preparing for run 40 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 40 of control_RRBT
+Info:    Preparing for run 40 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 797 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 41 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 41 of control_RRBT
+Info:    Preparing for run 41 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 542.57 in 535 iterations (282 vertices in the graph)
+Info:    RRBT: Created 281 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 542.566
+Info:    Preparing for run 42 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 42 of control_RRBT
+Info:    Preparing for run 42 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 500.08 in 834 iterations (416 vertices in the graph)
+Info:    RRBT: Created 415 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 500.081
+Info:    Preparing for run 43 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 43 of control_RRBT
+Info:    Preparing for run 43 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 882 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 44 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 44 of control_RRBT
+Info:    Preparing for run 44 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 741 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 45 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 45 of control_RRBT
+Info:    Preparing for run 45 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 474.07 in 639 iterations (339 vertices in the graph)
+Info:    RRBT: Created 338 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 474.074
+Info:    Preparing for run 46 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 46 of control_RRBT
+Info:    Preparing for run 46 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 486.72 in 723 iterations (388 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 484.97 in 723 iterations (388 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 482.72 in 723 iterations (388 vertices in the graph)
+Info:    RRBT: Created 387 new states. Checked 0 rewire options. 3 goal states in tree. Final solution cost 482.723
+Info:    Preparing for run 47 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 47 of control_RRBT
+Info:    Preparing for run 47 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 484.67 in 1499 iterations (575 vertices in the graph)
+Info:    RRBT: Created 574 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 484.667
+Info:    Preparing for run 48 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 48 of control_RRBT
+Info:    Preparing for run 48 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 504.05 in 1164 iterations (698 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 493.03 in 1164 iterations (698 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 481.21 in 1164 iterations (698 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 478.99 in 1164 iterations (698 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 476.58 in 1164 iterations (698 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 464.13 in 1164 iterations (698 vertices in the graph)
+Info:    RRBT: Created 697 new states. Checked 0 rewire options. 7 goal states in tree. Final solution cost 464.133
+Info:    Preparing for run 49 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 49 of control_RRBT
+Info:    Preparing for run 49 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 511.18 in 837 iterations (426 vertices in the graph)
+Info:    RRBT: Created 425 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 511.176
+Info:    Preparing for run 50 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 50 of control_RRBT
+Info:    Preparing for run 50 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 452.46 in 1838 iterations (833 vertices in the graph)
+Info:    RRBT: Created 832 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 452.463
+Info:    Preparing for run 51 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 51 of control_RRBT
+Info:    Preparing for run 51 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 513.41 in 1326 iterations (762 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 504.78 in 1326 iterations (762 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 482.78 in 1326 iterations (762 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 462.94 in 1326 iterations (762 vertices in the graph)
+Info:    RRBT: Created 761 new states. Checked 0 rewire options. 4 goal states in tree. Final solution cost 462.937
+Info:    Preparing for run 52 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 52 of control_RRBT
+Info:    Preparing for run 52 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 679 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 53 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 53 of control_RRBT
+Info:    Preparing for run 53 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 486.34 in 1016 iterations (621 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 484.58 in 1016 iterations (621 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 463.33 in 1016 iterations (621 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 461.03 in 1016 iterations (621 vertices in the graph)
+Info:    RRBT: Created 620 new states. Checked 0 rewire options. 4 goal states in tree. Final solution cost 461.031
+Info:    Preparing for run 54 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 54 of control_RRBT
+Info:    Preparing for run 54 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 806 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 55 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 55 of control_RRBT
+Info:    Preparing for run 55 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 896 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 56 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 56 of control_RRBT
+Info:    Preparing for run 56 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 472.34 in 764 iterations (394 vertices in the graph)
+Info:    RRBT: Created 393 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 472.341
+Info:    Preparing for run 57 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 57 of control_RRBT
+Info:    Preparing for run 57 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 473.79 in 788 iterations (335 vertices in the graph)
+Info:    RRBT: Created 334 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 473.793
+Info:    Preparing for run 58 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 58 of control_RRBT
+Info:    Preparing for run 58 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 833 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 59 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 59 of control_RRBT
+Info:    Preparing for run 59 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 854 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 60 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 60 of control_RRBT
+Info:    Preparing for run 60 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 501.53 in 1565 iterations (729 vertices in the graph)
+Info:    RRBT: Created 728 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 501.533
+Info:    Preparing for run 61 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 61 of control_RRBT
+Info:    Preparing for run 61 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 474.54 in 1386 iterations (786 vertices in the graph)
+Info:    RRBT: Created 785 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 474.542
+Info:    Preparing for run 62 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 62 of control_RRBT
+Info:    Preparing for run 62 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 608 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 63 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 63 of control_RRBT
+Info:    Preparing for run 63 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 476.43 in 1742 iterations (768 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 474.38 in 1742 iterations (768 vertices in the graph)
+Info:    RRBT: Created 767 new states. Checked 0 rewire options. 2 goal states in tree. Final solution cost 474.378
+Info:    Preparing for run 64 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 64 of control_RRBT
+Info:    Preparing for run 64 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 502.67 in 1088 iterations (588 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 500.17 in 1088 iterations (588 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 493.12 in 1088 iterations (588 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 477.05 in 1088 iterations (588 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 474.09 in 1088 iterations (588 vertices in the graph)
+Info:    RRBT: Created 587 new states. Checked 0 rewire options. 5 goal states in tree. Final solution cost 474.090
+Info:    Preparing for run 65 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 65 of control_RRBT
+Info:    Preparing for run 65 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 504.90 in 1240 iterations (721 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 494.64 in 1240 iterations (721 vertices in the graph)
+Info:    RRBT: Created 720 new states. Checked 0 rewire options. 2 goal states in tree. Final solution cost 494.636
+Info:    Preparing for run 66 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 66 of control_RRBT
+Info:    Preparing for run 66 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 874 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 67 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 67 of control_RRBT
+Info:    Preparing for run 67 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 494.01 in 1271 iterations (583 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 482.80 in 1271 iterations (583 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 476.13 in 1271 iterations (583 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 473.34 in 1271 iterations (583 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 468.84 in 1271 iterations (583 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 464.51 in 1271 iterations (583 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 462.43 in 1271 iterations (583 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 457.78 in 1271 iterations (583 vertices in the graph)
+Info:    RRBT: Created 582 new states. Checked 0 rewire options. 8 goal states in tree. Final solution cost 457.778
+Info:    Preparing for run 68 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 68 of control_RRBT
+Info:    Preparing for run 68 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 460.40 in 982 iterations (652 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 460.22 in 982 iterations (652 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 458.33 in 982 iterations (652 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 458.19 in 982 iterations (652 vertices in the graph)
+Info:    RRBT: Created 651 new states. Checked 0 rewire options. 5 goal states in tree. Final solution cost 458.191
+Info:    Preparing for run 69 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 69 of control_RRBT
+Info:    Preparing for run 69 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 478.33 in 1195 iterations (739 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 470.43 in 1195 iterations (739 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 460.76 in 1195 iterations (739 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 460.26 in 1195 iterations (739 vertices in the graph)
+Info:    RRBT: Created 738 new states. Checked 0 rewire options. 6 goal states in tree. Final solution cost 460.255
+Info:    Preparing for run 70 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 70 of control_RRBT
+Info:    Preparing for run 70 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 476.14 in 962 iterations (531 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 473.70 in 962 iterations (531 vertices in the graph)
+Info:    RRBT: Created 530 new states. Checked 0 rewire options. 2 goal states in tree. Final solution cost 473.696
+Info:    Preparing for run 71 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 71 of control_RRBT
+Info:    Preparing for run 71 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 691 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 72 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 72 of control_RRBT
+Info:    Preparing for run 72 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 908 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 73 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 73 of control_RRBT
+Info:    Preparing for run 73 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 459.40 in 1132 iterations (626 vertices in the graph)
+Info:    RRBT: Created 625 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 459.403
+Info:    Preparing for run 74 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 74 of control_RRBT
+Info:    Preparing for run 74 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 530.26 in 632 iterations (316 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 525.22 in 632 iterations (316 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 515.18 in 632 iterations (316 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 506.65 in 632 iterations (316 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 494.35 in 632 iterations (316 vertices in the graph)
+Info:    RRBT: Created 315 new states. Checked 0 rewire options. 5 goal states in tree. Final solution cost 494.347
+Info:    Preparing for run 75 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 75 of control_RRBT
+Info:    Preparing for run 75 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 470.57 in 1314 iterations (704 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 459.60 in 1314 iterations (704 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 455.33 in 1314 iterations (704 vertices in the graph)
+Info:    RRBT: Created 703 new states. Checked 0 rewire options. 3 goal states in tree. Final solution cost 455.328
+Info:    Preparing for run 76 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 76 of control_RRBT
+Info:    Preparing for run 76 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 528.13 in 1021 iterations (514 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 482.65 in 1021 iterations (514 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 481.25 in 1021 iterations (514 vertices in the graph)
+Info:    RRBT: Created 513 new states. Checked 0 rewire options. 3 goal states in tree. Final solution cost 481.247
+Info:    Preparing for run 77 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 77 of control_RRBT
+Info:    Preparing for run 77 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 483.06 in 931 iterations (538 vertices in the graph)
+Info:    RRBT: Created 537 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 483.063
+Info:    Preparing for run 78 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 78 of control_RRBT
+Info:    Preparing for run 78 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 501.69 in 627 iterations (403 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 493.18 in 627 iterations (403 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 490.05 in 627 iterations (403 vertices in the graph)
+Info:    RRBT: Created 402 new states. Checked 0 rewire options. 3 goal states in tree. Final solution cost 490.053
+Info:    Preparing for run 79 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 79 of control_RRBT
+Info:    Preparing for run 79 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 852 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 80 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 80 of control_RRBT
+Info:    Preparing for run 80 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 470.18 in 1029 iterations (540 vertices in the graph)
+Info:    RRBT: Created 539 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 470.182
+Info:    Preparing for run 81 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 81 of control_RRBT
+Info:    Preparing for run 81 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 462.21 in 803 iterations (409 vertices in the graph)
+Info:    RRBT: Created 408 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 462.211
+Info:    Preparing for run 82 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 82 of control_RRBT
+Info:    Preparing for run 82 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 478.63 in 1449 iterations (866 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 455.41 in 1449 iterations (866 vertices in the graph)
+Info:    RRBT: Created 865 new states. Checked 0 rewire options. 6 goal states in tree. Final solution cost 455.409
+Info:    Preparing for run 83 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 83 of control_RRBT
+Info:    Preparing for run 83 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 487.86 in 854 iterations (478 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 474.86 in 854 iterations (478 vertices in the graph)
+Info:    RRBT: Created 477 new states. Checked 0 rewire options. 2 goal states in tree. Final solution cost 474.856
+Info:    Preparing for run 84 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 84 of control_RRBT
+Info:    Preparing for run 84 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 475.95 in 1199 iterations (810 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 453.99 in 1199 iterations (810 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 451.21 in 1199 iterations (810 vertices in the graph)
+Info:    RRBT: Created 809 new states. Checked 0 rewire options. 3 goal states in tree. Final solution cost 451.212
+Info:    Preparing for run 85 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 85 of control_RRBT
+Info:    Preparing for run 85 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 501.29 in 1402 iterations (660 vertices in the graph)
+Info:    RRBT: Created 659 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 501.285
+Info:    Preparing for run 86 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 86 of control_RRBT
+Info:    Preparing for run 86 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 459.22 in 1097 iterations (631 vertices in the graph)
+Info:    RRBT: Created 630 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 459.218
+Info:    Preparing for run 87 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 87 of control_RRBT
+Info:    Preparing for run 87 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 490.05 in 1009 iterations (491 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 484.69 in 1009 iterations (491 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 481.77 in 1009 iterations (491 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 465.34 in 1009 iterations (491 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 463.11 in 1009 iterations (491 vertices in the graph)
+Info:    RRBT: Created 490 new states. Checked 0 rewire options. 5 goal states in tree. Final solution cost 463.107
+Info:    Preparing for run 88 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 88 of control_RRBT
+Info:    Preparing for run 88 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 496.46 in 1141 iterations (700 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 491.13 in 1141 iterations (700 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 477.75 in 1141 iterations (700 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 462.71 in 1141 iterations (700 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 461.22 in 1141 iterations (700 vertices in the graph)
+Info:    RRBT: Created 699 new states. Checked 0 rewire options. 5 goal states in tree. Final solution cost 461.223
+Info:    Preparing for run 89 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 89 of control_RRBT
+Info:    Preparing for run 89 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 810 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 90 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 90 of control_RRBT
+Info:    Preparing for run 90 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 818 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 91 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 91 of control_RRBT
+Info:    Preparing for run 91 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 820 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 92 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 92 of control_RRBT
+Info:    Preparing for run 92 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 476.63 in 1221 iterations (655 vertices in the graph)
+Info:    RRBT: Created 654 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 476.628
+Info:    Preparing for run 93 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 93 of control_RRBT
+Info:    Preparing for run 93 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 479.54 in 892 iterations (490 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 476.80 in 892 iterations (490 vertices in the graph)
+Info:    RRBT: Created 489 new states. Checked 0 rewire options. 2 goal states in tree. Final solution cost 476.797
+Info:    Preparing for run 94 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 94 of control_RRBT
+Info:    Preparing for run 94 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 497.38 in 2189 iterations (746 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 476.65 in 2189 iterations (746 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 453.17 in 2189 iterations (746 vertices in the graph)
+Info:    RRBT: Created 745 new states. Checked 0 rewire options. 5 goal states in tree. Final solution cost 453.168
+Info:    Preparing for run 95 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 95 of control_RRBT
+Info:    Preparing for run 95 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 489.66 in 672 iterations (345 vertices in the graph)
+Info:    RRBT: Created 344 new states. Checked 0 rewire options. 1 goal states in tree. Final solution cost 489.655
+Info:    Preparing for run 96 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 96 of control_RRBT
+Info:    Preparing for run 96 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 489.08 in 1183 iterations (699 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 487.09 in 1183 iterations (699 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 475.57 in 1183 iterations (699 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 471.50 in 1183 iterations (699 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 466.61 in 1183 iterations (699 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 464.94 in 1183 iterations (699 vertices in the graph)
+Info:    RRBT: Created 698 new states. Checked 0 rewire options. 6 goal states in tree. Final solution cost 464.939
+Info:    Preparing for run 97 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 97 of control_RRBT
+Info:    Preparing for run 97 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Created 770 new states. Checked 0 rewire options. 0 goal states in tree. Final solution cost inf
+Info:    Preparing for run 98 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 98 of control_RRBT
+Info:    Preparing for run 98 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 479.46 in 730 iterations (444 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 478.30 in 730 iterations (444 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 477.65 in 730 iterations (444 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 465.37 in 730 iterations (444 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 464.88 in 730 iterations (444 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 464.78 in 730 iterations (444 vertices in the graph)
+Info:    RRBT: Created 443 new states. Checked 0 rewire options. 6 goal states in tree. Final solution cost 464.779
+Info:    Preparing for run 99 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 99 of control_RRBT
+Info:    Preparing for run 99 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 483.68 in 1106 iterations (592 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 471.71 in 1106 iterations (592 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 471.64 in 1106 iterations (592 vertices in the graph)
+Info:    RRBT: Created 591 new states. Checked 0 rewire options. 3 goal states in tree. Final solution cost 471.638
+Info:    Benchmark complete

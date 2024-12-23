@@ -1,0 +1,3 @@
+source;share/agent_helpers/environment/ament_prefix_path.sh
+source;share/agent_helpers/environment/library_path.sh
+source;share/agent_helpers/environment/path.sh

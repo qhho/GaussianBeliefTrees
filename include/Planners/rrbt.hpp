@@ -57,7 +57,6 @@
 
 typedef Eigen::Matrix<double, 2, 2, Eigen::DontAlign> Mat;
 typedef Eigen::Matrix<double, 3, 3, Eigen::DontAlign> Mat3;
-
 namespace ompl
 {
     namespace control
@@ -84,6 +83,7 @@ namespace ompl
         class RRBT : public base::Planner
         {
         public:
+            EIGEN_MAKE_ALIGNED_OPERATOR_NEW
             RRBT(const SpaceInformationPtr &si);
 
             ~RRBT() override;
@@ -386,7 +386,7 @@ namespace ompl
 
             Eigen::Matrix2d A_ol_, B_ol_, A_cl_, B_cl_, A_cl_d_, B_cl_d_;
 
-            Eigen::Matrix3d A_ol_3_, B_ol_3_, A_cl_3_, B_cl_3_, A_cl_d_3_, B_cl_d_3_;
+            // Eigen::Matrix3d A_ol_3_, B_ol_3_, A_cl_3_, B_cl_3_, A_cl_d_3_, B_cl_d_3_;
 
             unsigned int n_obstacles_;
             std::vector<Eigen::Matrix<float, 6, 3> > A_list_;
@@ -624,7 +624,7 @@ namespace ompl
             RNG rng_;
 
             /** \brief Option to use k-nearest search for rewiring */
-            bool useKNearest_{true};
+            bool useKNearest_{false};
 
             /** \brief The rewiring factor, s, so that r_rrt = s \times r_rrt* > r_rrt* (or k_rrt = s \times k_rrt* >
              * k_rrt*) */
@@ -637,7 +637,7 @@ namespace ompl
             double r_rrt_{0.};
 
             /** \brief Option to delay and reduce collision checking within iterations */
-            bool delayCC_{true};
+            bool delayCC_{false};
 
             /** \brief Objective we're optimizing */
             base::OptimizationObjectivePtr opt_;
@@ -714,9 +714,9 @@ namespace ompl
             Eigen::Matrix2d H = Eigen::MatrixXd::Identity(2, 2);
             Eigen::Matrix2d F = Eigen::MatrixXd::Identity(2, 2);
 
-            Eigen::Matrix3d I3 = Eigen::MatrixXd::Identity(2, 2);
-            Eigen::Matrix3d H3 = Eigen::MatrixXd::Identity(2, 2);
-            Eigen::Matrix3d F3 = Eigen::MatrixXd::Identity(2, 2);
+            // Eigen::Matrix3d I3 = Eigen::MatrixXd::Identity(2, 2);
+            // Eigen::Matrix3d H3 = Eigen::MatrixXd::Identity(2, 2);
+            // Eigen::Matrix3d F3 = Eigen::MatrixXd::Identity(2, 2);
 
             Eigen::MatrixXd Q;
 

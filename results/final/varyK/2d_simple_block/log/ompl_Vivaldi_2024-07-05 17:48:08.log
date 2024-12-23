@@ -1,0 +1,192 @@
+OMPL version 
+Experiment wasserstein
+5 experiment properties
+Q_value double = 0.200000
+R double = 0.100000
+R_bad_value double = 5.000000
+bias_value double = 0.200000
+first_solution bool = 0
+Running on Vivaldi
+Starting at 2024-07-05 17:48:08
+<<<|
+Properties of the state space 'R2_BELIEFRealVectorSpace0'
+  - signature: 2 1 2 
+  - dimension: 2
+  - extent: 141.421
+  - sanity checks for state space passed
+  - probability of valid states: 1
+  - average length of a valid motion: 0
+  - average number of samples drawn per second: sampleUniform()=3.86548e+08 sampleUniformNear()=3.29598e+08 sampleGaussian()=3.02663e+08
+Settings for the state space 'R2_BELIEFRealVectorSpace0'
+  - state validity check resolution: 1%
+  - valid segment count factor: 1
+  - state space:
+Real vector state space 'R2_BELIEFRealVectorSpace0' of dimension 2 with bounds: 
+  - min: 0 0 
+  - max: 100 100 
+
+Declared parameters:
+longest_valid_segment_fraction = 0.01
+max_control_duration = 20
+min_control_duration = 1
+projection.cellsize.0 = 5
+projection.cellsize.1 = 5
+projection.cellsize_factor = 0
+propagation_step_size = 0.1
+valid_segment_count_factor = 1
+Valid state sampler named uniform with parameters:
+nr_attempts = 100
+  - control space:
+Real vector control space 'RealVectorControl[R2_BELIEFRealVectorSpace0]' with bounds: 
+  - min: -10 -10 0 
+  - max: 10 10 0.5 
+  - can propagate backward: no
+  - propagation step size: 0.1
+  - propagation duration: [1, 20]
+Planner KPIECE1 specs:
+Multithreaded:                 No
+Reports approximate solutions: Yes
+Can optimize solutions:        No
+Aware of the following parameters: bad_score_factor border_fraction goal_bias good_score_factor max_close_samples
+Declared parameters for planner KPIECE1:
+bad_score_factor = 0.45
+border_fraction = 0.8
+goal_bias = 0.05
+good_score_factor = 0.9
+max_close_samples = 30
+Start states:
+RealVectorState [90 1]
+Goal region, threshold = 10, memory address = 0x8db940
+Optimization Objective: Path Length @0x8db040
+Optimization Threshold: 0
+Average state cost: 0
+There are 1 solutions
+
+Properties of benchmarked planners:
+Planner SSBT specs:
+Multithreaded:                 No
+Reports approximate solutions: Yes
+Can optimize solutions:        No
+Aware of the following parameters: goal_bias pruning_radius selection_radius
+Planner mod_RRT specs:
+Multithreaded:                 No
+Reports approximate solutions: Yes
+Can optimize solutions:        No
+Aware of the following parameters: goal_bias intermediate_states
+|>>>
+<<<|
+Architecture:                       x86_64
+CPU op-mode(s):                     32-bit, 64-bit
+Byte Order:                         Little Endian
+Address sizes:                      39 bits physical, 48 bits virtual
+CPU(s):                             16
+On-line CPU(s) list:                0-15
+Thread(s) per core:                 2
+Core(s) per socket:                 8
+Socket(s):                          1
+NUMA node(s):                       1
+Vendor ID:                          GenuineIntel
+CPU family:                         6
+Model:                              167
+Model name:                         11th Gen Intel(R) Core(TM) i7-11700K @ 3.60GHz
+Stepping:                           1
+CPU MHz:                            3600.000
+CPU max MHz:                        5000.0000
+CPU min MHz:                        800.0000
+BogoMIPS:                           7200.00
+Virtualization:                     VT-x
+L1d cache:                          384 KiB
+L1i cache:                          256 KiB
+L2 cache:                           4 MiB
+L3 cache:                           16 MiB
+NUMA node0 CPU(s):                  0-15
+Vulnerability Gather data sampling: Mitigation; Microcode
+Vulnerability Itlb multihit:        Not affected
+Vulnerability L1tf:                 Not affected
+Vulnerability Mds:                  Not affected
+Vulnerability Meltdown:             Not affected
+Vulnerability Mmio stale data:      Mitigation; Clear CPU buffers; SMT vulnerable
+Vulnerability Retbleed:             Mitigation; Enhanced IBRS
+Vulnerability Spec rstack overflow: Not affected
+Vulnerability Spec store bypass:    Mitigation; Speculative Store Bypass disabled via prctl and seccomp
+Vulnerability Spectre v1:           Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:           Mitigation; Enhanced IBRS, IBPB conditional, RSB filling, PBRSB-eIBRS SW sequence
+Vulnerability Srbds:                Not affected
+Vulnerability Tsx async abort:      Not affected
+Flags:                              fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb invpcid_single ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx avx512f avx512dq rdseed adx smap avx512ifma clflushopt intel_pt avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp hwp_pkg_req avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid fsrm md_clear flush_l1d arch_capabilities
+|>>>
+10943595316845962 is the random seed
+10 seconds per run
+1000 MB per run
+1 runs per planner
+10.1455 seconds spent to collect the data
+1 enum type
+status|Unknown status|Invalid start|Invalid goal|Unrecognized goal type|Timeout|Approximate solution|Exact solution|Crash|Unknown status
+2 planners
+control_SSBT
+11 common properties
+goal_bias = 0.05
+longest_valid_segment_fraction = 0.01
+max_control_duration = 20
+min_control_duration = 1
+projection.cellsize.0 = 5
+projection.cellsize.1 = 5
+projection.cellsize_factor = 0
+propagation_step_size = 0.1
+pruning_radius = 1
+selection_radius = 5
+valid_segment_count_factor = 1
+15 properties for each run
+approximate solution BOOLEAN
+best cost REAL
+correct solution BOOLEAN
+graph motions INTEGER
+graph states INTEGER
+memory REAL
+solution clearance REAL
+solution difference REAL
+solution length REAL
+solution path length REAL
+solution segments INTEGER
+solved BOOLEAN
+status ENUM
+time REAL
+valid segment fraction REAL
+1 runs
+0; 257.491326; 1; 11719; 11721; 19.1094; 0; 0; 11.1; 98.4102; 11; 1; 6; 10.0524; 0; 
+2 progress properties for each run
+best cost REAL
+time REAL
+1 runs
+inf,0.0500702,;inf,0.100169,;inf,0.150254,;inf,0.200384,;inf,0.250477,;inf,0.300559,;294.696184,0.350646,;263.914188,0.400739,;263.914188,0.450848,;263.914188,0.500939,;263.914188,0.551042,;263.914188,0.601143,;263.914188,0.651281,;263.914188,0.701393,;263.914188,0.751491,;263.914188,0.801591,;263.914188,0.851713,;263.914188,0.901847,;263.914188,0.951945,;263.914188,1.00205,;263.914188,1.05215,;263.914188,1.10228,;263.914188,1.15237,;263.914188,1.20247,;263.914188,1.25255,;263.914188,1.30265,;263.914188,1.35275,;263.914188,1.40285,;263.914188,1.45295,;263.914188,1.50306,;263.914188,1.55318,;263.914188,1.60329,;263.914188,1.65339,;263.914188,1.70349,;263.914188,1.75361,;263.914188,1.80371,;263.914188,1.85384,;263.914188,1.90394,;263.914188,1.95403,;263.914188,2.00413,;263.914188,2.05425,;263.914188,2.10437,;263.914188,2.1545,;263.914188,2.2046,;261.769230,2.25473,;261.769230,2.30482,;261.769230,2.35491,;261.769230,2.40503,;261.769230,2.45515,;261.769230,2.50527,;261.769230,2.55537,;261.769230,2.6055,;261.769230,2.65558,;261.769230,2.70569,;261.769230,2.75579,;261.769230,2.80591,;261.769230,2.856,;261.769230,2.90614,;261.769230,2.95626,;261.769230,3.00635,;261.769230,3.05645,;261.769230,3.10653,;261.769230,3.15663,;261.769230,3.20676,;261.769230,3.25685,;261.769230,3.307,;261.769230,3.3571,;261.769230,3.40722,;261.769230,3.45734,;261.769230,3.50743,;261.769230,3.55756,;261.769230,3.60769,;261.769230,3.65778,;261.769230,3.70789,;261.769230,3.75799,;261.769230,3.80808,;261.769230,3.85816,;261.769230,3.90828,;261.769230,3.95838,;261.769230,4.00847,;261.769230,4.05861,;261.769230,4.10873,;261.769230,4.15885,;261.769230,4.20895,;261.769230,4.25908,;261.769230,4.3092,;261.769230,4.35932,;261.769230,4.40945,;261.769230,4.45954,;261.769230,4.50963,;261.769230,4.55974,;261.769230,4.60982,;261.769230,4.65992,;261.769230,4.71001,;261.769230,4.76011,;261.769230,4.81023,;261.769230,4.86032,;261.769230,4.91041,;261.769230,4.96051,;261.769230,5.01061,;261.769230,5.0607,;261.769230,5.1108,;261.769230,5.16089,;261.769230,5.211,;261.769230,5.2611,;260.110615,5.31122,;257.491326,5.36136,;257.491326,5.41145,;257.491326,5.46154,;257.491326,5.51165,;257.491326,5.56176,;257.491326,5.61184,;257.491326,5.66193,;257.491326,5.71204,;257.491326,5.76217,;257.491326,5.81231,;257.491326,5.86241,;257.491326,5.91251,;257.491326,5.96261,;257.491326,6.01271,;257.491326,6.06281,;257.491326,6.1129,;257.491326,6.16303,;257.491326,6.21312,;257.491326,6.26321,;257.491326,6.31332,;257.491326,6.36341,;257.491326,6.4135,;257.491326,6.46359,;257.491326,6.5137,;257.491326,6.5638,;257.491326,6.61389,;257.491326,6.66398,;257.491326,6.7141,;257.491326,6.7642,;257.491326,6.81432,;257.491326,6.86442,;257.491326,6.91451,;257.491326,6.96463,;257.491326,7.01473,;257.491326,7.06483,;257.491326,7.11492,;257.491326,7.16505,;257.491326,7.21514,;257.491326,7.26527,;257.491326,7.31532,;257.491326,7.36542,;257.491326,7.4155,;257.491326,7.46559,;257.491326,7.51568,;257.491326,7.56581,;257.491326,7.6159,;257.491326,7.66603,;257.491326,7.71612,;257.491326,7.76623,;257.491326,7.81633,;257.491326,7.86644,;257.491326,7.91654,;257.491326,7.96666,;257.491326,8.01676,;257.491326,8.06687,;257.491326,8.117,;257.491326,8.16711,;257.491326,8.21721,;257.491326,8.2673,;257.491326,8.31742,;257.491326,8.36755,;257.491326,8.41768,;257.491326,8.46781,;257.491326,8.51793,;257.491326,8.56803,;257.491326,8.61814,;257.491326,8.66824,;257.491326,8.71835,;257.491326,8.76845,;257.491326,8.81857,;257.491326,8.86869,;257.491326,8.91883,;257.491326,8.96893,;257.491326,9.01903,;257.491326,9.06915,;257.491326,9.11924,;257.491326,9.16933,;257.491326,9.21942,;257.491326,9.26951,;257.491326,9.31962,;257.491326,9.36974,;257.491326,9.41983,;257.491326,9.46996,;257.491326,9.52005,;257.491326,9.57014,;257.491326,9.62023,;257.491326,9.67031,;257.491326,9.72041,;257.491326,9.77051,;257.491326,9.82059,;257.491326,9.87068,;257.491326,9.92078,;257.491326,9.9709,;257.491326,10.021,;
+.
+control_mod_RRT
+10 common properties
+goal_bias = 0.05
+intermediate_states = 0
+longest_valid_segment_fraction = 0.01
+max_control_duration = 20
+min_control_duration = 1
+projection.cellsize.0 = 5
+projection.cellsize.1 = 5
+projection.cellsize_factor = 0
+propagation_step_size = 0.1
+valid_segment_count_factor = 1
+14 properties for each run
+approximate solution BOOLEAN
+correct solution BOOLEAN
+graph motions INTEGER
+graph states INTEGER
+memory REAL
+solution clearance REAL
+solution difference REAL
+solution length REAL
+solution path length REAL
+solution segments INTEGER
+solved BOOLEAN
+status ENUM
+time REAL
+valid segment fraction REAL
+1 runs
+0; 1; 3179; 3180; 20.1367; 0; 0; 41.8; 291.864; 418; 1; 6; 0.06279; 0; 
+.

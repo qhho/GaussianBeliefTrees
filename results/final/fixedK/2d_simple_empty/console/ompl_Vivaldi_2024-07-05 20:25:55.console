@@ -1,0 +1,54 @@
+Info:    Beginning benchmark
+Info:    Preparing for run 0 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 696.02
+Info:    Solution state:84.048545 90.215943 
+Info:    Found solution with cost 690.08
+Info:    Solution state:87.833898 87.189742 
+Info:    Found solution with cost 595.52
+Info:    Solution state:87.438805 80.134382 
+Info:    Found solution with cost 576.25
+Info:    Solution state:79.058426 85.241062 
+Info:    Found solution with cost 555.35
+Info:    Solution state:79.795901 84.296779 
+Info:    Found solution with cost 508.03
+Info:    Solution state:96.288326 82.441496 
+Info:    Found solution with cost 499.63
+Info:    Solution state:78.186613 85.613295 
+Info:    Found solution with cost 459.54
+Info:    Solution state:89.898653 80.015049 
+Info:    Found solution with cost 423.86
+Info:    Solution state:77.820261 86.311931 
+Info:    Found solution with cost 419.38
+Info:    Solution state:93.617729 78.201431 
+Info:    Found solution with cost 382.60
+Info:    Solution state:82.863806 80.536428 
+Info:    Found solution with cost 378.74
+Info:    Solution state:86.247772 77.779731 
+Info:    Found solution with cost 370.62
+Info:    Solution state:78.522528 94.838349 
+Info:    Found solution with cost 354.94
+Info:    Solution state:77.883353 84.767169 
+Info:    Found solution with cost 351.50
+Info:    Solution state:76.796968 89.027391 
+Info:    Found solution with cost 327.14
+Info:    Solution state:94.738903 79.269381 
+Info:    Found solution with cost 306.75
+Info:    Solution state:80.917251 87.981748 
+Info:    Found solution with cost 293.56
+Info:    Solution state:90.702491 79.904203 
+Info:    Found solution with cost 281.72
+Info:    Solution state:86.354566 78.253536 
+Info:    Found solution with cost 275.43
+Info:    Solution state:88.846225 76.817275 
+Info:    Found solution with cost 267.31
+Info:    Solution state:84.628959 78.547508 
+Info:    Found solution with cost 258.68
+Info:    Solution state:84.946786 79.028649 
+Info:    Found solution with cost 257.55
+Info:    Solution state:88.550113 77.664351 
+Info:    Found solution with cost 254.35
+Info:    Solution state:82.213004 79.838743 
+Info:    Found solution with cost 248.19
+Info:    Solution state:80.284812 81.267853 

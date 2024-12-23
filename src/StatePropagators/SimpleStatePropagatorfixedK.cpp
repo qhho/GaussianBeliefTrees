@@ -115,15 +115,13 @@ void SimpleStatePropagatorFixedK::propagate(const base::State *state, const cont
         lambda_pred = A_cl_*lambda_from*A_cl_;
         // K = Eigen::MatrixXd::Zero(dimensions_, dimensions_);
         // lambda_pred = lambda_from;
+        // std::cout << R_bad_ << " " << S << K << lambda_pred << std::endl;
     }
     Mat sigma_to = (I - (K*H)) * sigma_pred;
     Mat lambda_to = lambda_pred + K*H*sigma_pred;
 
     result->as<R2BeliefSpace::StateType>()->setSigma(sigma_to);
     result->as<R2BeliefSpace::StateType>()->setLambda(lambda_to);
-
-    // std::cout << sigma_to << std::endl;
-    // std::cout << lambda_to << std::endl;
 }
 
 bool SimpleStatePropagatorFixedK::canPropagateBackward(void) const

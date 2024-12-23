@@ -141,7 +141,7 @@ public:
     virtual double distanceGoal(const State *st) const
         {
         
-        std::cout << "Dimension: " <<  dim_ << std::endl;
+        // std::cout << "Dimension: " <<  dim_ << std::endl;
 
         if (dim_ == 2)
         {
@@ -162,7 +162,6 @@ public:
             radius = t_crit_*sqrt(radius);
             return sqrt(dx*dx + dy*dy + dz*dz) + radius;
         }
-        // std::cout <<"YOUDUM" <<std::endl;
         return 0;
     }
 
@@ -173,7 +172,7 @@ public:
     int dim_;
 };
 
-void OfflinePlannerUncertainty::planWithUnicycle(int sysType, double plan_time, double dt, double p_safe, double Q, double R, double R_bad, double K, std::string scene,  std::vector<std::vector<double>> measurement_region, std::vector<std::vector<double>> bounds_state, std::vector<double > bounds_surge, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file)
+void OfflinePlannerUncertainty::planWithUnicycle(int sysType, double plan_time, double dt, double p_safe, double Q, double R, double R_bad, double K, std::string scene,  std::vector<std::vector<double>> measurement_region, std::vector<std::vector<double>> bounds_state, std::vector<std::vector<double> > bounds_surge, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file)
 {   
      int dimension;
 
@@ -202,14 +201,14 @@ void OfflinePlannerUncertainty::planWithUnicycle(int sysType, double plan_time, 
     {
         space->as<ob::CompoundStateSpace>()->as<R3BeliefSpace>(0)->setBounds(bounds_se2);
         ob::RealVectorBounds bound_heave(1);
-        bound_heave.setLow(bounds_surge[2]);
-        bound_heave.setHigh(bounds_surge[3]);
+        bound_heave.setLow(bounds_surge[1][0]);
+        bound_heave.setHigh(bounds_surge[1][1]);
         space->as<ob::CompoundStateSpace>()->as<ob::RealVectorStateSpace>(3)->setBounds(bound_heave);
     }
 
     ob::RealVectorBounds bound_surge(1);
-    bound_surge.setLow(bounds_surge[0]);
-    bound_surge.setHigh(bounds_surge[1]);
+    bound_surge.setLow(bounds_surge[0][0]);
+    bound_surge.setHigh(bounds_surge[0][1]);
     space->as<ob::CompoundStateSpace>()->as<ob::RealVectorStateSpace>(2)->setBounds(bound_surge);
     //=======================================================================
     // Instantiate the control space
@@ -365,7 +364,7 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
 
     ob::RealVectorBounds bounds(dimension+1);
 
-    for (int i = 0; i < dimension; i++)
+    for (int i = 0; i < dimension+1; i++)
     {
         bounds.setLow(i, bounds_control[i][0]);
         bounds.setHigh(i, bounds_control[i][1]);
@@ -413,9 +412,19 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     val_checker = ob::StateValidityCheckerPtr(new StateValidityCheckerPCCBlackmore(scene, simple_setup_->getSpaceInformation(), p_safe, sysType));
     simple_setup_->setStateValidityChecker(val_checker);
 
+    // auto stateSpace = simple_setup_->getStateSpace();
+    // stateSpace->setStateSamplerAllocator(
+    //     [](const ob::StateSpace *space) -> ob::StateSamplerPtr {
+    //         return std::make_shared<BeliefStateSampler>(space);
+    //     }
+    // );
 
-    BeliefStateSampler *sampler = new BeliefStateSampler(&(*simple_setup_->getStateSpace()));
-    simple_setup_->getSpaceInformation()->getStateSpace()->allocStateSampler(ob::StateSamplerPtr(sampler));
+
+    // BeliefStateSampler *sampler = new BeliefStateSampler(&(*simple_setup_->getStateSpace()));
+    // auto stateSpace = simple_setup_->getStateSpace();
+    // auto sampler = std::make_shared<BeliefStateSampler>(stateSpace.get());
+    // // simple_setup_->getStateSpace()->setStateSampler(sampler);
+    // simple_setup_->getStateSpace()->allocStateSampler(sampler);
 
     // simple_setup_->getStateSpace()->setStateSamplerAllocator(std::bind(&BeliefStateSampler, std::placeholders::_1));
 
@@ -485,7 +494,7 @@ void OfflinePlannerUncertainty::solve(double plan_time, double goal_bias, double
     ompl::tools::MyBenchmark::MyRequest req;
     req.maxTime = plan_time;
     req.maxMem = 1000.0;
-    req.runCount = 1;
+    req.runCount = 100;
     req.displayProgress = true;
     b.benchmark(req);
     b.saveResultsToFile();
@@ -618,10 +627,25 @@ int main(int argc, char **argv)
         offline_planner_uncertainty.planWithSimpleSetup(sysType, plan_time, dt, p_safe, Q, R, R_bad, K, scene, measurement_region, bounds_state, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
     else if (sysType == 2 || sysType == 3)
     {
-        std::string surge = pt.get<std::string>("Environment.bounds_surge");
-        spltStr = split(surge, ",");
-        std::vector<double> surge_bounds = {std::stod(spltStr[0]), std::stod(spltStr[1])};
-        offline_planner_uncertainty.planWithUnicycle(sysType, plan_time, dt, p_safe, Q, R, R_bad, K, scene, measurement_region, bounds_state, surge_bounds, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
+        // std::string surge = pt.get<std::string>("Environment.bounds_surge");
+        // spltStr = split(surge, ",");
+        // std::vector<double> surge_bounds = {std::stod(spltStr[0]), std::stod(spltStr[1])};
+        // Bounds on surge
+        std::string Boundstr = pt.get<std::string>("Environment.bounds_surge");
+        std::vector<std::string> Boundsplt = split(Boundstr, ":"); // Split rows
+        std::vector<std::string>::iterator iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
+        std::vector< std::vector<double>> bounds_surge;
+        for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+        {
+            std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
+            std::vector<double> rowsBound_doub(spltStrBound_rows.size());
+            std::transform(spltStrBound_rows.begin(), spltStrBound_rows.end(), rowsBound_doub.begin(), [](const std::string& val)
+                {
+                    return std::stod(val);
+                });
+            bounds_surge.push_back(rowsBound_doub);
+        }
+        offline_planner_uncertainty.planWithUnicycle(sysType, plan_time, dt, p_safe, Q, R, R_bad, K, scene, measurement_region, bounds_state, bounds_surge, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
     }
     else
         OMPL_ERROR("Invalid system type");

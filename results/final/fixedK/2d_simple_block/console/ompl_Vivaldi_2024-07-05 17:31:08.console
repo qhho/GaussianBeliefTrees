@@ -1,0 +1,47 @@
+Info:    Beginning benchmark
+Info:    Preparing for run 0 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 781.87
+Info:    Solution state:93.963113 88.341492 
+Info:    Found solution with cost 755.04
+Info:    Solution state:82.949206 85.208392 
+Info:    Found solution with cost 286.14
+Info:    Solution state:95.227019 82.684779 
+Info:    Found solution with cost 284.05
+Info:    Solution state:89.546694 83.661240 
+Info:    Found solution with cost 282.58
+Info:    Solution state:94.684165 83.820639 
+Info:    Found solution with cost 256.70
+Info:    Solution state:96.301241 86.859973 
+Info:    Found solution with cost 250.92
+Info:    Solution state:93.348302 83.662730 
+Info:    Found solution with cost 239.83
+Info:    Solution state:96.657867 85.948292 
+Info:    Found solution with cost 236.59
+Info:    Solution state:94.216791 83.222924 
+Info:    Found solution with cost 230.35
+Info:    Solution state:98.675652 86.033656 
+Info:    Found solution with cost 217.78
+Info:    Solution state:93.112471 81.856100 
+Info:    Found solution with cost 215.69
+Info:    Solution state:97.714334 84.527344 
+Info:    Found solution with cost 215.68
+Info:    Solution state:95.976167 85.034254 
+Info:    Found solution with cost 209.33
+Info:    Solution state:92.827583 82.336008 
+Info:    Found solution with cost 206.45
+Info:    Solution state:92.319168 81.892359 
+Info:    Found solution with cost 204.67
+Info:    Solution state:93.745438 81.544270 
+Info:    Found solution with cost 202.92
+Info:    Solution state:92.766807 81.918655 
+Info:    Found solution with cost 202.70
+Info:    Solution state:93.236478 81.497670 
+Info:    Found solution with cost 201.25
+Info:    Solution state:92.869415 80.896926 
+Info:    SSBT: Created 34986 states in 248677 iterations
+Info:    Preparing for run 0 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 3659 states
+Info:    Benchmark complete

@@ -1,0 +1,13 @@
+Info:    Beginning benchmark
+Info:    Preparing for run 0 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 0 of control_RRBT
+Info:    Preparing for run 0 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 10000.00000.
+Info:    RRBT: Initial k-nearest value of 25
+Info:    RRBT: Found an initial solution with a cost of 403.07 in 1549 iterations (1012 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 400.67 in 1549 iterations (1012 vertices in the graph)
+Info:    RRBT: Created 1011 new states. Checked 0 rewire options. 3 goal states in tree. Final solution cost 400.671
+Info:    Benchmark complete

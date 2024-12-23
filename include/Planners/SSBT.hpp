@@ -180,6 +180,11 @@ namespace ompl
                 setup();
             }
 
+            ompl::base::Cost bestCost() const
+            {
+                return prevSolutionCost_;
+            }
+
         protected:
             /** \brief Representation of a motion
 
@@ -313,6 +318,11 @@ namespace ompl
             base::OptimizationObjectivePtr opt_;
 
             double max_eigenvalue_;
+
+            std::string bestCostProperty() const
+            {
+                return std::to_string(bestCost().value());
+            }
         };
     }
 }

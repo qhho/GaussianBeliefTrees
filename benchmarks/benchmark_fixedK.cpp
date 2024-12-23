@@ -74,8 +74,6 @@ ob::StateSpacePtr constructUnicycleStateSpace(int dim)
     }
     else
         OMPL_ERROR("Invalid dimension. Must be 2 or 3");
-
-
     return c_space;
 }
 
@@ -101,11 +99,13 @@ public:
     
         if (dim_ == 2)
         {
+            
             double dx = st->as<R2BeliefSpace::StateType>()->getX() - goal_state_[0];
             double dy = st->as<R2BeliefSpace::StateType>()->getY() - goal_state_[1];
             double radius = st->as<R2BeliefSpace::StateType>()->getCovariance()(0,0);
             radius = t_crit_*sqrt(radius);
             return sqrt(dx*dx + dy*dy) + radius;
+            
         }
         else
         {
@@ -136,7 +136,7 @@ public:
     {
         setThreshold(goal_r);
         goal_state_ = goal_state;
-        std::cout << goal_state_[0] << " " << goal_state_[1] << std::endl;
+        // std::cout << goal_state_[0] << " " << goal_state_[1] << std::endl;
         t_crit_ = t_crit;
         p_safe_ = p_safe;
         dim_ = dim;
@@ -149,6 +149,7 @@ public:
             double dy = st->as<R2BeliefSpace::StateType>()->getY() - goal_state_[1];
             double radius = st->as<R2BeliefSpace::StateType>()->getCovariance()(0,0);
             radius = t_crit_*sqrt(radius);
+            
             return sqrt(dx*dx + dy*dy) + radius;
         }
         else
@@ -172,7 +173,7 @@ public:
 };
 
 
-void OfflinePlannerUncertainty::planWithUnicycle(int sysType, double plan_time, double dt, double p_safe, double Q, double R, double R_bad, double K, std::string scene,  std::vector<std::vector<double>> measurement_region, std::vector<std::vector<double>> bounds_state, std::vector<double > bounds_surge, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file)
+void OfflinePlannerUncertainty::planWithUnicycle(int sysType, double plan_time, double dt, double p_safe, double Q, double R, double R_bad, double K, std::string scene,  std::vector<std::vector<double>> measurement_region, std::vector<std::vector<double>> bounds_state, std::vector<std::vector<double> > bounds_surge, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file)
 {   
      int dimension;
 
@@ -201,14 +202,14 @@ void OfflinePlannerUncertainty::planWithUnicycle(int sysType, double plan_time, 
     {
         space->as<ob::CompoundStateSpace>()->as<R3BeliefSpace>(0)->setBounds(bounds_se2);
         ob::RealVectorBounds bound_heave(1);
-        bound_heave.setLow(bounds_surge[2]);
-        bound_heave.setHigh(bounds_surge[3]);
+        bound_heave.setLow(bounds_surge[1][0]);
+        bound_heave.setHigh(bounds_surge[1][1]);
         space->as<ob::CompoundStateSpace>()->as<ob::RealVectorStateSpace>(3)->setBounds(bound_heave);
     }
 
     ob::RealVectorBounds bound_surge(1);
-    bound_surge.setLow(bounds_surge[0]);
-    bound_surge.setHigh(bounds_surge[1]);
+    bound_surge.setLow(bounds_surge[0][0]);
+    bound_surge.setHigh(bounds_surge[0][1]);
     space->as<ob::CompoundStateSpace>()->as<ob::RealVectorStateSpace>(2)->setBounds(bound_surge);
     //=======================================================================
     // Instantiate the control space
@@ -355,7 +356,7 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     //=======================================================================
     auto cspace(std::make_shared<oc::RealVectorControlSpace>(space, dimension));
 
-    ob::RealVectorBounds bounds(dimension+1);
+    ob::RealVectorBounds bounds(dimension);
 
     for (int i = 0; i < dimension; i++)
     {
@@ -393,7 +394,7 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     //=======================================================================
 
     if (dimension == 2)
-        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new SimpleStatePropagator(si, Q, R, R_bad, K, measurement_region)));
+        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new SimpleStatePropagatorFixedK(si, Q, R, R_bad, K, measurement_region)));
     else if (dimension == 3)
         simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new ThreeDSimpleStatePropagator(si, Q, R, R_bad, K, measurement_region)));
 
@@ -583,20 +584,41 @@ int main(int argc, char **argv)
     }
 
     OMPL_INFORM("USING P_SAFE: %3f, Q: %3f, R: %3f", p_safe, Q, R);
-    if(sysType==1){
-        OMPL_INFORM("Using linearized unicycle system");
-    } else if (sysType==0){
-        OMPL_INFORM("Using linear system");
-    }
-    else{
-        OMPL_ERROR("Invalid system type");
-    }
+
 
     std::vector< double > goal_state = {goal_x, goal_y};
     std::vector< double > initial_state = {initial_state_x, initial_state_y};
-
     OfflinePlannerUncertainty offline_planner_uncertainty;
-    offline_planner_uncertainty.planWithSimpleSetup(sysType, plan_time, dt, p_safe, Q, R, R_bad, K, scene, measurement_region, bounds_state, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
 
+    if(sysType==1){
+        OMPL_INFORM("Using 3d linear system");
+                offline_planner_uncertainty.planWithSimpleSetup(sysType, plan_time, dt, p_safe, Q, R, R_bad, K, scene, measurement_region, bounds_state, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
+    } else if (sysType==0){
+        OMPL_INFORM("Using linear system");
+        offline_planner_uncertainty.planWithSimpleSetup(sysType, plan_time, dt, p_safe, Q, R, R_bad, K, scene, measurement_region, bounds_state, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
+    }
+    else if (sysType==2){
+        OMPL_INFORM("Using linearized unicycle system");
+        // Bounds on surge
+        std::string Boundstr = pt.get<std::string>("Environment.bounds_surge");
+        std::vector<std::string> Boundsplt = split(Boundstr, ":"); // Split rows
+        std::vector<std::string>::iterator iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
+        std::vector< std::vector<double>> bounds_surge;
+        for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+        {
+            std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
+            std::vector<double> rowsBound_doub(spltStrBound_rows.size());
+            std::transform(spltStrBound_rows.begin(), spltStrBound_rows.end(), rowsBound_doub.begin(), [](const std::string& val)
+                {
+                    return std::stod(val);
+                });
+            bounds_surge.push_back(rowsBound_doub);
+        }
+        offline_planner_uncertainty.planWithUnicycle(sysType, plan_time, dt, p_safe, Q, R, R_bad, K, scene, measurement_region, bounds_state, bounds_surge, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
+    }
+    else{
+        OMPL_ERROR("Invalid system type");
+    }    
+    
     return 0;
 }

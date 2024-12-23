@@ -214,6 +214,13 @@ namespace ompl
             Motion *lastGoalMotion_{nullptr};
 
             double max_eigenvalue_;
+
+            /** \brief The best solution cost we found so far. */
+            base::Cost prevSolutionCost_;
+
+            /** \brief The optimization objective. */
+            base::OptimizationObjectivePtr opt_;
+
         };
     }
 }

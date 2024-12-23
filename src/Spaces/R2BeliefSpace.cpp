@@ -57,7 +57,7 @@ double R2BeliefSpace::distance(const State* state1, const State *state2) const /
     //if less than epsilon difference, return 0
     if (sqrt(dx*dx+dy*dy + (cov1 + cov2 - 2*(cov2.sqrt()*cov1*cov2.sqrt()).sqrt()).trace()) < 1e-5)
         return 0.0;
-    return sqrt(dx*dx+dy*dy + (cov1 + cov2 - 2*(cov2.sqrt()*cov1*cov2.sqrt()).sqrt()).trace());
+    return sqrt(dx*dx+dy*dy) + (cov1 + cov2 - 2*(cov2.sqrt()*cov1*cov2.sqrt()).sqrt()).trace();
 }
 
 void R2BeliefSpace::printBeliefState(const State *state)

@@ -1,0 +1,16 @@
+Info:    Beginning benchmark
+Info:    Preparing for run 0 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 659.11
+Info:    Solution state:89.009713 89.343812 
+Info:    Found solution with cost 413.62
+Info:    Solution state:89.705548 88.803300 
+Info:    Found solution with cost 408.57
+Info:    Solution state:91.365997 89.719978 
+Info:    Found solution with cost 405.10
+Info:    Solution state:89.208098 90.913656 
+Info:    Found solution with cost 357.75
+Info:    Solution state:91.020009 90.908828 
+Info:    Found solution with cost 340.92
+Info:    Solution state:89.348398 88.800032 

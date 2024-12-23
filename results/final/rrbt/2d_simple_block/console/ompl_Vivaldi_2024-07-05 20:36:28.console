@@ -1,0 +1,15 @@
+Info:    Beginning benchmark
+Info:    Preparing for run 0 of control_RRBT
+Info:    Free-ing memory
+Info:    Freed memory
+Info:    Cleared nn
+Info:    Preparing for run 0 of control_RRBT
+Info:    Preparing for run 0 of control_RRBT
+Info:    RRBT: Started planning with 1 states. Seeking a solution better than 0.00000.
+Info:    RRBT: Initial rewiring radius of 10.00
+Info:    RRBT: Found an initial solution with a cost of 236.90 in 1740 iterations (876 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 214.85 in 1740 iterations (876 vertices in the graph)
+Info:    RRBT: Found an initial solution with a cost of 213.41 in 1740 iterations (876 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 212.43 in 1761 iterations (888 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 210.37 in 2040 iterations (1093 vertices in the graph)
+Info:    RRBT: Found a new solution with a cost of 210.19 in 2040 iterations (1093 vertices in the graph)

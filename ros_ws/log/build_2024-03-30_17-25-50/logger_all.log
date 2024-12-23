@@ -1,0 +1,120 @@
+[0.228s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build']
+[0.228s] DEBUG:colcon:Parsed command line arguments: Namespace(allow_overriding=[], ament_cmake_args=None, base_paths=['.'], build_base='build', catkin_cmake_args=None, catkin_skip_building_tests=False, cmake_args=None, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, cmake_target=None, cmake_target_skip_unavailable=False, continue_on_error=False, event_handlers=None, executor='parallel', ignore_user_meta=False, install_base='install', log_base=None, log_level=None, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7f1072ea09d0>>, merge_install=False, metas=['./colcon.meta'], packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_end=None, packages_ignore=None, packages_ignore_regex=None, packages_select=None, packages_select_build_failed=False, packages_select_by_dep=None, packages_select_regex=None, packages_select_test_failures=False, packages_skip=None, packages_skip_build_finished=False, packages_skip_by_dep=None, packages_skip_regex=None, packages_skip_test_passed=False, packages_skip_up_to=None, packages_start=None, packages_up_to=None, packages_up_to_regex=None, parallel_workers=16, paths=None, symlink_install=False, test_result_base=None, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7f1072ea09d0>, verb_name='build', verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x7f1072db5b20>)
+[0.391s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.391s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.391s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.391s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.391s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.391s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.391s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws'
+[0.391s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.391s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.391s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.391s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.391s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.391s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.391s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.391s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.391s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(agent_helpers) by extensions ['ignore', 'ignore_ament_install']
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(agent_helpers) by extension 'ignore'
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(agent_helpers) by extension 'ignore_ament_install'
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(agent_helpers) by extensions ['colcon_pkg']
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(agent_helpers) by extension 'colcon_pkg'
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(agent_helpers) by extensions ['colcon_meta']
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(agent_helpers) by extension 'colcon_meta'
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(agent_helpers) by extensions ['ros']
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(agent_helpers) by extension 'ros'
+[0.408s] DEBUG:colcon.colcon_core.package_identification:Package 'agent_helpers' with type 'ros.ament_cmake' and name 'agent_helpers'
+[0.408s] Level 1:colcon.colcon_core.package_identification:_identify(agent_visualizer) by extensions ['ignore', 'ignore_ament_install']
+[0.408s] Level 1:colcon.colcon_core.package_identification:_identify(agent_visualizer) by extension 'ignore'
+[0.408s] Level 1:colcon.colcon_core.package_identification:_identify(agent_visualizer) by extension 'ignore_ament_install'
+[0.408s] Level 1:colcon.colcon_core.package_identification:_identify(agent_visualizer) by extensions ['colcon_pkg']
+[0.408s] Level 1:colcon.colcon_core.package_identification:_identify(agent_visualizer) by extension 'colcon_pkg'
+[0.408s] Level 1:colcon.colcon_core.package_identification:_identify(agent_visualizer) by extensions ['colcon_meta']
+[0.408s] Level 1:colcon.colcon_core.package_identification:_identify(agent_visualizer) by extension 'colcon_meta'
+[0.408s] Level 1:colcon.colcon_core.package_identification:_identify(agent_visualizer) by extensions ['ros']
+[0.408s] Level 1:colcon.colcon_core.package_identification:_identify(agent_visualizer) by extension 'ros'
+[0.409s] DEBUG:colcon.colcon_core.package_identification:Package 'agent_visualizer' with type 'ros.ament_cmake' and name 'agent_visualizer'
+[0.409s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.409s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.409s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.409s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.409s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.409s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.409s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.410s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.410s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.410s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.410s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.410s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.410s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.410s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.426s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[0.426s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[0.427s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[0.427s] Level 5:colcon.colcon_core.verb:set package 'agent_helpers' build argument 'cmake_args' from command line to 'None'
+[0.427s] Level 5:colcon.colcon_core.verb:set package 'agent_helpers' build argument 'cmake_target' from command line to 'None'
+[0.427s] Level 5:colcon.colcon_core.verb:set package 'agent_helpers' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.428s] Level 5:colcon.colcon_core.verb:set package 'agent_helpers' build argument 'cmake_clean_cache' from command line to 'False'
+[0.428s] Level 5:colcon.colcon_core.verb:set package 'agent_helpers' build argument 'cmake_clean_first' from command line to 'False'
+[0.428s] Level 5:colcon.colcon_core.verb:set package 'agent_helpers' build argument 'cmake_force_configure' from command line to 'False'
+[0.428s] Level 5:colcon.colcon_core.verb:set package 'agent_helpers' build argument 'ament_cmake_args' from command line to 'None'
+[0.428s] Level 5:colcon.colcon_core.verb:set package 'agent_helpers' build argument 'catkin_cmake_args' from command line to 'None'
+[0.428s] Level 5:colcon.colcon_core.verb:set package 'agent_helpers' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.428s] DEBUG:colcon.colcon_core.verb:Building package 'agent_helpers' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/build/agent_helpers', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/agent_helpers', 'merge_install': False, 'path': '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/agent_helpers', 'symlink_install': False, 'test_result_base': None}
+[0.428s] Level 5:colcon.colcon_core.verb:set package 'agent_visualizer' build argument 'cmake_args' from command line to 'None'
+[0.428s] Level 5:colcon.colcon_core.verb:set package 'agent_visualizer' build argument 'cmake_target' from command line to 'None'
+[0.428s] Level 5:colcon.colcon_core.verb:set package 'agent_visualizer' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.428s] Level 5:colcon.colcon_core.verb:set package 'agent_visualizer' build argument 'cmake_clean_cache' from command line to 'False'
+[0.428s] Level 5:colcon.colcon_core.verb:set package 'agent_visualizer' build argument 'cmake_clean_first' from command line to 'False'
+[0.428s] Level 5:colcon.colcon_core.verb:set package 'agent_visualizer' build argument 'cmake_force_configure' from command line to 'False'
+[0.428s] Level 5:colcon.colcon_core.verb:set package 'agent_visualizer' build argument 'ament_cmake_args' from command line to 'None'
+[0.428s] Level 5:colcon.colcon_core.verb:set package 'agent_visualizer' build argument 'catkin_cmake_args' from command line to 'None'
+[0.428s] Level 5:colcon.colcon_core.verb:set package 'agent_visualizer' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.428s] DEBUG:colcon.colcon_core.verb:Building package 'agent_visualizer' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/build/agent_visualizer', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/agent_visualizer', 'merge_install': False, 'path': '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/agent_visualizer', 'symlink_install': False, 'test_result_base': None}
+[0.428s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[0.429s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[0.430s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/agent_helpers' with build type 'ament_cmake'
+[0.430s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/agent_helpers'
+[0.431s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.432s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.432s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.439s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/build/agent_helpers': /usr/bin/cmake /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/agent_helpers -DCMAKE_INSTALL_PREFIX=/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/agent_helpers
+[1.472s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/build/agent_helpers' returned '1': /usr/bin/cmake /home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/agent_helpers -DCMAKE_INSTALL_PREFIX=/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/agent_helpers
+[1.494s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(agent_helpers)
+[1.500s] Level 1:colcon.colcon_core.environment:checking '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/agent_helpers' for CMake module files
+[1.501s] Level 1:colcon.colcon_core.environment:checking '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/agent_helpers' for CMake config files
+[1.502s] Level 1:colcon.colcon_core.environment:checking '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/agent_helpers/bin'
+[1.502s] Level 1:colcon.colcon_core.environment:checking '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/agent_helpers/lib/pkgconfig/agent_helpers.pc'
+[1.504s] Level 1:colcon.colcon_core.environment:checking '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/agent_helpers/lib/python3.8/site-packages'
+[1.504s] Level 1:colcon.colcon_core.environment:checking '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/agent_helpers/bin'
+[1.505s] INFO:colcon.colcon_core.shell:Creating package script '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/agent_helpers/share/agent_helpers/package.ps1'
+[1.507s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/agent_helpers/share/agent_helpers/package.dsv'
+[1.508s] INFO:colcon.colcon_core.shell:Creating package script '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/agent_helpers/share/agent_helpers/package.sh'
+[1.509s] INFO:colcon.colcon_core.shell:Creating package script '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/agent_helpers/share/agent_helpers/package.bash'
+[1.510s] INFO:colcon.colcon_core.shell:Creating package script '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/agent_helpers/share/agent_helpers/package.zsh'
+[1.510s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/agent_helpers/share/colcon-core/packages/agent_helpers)
+[1.521s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[1.521s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[1.521s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '1'
+[1.521s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[1.526s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[1.526s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[1.527s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[1.561s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[1.562s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/local_setup.ps1'
+[1.566s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/_local_setup_util_ps1.py'
+[1.568s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/setup.ps1'
+[1.569s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/local_setup.sh'
+[1.570s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/_local_setup_util_sh.py'
+[1.571s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/setup.sh'
+[1.573s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/local_setup.bash'
+[1.574s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/setup.bash'
+[1.575s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/local_setup.zsh'
+[1.576s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/ros_ws/install/setup.zsh'

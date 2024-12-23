@@ -1,0 +1,166 @@
+OMPL version 
+Experiment rrbt
+4 experiment properties
+Q_value double = 0.200000
+R double = 0.100000
+R_bad_value double = 5.000000
+first_solution bool = 1
+Running on Vivaldi
+Starting at 2024-07-05 20:22:02
+<<<|
+Properties of the state space 'RealVectorSpace0'
+  - signature: 2 1 2 
+  - dimension: 2
+  - extent: 141.421
+  - sanity checks for state space passed
+  - probability of valid states: 0.754
+  - average length of a valid motion: 31.9924
+  - average number of samples drawn per second: sampleUniform()=7.3416e+06 sampleUniformNear()=7.75879e+06 sampleGaussian()=3.71926e+06
+Settings for the state space 'RealVectorSpace0'
+  - state validity check resolution: 1%
+  - valid segment count factor: 1
+  - state space:
+Real vector state space 'RealVectorSpace0' of dimension 2 with bounds: 
+  - min: 0 0 
+  - max: 100 100 
+
+Declared parameters:
+longest_valid_segment_fraction = 0.01
+max_control_duration = 20
+min_control_duration = 1
+projection.cellsize.0 = 5
+projection.cellsize.1 = 5
+projection.cellsize_factor = 0
+propagation_step_size = 0.1
+valid_segment_count_factor = 1
+Valid state sampler named uniform with parameters:
+nr_attempts = 100
+  - control space:
+Real vector control space 'RealVectorControl[RealVectorSpace0]' with bounds: 
+  - min: -10 -10 
+  - max: 10 10 
+  - can propagate backward: no
+  - propagation step size: 0.1
+  - propagation duration: [1, 20]
+Planner KPIECE1 specs:
+Multithreaded:                 No
+Reports approximate solutions: Yes
+Can optimize solutions:        No
+Aware of the following parameters: bad_score_factor border_fraction goal_bias good_score_factor max_close_samples
+Declared parameters for planner KPIECE1:
+bad_score_factor = 0.45
+border_fraction = 0.8
+goal_bias = 0.05
+good_score_factor = 0.9
+max_close_samples = 30
+Start states:
+RealVectorState [1 1]
+Goal region, threshold = 10, memory address = 0x19bbd00
+Optimization Objective: Path Length @0x19bc160
+Optimization Threshold: 10000
+Average state cost: 0
+There are 0 solutions
+
+Properties of benchmarked planners:
+Planner RRBT specs:
+Multithreaded:                 No
+Reports approximate solutions: Yes
+Can optimize solutions:        Yes
+Aware of the following parameters: delay_collision_checking focus_search goal_bias informed_sampling new_state_rejection number_sampling_attempts ordered_sampling ordering_batch_size prune_threshold pruned_measure range rewire_factor sample_rejection tree_pruning use_admissible_heuristic use_k_nearest
+|>>>
+<<<|
+Architecture:                       x86_64
+CPU op-mode(s):                     32-bit, 64-bit
+Byte Order:                         Little Endian
+Address sizes:                      39 bits physical, 48 bits virtual
+CPU(s):                             16
+On-line CPU(s) list:                0-15
+Thread(s) per core:                 2
+Core(s) per socket:                 8
+Socket(s):                          1
+NUMA node(s):                       1
+Vendor ID:                          GenuineIntel
+CPU family:                         6
+Model:                              167
+Model name:                         11th Gen Intel(R) Core(TM) i7-11700K @ 3.60GHz
+Stepping:                           1
+CPU MHz:                            3600.000
+CPU max MHz:                        5000.0000
+CPU min MHz:                        800.0000
+BogoMIPS:                           7200.00
+Virtualization:                     VT-x
+L1d cache:                          384 KiB
+L1i cache:                          256 KiB
+L2 cache:                           4 MiB
+L3 cache:                           16 MiB
+NUMA node0 CPU(s):                  0-15
+Vulnerability Gather data sampling: Mitigation; Microcode
+Vulnerability Itlb multihit:        Not affected
+Vulnerability L1tf:                 Not affected
+Vulnerability Mds:                  Not affected
+Vulnerability Meltdown:             Not affected
+Vulnerability Mmio stale data:      Mitigation; Clear CPU buffers; SMT vulnerable
+Vulnerability Retbleed:             Mitigation; Enhanced IBRS
+Vulnerability Spec rstack overflow: Not affected
+Vulnerability Spec store bypass:    Mitigation; Speculative Store Bypass disabled via prctl and seccomp
+Vulnerability Spectre v1:           Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:           Mitigation; Enhanced IBRS, IBPB conditional, RSB filling, PBRSB-eIBRS SW sequence
+Vulnerability Srbds:                Not affected
+Vulnerability Tsx async abort:      Not affected
+Flags:                              fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb invpcid_single ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx avx512f avx512dq rdseed adx smap avx512ifma clflushopt intel_pt avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp hwp_pkg_req avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid fsrm md_clear flush_l1d arch_capabilities
+|>>>
+10943604559349972 is the random seed
+60 seconds per run
+10000 MB per run
+1 runs per planner
+25.2246 seconds spent to collect the data
+1 enum type
+status|Unknown status|Invalid start|Invalid goal|Unrecognized goal type|Timeout|Approximate solution|Exact solution|Crash|Unknown status
+1 planners
+control_RRBT
+24 common properties
+delay_collision_checking = 0
+focus_search = 0
+goal_bias = 0.05
+informed_sampling = 0
+longest_valid_segment_fraction = 0.01
+max_control_duration = 20
+min_control_duration = 1
+new_state_rejection = 0
+number_sampling_attempts = 100
+ordered_sampling = 0
+ordering_batch_size = 1
+projection.cellsize.0 = 5
+projection.cellsize.1 = 5
+projection.cellsize_factor = 0
+propagation_step_size = 0.1
+prune_threshold = 0.05
+pruned_measure = 0
+range = 10
+rewire_factor = 1.1
+sample_rejection = 0
+tree_pruning = 0
+use_admissible_heuristic = 1
+use_k_nearest = 0
+valid_segment_count_factor = 1
+11 properties for each run
+approximate solution BOOLEAN
+best cost REAL
+graph motions INTEGER
+graph states INTEGER
+iterations INTEGER
+memory REAL
+solution length REAL
+solved BOOLEAN
+status ENUM
+time REAL
+valid segment fraction REAL
+1 runs
+0; 308.609479; 939; 940; 1804; 15.0898; 145.048; 1; 6; 25.2177; 0; 
+3 progress properties for each run
+best cost REAL
+iterations INTEGER
+time REAL
+1 runs
+inf,250,0.0500816,;inf,328,0.100202,;inf,355,0.150298,;inf,369,0.200397,;inf,406,0.250495,;inf,432,0.30059,;inf,457,0.350688,;inf,465,0.400774,;inf,487,0.45087,;inf,497,0.500955,;inf,502,0.551045,;inf,515,0.601141,;inf,532,0.651246,;inf,540,0.701339,;inf,560,0.751437,;inf,567,0.801542,;inf,582,0.851629,;inf,595,0.901732,;inf,606,0.951834,;inf,630,1.00192,;inf,636,1.05204,;inf,649,1.10217,;inf,660,1.15225,;inf,667,1.20234,;inf,676,1.25243,;inf,680,1.30253,;inf,684,1.35263,;inf,695,1.40273,;inf,704,1.45283,;inf,714,1.50295,;inf,727,1.55307,;inf,730,1.6032,;inf,740,1.6533,;inf,744,1.70343,;inf,754,1.75352,;inf,764,1.80361,;inf,771,1.85374,;inf,772,1.90387,;inf,775,1.95397,;inf,780,2.00409,;inf,785,2.05418,;inf,787,2.10426,;inf,792,2.15436,;inf,797,2.20446,;inf,801,2.25458,;inf,805,2.30467,;inf,811,2.35478,;inf,813,2.40488,;inf,814,2.455,;inf,816,2.50509,;inf,820,2.55518,;inf,824,2.60526,;inf,830,2.65539,;inf,832,2.70549,;inf,837,2.75557,;inf,844,2.80566,;inf,855,2.85578,;inf,864,2.90588,;inf,867,2.95599,;inf,871,3.00611,;inf,879,3.05624,;inf,879,3.10636,;inf,881,3.15648,;inf,890,3.2066,;inf,892,3.2567,;inf,897,3.30679,;inf,899,3.35688,;inf,901,3.407,;inf,903,3.4571,;inf,905,3.50722,;inf,907,3.55733,;inf,910,3.60743,;inf,917,3.65752,;inf,923,3.70762,;inf,926,3.75771,;inf,929,3.80779,;inf,929,3.85789,;inf,934,3.90798,;inf,943,3.95807,;inf,954,4.00813,;inf,956,4.05821,;inf,960,4.10829,;inf,964,4.15838,;inf,968,4.20846,;inf,972,4.25854,;inf,973,4.30863,;inf,973,4.35871,;inf,978,4.4088,;inf,984,4.45889,;inf,994,4.50897,;inf,1004,4.55906,;inf,1006,4.60914,;inf,1006,4.65922,;inf,1009,4.70936,;inf,1014,4.75946,;inf,1018,4.80955,;inf,1022,4.85967,;inf,1022,4.90979,;inf,1023,4.95991,;inf,1027,5.01003,;inf,1034,5.06012,;inf,1039,5.11022,;inf,1039,5.16031,;inf,1042,5.2104,;inf,1044,5.26052,;inf,1048,5.31062,;inf,1049,5.36072,;inf,1056,5.41082,;inf,1057,5.46095,;inf,1057,5.51105,;inf,1063,5.56115,;inf,1064,5.61124,;inf,1065,5.66134,;inf,1067,5.71144,;inf,1067,5.76154,;inf,1076,5.81163,;inf,1077,5.86174,;inf,1077,5.91184,;inf,1079,5.96193,;inf,1080,6.01203,;inf,1080,6.06214,;inf,1080,6.11223,;inf,1081,6.16232,;inf,1086,6.21242,;inf,1087,6.26252,;inf,1088,6.31262,;inf,1088,6.36272,;inf,1089,6.41283,;inf,1094,6.46293,;inf,1094,6.51304,;inf,1095,6.56312,;inf,1097,6.61324,;inf,1109,6.66333,;inf,1124,6.71343,;inf,1124,6.76353,;inf,1124,6.81363,;inf,1132,6.86374,;inf,1134,6.91384,;inf,1138,6.96394,;inf,1139,7.01404,;inf,1143,7.06411,;inf,1144,7.11421,;inf,1144,7.1643,;inf,1145,7.2144,;inf,1145,7.2645,;inf,1145,7.31462,;inf,1146,7.36472,;inf,1147,7.41481,;inf,1150,7.46491,;inf,1152,7.51503,;inf,1152,7.56515,;inf,1153,7.61527,;inf,1154,7.66537,;inf,1161,7.71546,;inf,1161,7.76559,;inf,1161,7.81572,;inf,1162,7.8658,;inf,1162,7.91599,;inf,1164,7.96615,;inf,1167,8.01624,;inf,1167,8.06633,;inf,1169,8.11642,;inf,1173,8.16653,;inf,1176,8.21662,;inf,1180,8.26671,;inf,1181,8.31679,;inf,1181,8.3669,;inf,1181,8.41699,;inf,1183,8.46709,;inf,1196,8.5172,;inf,1198,8.56729,;inf,1199,8.61739,;inf,1201,8.66748,;inf,1205,8.71759,;inf,1213,8.76768,;inf,1223,8.81779,;inf,1230,8.86791,;inf,1236,8.91805,;inf,1238,8.96813,;inf,1241,9.01822,;inf,1241,9.06831,;inf,1242,9.11843,;inf,1242,9.16851,;inf,1244,9.2186,;inf,1246,9.2687,;inf,1246,9.3188,;inf,1252,9.3689,;inf,1252,9.419,;inf,1252,9.4691,;inf,1253,9.5192,;inf,1253,9.56931,;inf,1254,9.61941,;inf,1257,9.6695,;inf,1257,9.7196,;inf,1257,9.76969,;inf,1264,9.81978,;inf,1272,9.86987,;inf,1277,9.91997,;inf,1277,9.97007,;inf,1277,10.0202,;inf,1278,10.0703,;inf,1282,10.1203,;inf,1286,10.1704,;inf,1288,10.2205,;inf,1296,10.2706,;inf,1296,10.3207,;inf,1296,10.3708,;inf,1303,10.4209,;inf,1305,10.471,;inf,1305,10.5211,;inf,1305,10.5712,;inf,1306,10.6213,;inf,1309,10.6714,;inf,1311,10.7215,;inf,1315,10.7716,;inf,1319,10.8217,;inf,1319,10.8718,;inf,1319,10.9219,;inf,1319,10.972,;inf,1324,11.0221,;inf,1324,11.0722,;inf,1324,11.1223,;inf,1326,11.1724,;inf,1326,11.2225,;inf,1326,11.2726,;inf,1332,11.3227,;inf,1333,11.3728,;inf,1335,11.4229,;inf,1338,11.473,;inf,1338,11.5231,;inf,1338,11.5731,;inf,1344,11.6232,;inf,1347,11.6733,;inf,1348,11.7234,;inf,1349,11.7735,;inf,1353,11.8236,;inf,1354,11.8736,;inf,1354,11.9237,;inf,1354,11.9738,;inf,1358,12.0239,;inf,1360,12.074,;inf,1361,12.124,;inf,1367,12.1741,;inf,1368,12.2242,;inf,1371,12.2743,;inf,1378,12.3244,;inf,1381,12.3745,;inf,1381,12.4246,;inf,1383,12.4747,;inf,1385,12.5248,;inf,1386,12.5748,;inf,1386,12.6249,;inf,1388,12.675,;inf,1394,12.7252,;inf,1395,12.7753,;inf,1395,12.8254,;inf,1395,12.8755,;inf,1396,12.9256,;inf,1396,12.9757,;inf,1396,13.0258,;inf,1399,13.0759,;inf,1399,13.126,;inf,1399,13.1761,;inf,1399,13.2262,;inf,1400,13.2763,;inf,1400,13.3264,;inf,1401,13.3765,;inf,1401,13.4266,;inf,1403,13.4767,;inf,1405,13.5268,;inf,1405,13.5769,;inf,1411,13.627,;inf,1413,13.6771,;inf,1419,13.7272,;inf,1421,13.7773,;inf,1424,13.8274,;inf,1424,13.8775,;inf,1432,13.9276,;inf,1435,13.9777,;inf,1437,14.0278,;inf,1437,14.0779,;inf,1437,14.128,;inf,1438,14.1781,;inf,1441,14.2282,;inf,1441,14.2783,;inf,1451,14.3284,;inf,1454,14.3785,;inf,1454,14.4286,;inf,1458,14.4787,;inf,1458,14.5288,;inf,1459,14.5789,;inf,1459,14.629,;inf,1459,14.6791,;inf,1459,14.7292,;inf,1462,14.7793,;inf,1463,14.8295,;inf,1463,14.8796,;inf,1463,14.9297,;inf,1465,14.9798,;inf,1472,15.0299,;inf,1472,15.08,;inf,1472,15.1301,;inf,1473,15.1802,;inf,1474,15.2304,;inf,1475,15.2804,;inf,1479,15.3306,;inf,1480,15.3807,;inf,1481,15.4308,;inf,1488,15.4809,;inf,1491,15.531,;inf,1494,15.5811,;inf,1494,15.6312,;inf,1494,15.6813,;inf,1495,15.7314,;inf,1500,15.7815,;inf,1500,15.8316,;inf,1500,15.8818,;inf,1501,15.9319,;inf,1508,15.982,;inf,1508,16.0321,;inf,1509,16.0822,;inf,1509,16.1323,;inf,1509,16.1824,;inf,1510,16.2325,;inf,1510,16.2826,;inf,1511,16.3326,;inf,1513,16.3827,;inf,1517,16.4328,;inf,1517,16.4829,;inf,1517,16.533,;inf,1518,16.5831,;inf,1524,16.6332,;inf,1524,16.6832,;inf,1526,16.7334,;inf,1527,16.7835,;inf,1527,16.8336,;inf,1527,16.8837,;inf,1528,16.9338,;inf,1532,16.9839,;inf,1532,17.034,;inf,1532,17.0841,;inf,1532,17.1342,;inf,1532,17.1843,;inf,1536,17.2345,;inf,1536,17.2846,;inf,1536,17.3347,;inf,1536,17.3848,;inf,1538,17.4349,;inf,1539,17.485,;inf,1540,17.5351,;inf,1541,17.5852,;inf,1542,17.6353,;inf,1542,17.6854,;inf,1542,17.7355,;inf,1542,17.7857,;inf,1544,17.8358,;inf,1544,17.8859,;inf,1546,17.936,;inf,1546,17.9862,;inf,1546,18.0363,;inf,1548,18.0864,;inf,1555,18.1365,;inf,1555,18.1866,;inf,1563,18.2367,;inf,1565,18.2868,;inf,1569,18.3369,;inf,1570,18.3871,;inf,1570,18.4372,;inf,1572,18.4873,;inf,1572,18.5374,;inf,1579,18.5875,;inf,1584,18.6376,;inf,1592,18.6877,;inf,1595,18.7378,;inf,1595,18.7879,;inf,1599,18.838,;inf,1600,18.8881,;inf,1600,18.9382,;inf,1600,18.9883,;inf,1600,19.0384,;inf,1605,19.0885,;inf,1605,19.1387,;inf,1605,19.1887,;inf,1607,19.2388,;inf,1611,19.2889,;inf,1613,19.339,;inf,1614,19.3891,;inf,1617,19.4392,;inf,1617,19.4894,;inf,1617,19.5395,;inf,1620,19.5896,;inf,1623,19.6397,;inf,1623,19.6898,;inf,1625,19.7399,;inf,1625,19.7901,;inf,1625,19.8401,;inf,1625,19.8903,;inf,1626,19.9403,;inf,1628,19.9905,;inf,1628,20.0406,;inf,1629,20.0907,;inf,1631,20.1408,;inf,1631,20.1909,;inf,1633,20.241,;inf,1634,20.2911,;inf,1634,20.3412,;inf,1636,20.3913,;inf,1641,20.4413,;inf,1641,20.4915,;inf,1643,20.5416,;inf,1643,20.5917,;inf,1643,20.6417,;inf,1645,20.6918,;inf,1646,20.7419,;inf,1648,20.792,;inf,1653,20.842,;inf,1653,20.8921,;inf,1657,20.9422,;inf,1657,20.9923,;inf,1657,21.0425,;inf,1657,21.0926,;inf,1660,21.1427,;inf,1660,21.1928,;inf,1660,21.2429,;inf,1665,21.293,;inf,1666,21.3431,;inf,1666,21.3932,;inf,1669,21.4433,;inf,1673,21.4934,;inf,1673,21.5435,;inf,1675,21.5936,;inf,1675,21.6437,;inf,1679,21.6938,;inf,1679,21.7439,;inf,1679,21.794,;inf,1680,21.8442,;inf,1684,21.8943,;inf,1688,21.9444,;inf,1695,21.9945,;inf,1701,22.0446,;inf,1702,22.0947,;inf,1702,22.1448,;inf,1702,22.1949,;inf,1703,22.245,;inf,1706,22.2952,;inf,1706,22.3452,;inf,1711,22.3953,;inf,1712,22.4454,;inf,1714,22.4955,;inf,1714,22.5457,;inf,1714,22.5958,;inf,1716,22.6458,;inf,1723,22.6959,;inf,1724,22.746,;inf,1724,22.7961,;inf,1724,22.8462,;inf,1730,22.8963,;inf,1730,22.9464,;inf,1730,22.9965,;inf,1730,23.0466,;inf,1730,23.0967,;inf,1731,23.1468,;inf,1731,23.1969,;inf,1733,23.2471,;inf,1739,23.2972,;inf,1739,23.3473,;inf,1739,23.3974,;inf,1744,23.4475,;inf,1750,23.4976,;inf,1755,23.5477,;inf,1757,23.5978,;inf,1757,23.6479,;inf,1757,23.698,;inf,1758,23.7481,;inf,1758,23.7982,;inf,1758,23.8483,;inf,1764,23.8984,;inf,1768,23.9485,;inf,1768,23.9986,;inf,1771,24.0487,;inf,1774,24.0988,;inf,1774,24.1489,;inf,1774,24.199,;inf,1774,24.2491,;inf,1775,24.2992,;inf,1778,24.3493,;inf,1778,24.3994,;inf,1778,24.4495,;inf,1780,24.4997,;inf,1780,24.5498,;inf,1785,24.5999,;inf,1785,24.65,;inf,1786,24.7001,;inf,1788,24.7502,;inf,1788,24.8003,;inf,1788,24.8504,;inf,1789,24.9005,;inf,1792,24.9506,;inf,1795,25.0007,;inf,1795,25.0508,;inf,1795,25.1009,;inf,1798,25.151,;inf,1798,25.2011,;
+.

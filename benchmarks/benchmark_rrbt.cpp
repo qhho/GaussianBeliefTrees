@@ -84,8 +84,8 @@ public:
         double radius = st->sigma_(0,0) + st->lambda_(0,0);
         radius = t_crit_*sqrt(radius);
         // return sqrt(dx*dx + dy*dy) + radius;
-        std::cout << "Distance to goal: " << sqrt(dx*dx + dy*dy) << std::endl;
-        return sqrt(dx*dx + dy*dy);
+        // std::cout << "Distance to goal: " << sqrt(dx*dx + dy*dy) << std::endl;
+        return sqrt(dx*dx + dy*dy) + radius;
     }
 
     //TODO: add distance to goal for whole motion node.
@@ -194,7 +194,7 @@ void OfflinePlannerUncertainty::solve(double plan_time, double goal_bias, std::v
     ob::PlannerPtr RRBT_Planner;
     RRBT_Planner = ob::PlannerPtr(new oc::RRBT(simple_setup_->getSpaceInformation()));
     RRBT_Planner->as<oc::RRBT>()->setGoalBias(goal_bias_);
-    RRBT_Planner->as<oc::RRBT>()->setRange(30.0);
+    RRBT_Planner->as<oc::RRBT>()->setRange(10.0);
     RRBT_Planner->as<oc::RRBT>()->setGoal(goal_state);
     RRBT_Planner->as<oc::RRBT>()->setScene(scene);
     RRBT_Planner->as<oc::RRBT>()->setMeasurementRegion(measurement_region);

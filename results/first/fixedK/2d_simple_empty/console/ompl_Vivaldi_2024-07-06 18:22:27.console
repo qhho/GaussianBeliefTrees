@@ -1,0 +1,34 @@
+Info:    Beginning benchmark
+Info:    Preparing for run 0 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 473.42
+Info:    Solution state:90.758589 90.539774 
+Info:    SSBT: Created 716 states in 3106 iterations
+Info:    Preparing for run 1 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 379.22
+Info:    Solution state:89.154491 89.874350 
+Info:    SSBT: Created 1706 states in 13378 iterations
+Info:    Preparing for run 2 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 464.13
+Info:    Solution state:89.588448 90.934451 
+Info:    SSBT: Created 506 states in 1833 iterations
+Info:    Preparing for run 3 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 435.05
+Info:    Solution state:90.010216 90.460860 
+Info:    SSBT: Created 1113 states in 5889 iterations
+Info:    Preparing for run 4 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 651.07
+Info:    Solution state:90.738334 90.487048 
+Info:    SSBT: Created 190 states in 481 iterations
+Info:    Preparing for run 5 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+

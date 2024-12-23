@@ -1,0 +1,25 @@
+Info:    Beginning benchmark
+Info:    Preparing for run 0 of control_SSBT
+Info:    SSBT: Starting planning with 1 states already in datastructure
+
+Info:    Found solution with cost 689.67
+Info:    Solution state:90.716049 86.530298 
+Info:    Found solution with cost 332.48
+Info:    Solution state:91.446699 88.928423 
+Info:    Found solution with cost 296.16
+Info:    Solution state:89.229679 87.572726 
+Info:    Found solution with cost 295.66
+Info:    Solution state:88.831932 93.157778 
+Info:    Found solution with cost 261.92
+Info:    Solution state:92.892995 89.676887 
+Info:    Found solution with cost 231.03
+Info:    Solution state:91.124449 89.192304 
+Info:    Found solution with cost 226.01
+Info:    Solution state:89.387405 86.165938 
+Info:    Found solution with cost 224.26
+Info:    Solution state:92.911579 87.349818 
+Info:    SSBT: Created 18671 states in 62199 iterations
+Info:    Preparing for run 0 of control_mod_RRT
+Info:    mod_RRT: Starting planning with 1 states already in datastructure
+Info:    mod_RRT: Created 7109 states
+Info:    Benchmark complete

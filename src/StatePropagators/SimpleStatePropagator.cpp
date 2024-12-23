@@ -66,6 +66,8 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
     double u_0 = control->as<oc::RealVectorControlSpace::ControlType>()->values[0];
     double u_1 = control->as<oc::RealVectorControlSpace::ControlType>()->values[1];
     K_sample = control->as<oc::RealVectorControlSpace::ControlType>()->values[2];
+
+    // std::cout << K_sample << std::endl;
     //=========================================================================
     // Compute control inputs (dot(dot(x)) dot(dot(y)) dot(dot(z))) with PD controller
     //=========================================================================
@@ -107,14 +109,14 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
         Mat S = (H * sigma_pred * H.transpose())+ R;
         K = (sigma_pred * H.transpose()) * S.inverse();
         lambda_pred = (A_ol_ - B_ol_ * K_sample)*lambda_from*(A_ol_ - B_ol_ * K_sample);
+        // lambda_pred = A_cl_*lambda_from*A_cl_;
     }
     else{
         Mat R = R_bad_*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
         Mat S = (H * sigma_pred * H.transpose()) + R;
         K = (sigma_pred * H.transpose()) * S.inverse();
         lambda_pred =  (A_ol_ - B_ol_ * K_sample)*lambda_from*(A_ol_ - B_ol_ * K_sample);
-        // K = Eigen::MatrixXd::Zero(dimensions_, dimensions_);
-        // lambda_pred = lambda_from;
+        // lambda_pred = A_cl_*lambda_from*A_cl_;
     }
     Mat sigma_to = (I - (K*H)) * sigma_pred;
     Mat lambda_to = lambda_pred + K*H*sigma_pred;

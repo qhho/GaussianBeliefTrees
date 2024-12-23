@@ -59,6 +59,30 @@ void ompl::control::mod_RRT::setup()
     if (!nn_)
         nn_.reset(tools::SelfConfig::getDefaultNearestNeighbors<Motion *>(this));
     nn_->setDistanceFunction([this](const Motion *a, const Motion *b) { return distanceFunction(a, b); });
+
+
+    // if (pdef_)
+    // {
+    //     if (pdef_->hasOptimizationObjective())
+    //     {
+    //         opt_ = pdef_->getOptimizationObjective();
+    //         if (dynamic_cast<base::MaximizeMinClearanceObjective *>(opt_.get()) ||
+    //             dynamic_cast<base::MinimaxObjective *>(opt_.get()))
+    //             OMPL_WARN("%s: Asymptotic near-optimality has only been proven with Lipschitz continuous cost "
+    //                       "functions w.r.t. state and control. This optimization objective will result in undefined "
+    //                       "behavior",
+    //                       getName().c_str());
+    //     }
+    //     else
+    //     {
+    //         OMPL_WARN("%s: No optimization object set. Using path length", getName().c_str());
+    //         opt_ = std::make_shared<base::PathLengthOptimizationObjective>(si_);
+    //         pdef_->setOptimizationObjective(opt_);
+    //     }
+    // }
+
+    // prevSolutionCost_ = opt_->infiniteCost();
+
 }
 
 void ompl::control::mod_RRT::clear()
@@ -272,6 +296,8 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
                 path->append(mpath[i]->state);
         solved = true;
         pdef_->addSolutionPath(path, approximate, approxdif, getName());
+
+        //compute cost of solution
     }
 
     if (rmotion->state)

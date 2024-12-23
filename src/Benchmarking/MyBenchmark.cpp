@@ -684,24 +684,25 @@ void ompl::tools::MyBenchmark::benchmark(const MyRequest &req)
                             ompl::toString(csetup_->getSolutionPath().asGeometric().clearance());
                         run["solution segments INTEGER"] = std::to_string(csetup_->getSolutionPath().getControlCount());
                         run["correct solution BOOLEAN"] = std::to_string(csetup_->getSolutionPath().check());
-                        ompl::control::PathControl path_control = csetup_->getSolutionPath();
-                        ompl::geometric::PathGeometric path = path_control.asGeometric();
-                        std::vector<ompl::base::State*> path_control_states;
-                        path_control_states = path.getStates();
-                        std::vector<double > xsolutions;
-                        std::vector<double > ysolutions;
-                        for (int i = 0; i < path_control_states.size(); ++i){
-                            xsolutions.push_back(path_control_states[i]->as<R2BeliefSpace::StateType>()->getX());
-                            ysolutions.push_back(path_control_states[i]->as<R2BeliefSpace::StateType>()->getY());
-                        }
-                        std::ostringstream ossx;
-                        std::copy(xsolutions.begin(), xsolutions.end(), std::ostream_iterator<double >(ossx, ","));
-                        std::string resultx( ossx.str());
-                        run["xsolution"] = resultx;
-                        std::ostringstream ossy;
-                        std::copy(ysolutions.begin(), ysolutions.end(), std::ostream_iterator<double >(ossy, ","));
-                        std::string resulty( ossy.str());
-                        run["ysolution"] = resulty;
+                        // csetup_->get
+                        // ompl::control::PathControl path_control = csetup_->getSolutionPath();
+                        // ompl::geometric::PathGeometric path = path_control.asGeometric();
+                        // std::vector<ompl::base::State*> path_control_states;
+                        // path_control_states = path.getStates();
+                        // std::vector<double > xsolutions;
+                        // std::vector<double > ysolutions;
+                        // for (int i = 0; i < path_control_states.size(); ++i){
+                        //     xsolutions.push_back(path_control_states[i]->as<R2BeliefSpace::StateType>()->getX());
+                        //     ysolutions.push_back(path_control_states[i]->as<R2BeliefSpace::StateType>()->getY());
+                        // }
+                        // std::ostringstream ossx;
+                        // std::copy(xsolutions.begin(), xsolutions.end(), std::ostream_iterator<double >(ossx, ","));
+                        // std::string resultx( ossx.str());
+                        // run["xsolution"] = resultx;
+                        // std::ostringstream ossy;
+                        // std::copy(ysolutions.begin(), ysolutions.end(), std::ostream_iterator<double >(ossy, ","));
+                        // std::string resulty( ossy.str());
+                        // run["ysolution"] = resulty;
                     }
                 }
 
@@ -768,7 +769,7 @@ void ompl::tools::MyBenchmark::benchmark(const MyRequest &req)
             }
         }
 
-        std::cout << total_cost/req.runCount << std::endl;
+        // std::cout << total_cost/req.runCount << std::endl;
     }
 
     status_.running = false;
