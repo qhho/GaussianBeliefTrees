@@ -1,7 +1,0 @@
-Info:    Beginning benchmark
-Info:    Preparing for run 0 of control_SSBT
-Info:    SSBT: Starting planning with 1 states already in datastructure
-
-Info:    ProblemDefinition: Adding approximate solution from planner SSBT
-Info:    SSBT: Created 33072 states in 129598 iterations
-Info:    Preparing for run 1 of control_SSBT

@@ -27,13 +27,26 @@ class ExpectedPathLengthObjective : public ob::PathLengthOptimizationObjective
         ExpectedPathLengthObjective(const ob::SpaceInformationPtr& si) :
         ob::PathLengthOptimizationObjective(si)
         {
+            compound_ = si->getStateSpace()->isCompound();
         }
  
         ob::Cost motionCost(const State *s1, const State *s2) const override
         {
-            Eigen::Vector2d diff = s1->as<R2BeliefSpace::StateType>()->getXY() - s2->as<R2BeliefSpace::StateType>()->getXY();
-            return Cost(sqrt(diff.norm()*diff.norm() + s1->as<R2BeliefSpace::StateType>()->getCovariance().trace() + s2->as<R2BeliefSpace::StateType>()->getCovariance().trace()));
+            auto beliefstate_s1 = s1->as<R2BeliefSpace::StateType>();
+            auto beliefstate_s2 = s2->as<R2BeliefSpace::StateType>();
+            if (compound_)
+            {
+                beliefstate_s1 =  s1->as<ob::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0);
+                beliefstate_s2 =  s2->as<ob::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0);
+            }
+
+
+            Eigen::Vector2d diff = beliefstate_s1->getXY() - beliefstate_s2->getXY();
+            // std::cout << s1->as<R2BeliefSpace::StateType>()->getSigma().trace() << " " << s1->as<R2BeliefSpace::StateType>()->getLambda().trace() << std::endl;
+            return Cost(sqrt(diff.norm()*diff.norm() + beliefstate_s1->getCovariance().trace() + beliefstate_s2->getCovariance().trace()));
         }
+
+    bool compound_;
 };
 
 

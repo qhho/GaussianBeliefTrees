@@ -18,6 +18,11 @@ namespace ob = ompl::base;
 namespace oc = ompl::control;
 namespace og = ompl::geometric;
 
+inline bool isCompoundStateSpace(const ompl::base::StateSpacePtr &space)
+{
+    return dynamic_cast<ompl::base::CompoundStateSpace*>(space.get()) != nullptr;
+}
+
 std::vector<std::string> split(std::string str, std::string delimiter)
 {
    std::vector<std::string> v;
@@ -46,7 +51,7 @@ ob::StateSpacePtr constructStateSpace(int dim)
 {
      ob::StateSpacePtr state_space;
     if (dim == 2)
-        state_space = ob::StateSpacePtr(new R2BeliefSpace(2.0));
+        state_space = ob::StateSpacePtr(new R2BeliefSpace(5.0));
     else if (dim == 3)
         state_space = ob::StateSpacePtr(new R3BeliefSpace(2.0));
     else
@@ -59,14 +64,14 @@ ob::StateSpacePtr constructUnicycleStateSpace(int dim)
     ob::StateSpacePtr c_space = ob::StateSpacePtr(new ob::CompoundStateSpace());
     if (dim == 2)
     {
-        c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new R2BeliefSpace(2.0)), 1.0); // x, y, P
+        c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new R2BeliefSpace(5.0)), 1.0); // x, y, P
         c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new ob::SO2StateSpace()), 0.0); // yaw
         c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new ob::RealVectorStateSpace(1)), 0.0); // surge
         c_space->as<ob::CompoundStateSpace>()->lock();
     }
     else if (dim == 3)
     {
-        c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new R3BeliefSpace(2.0)), 1.0); // x, y, z, P
+        c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new R3BeliefSpace(5.0)), 1.0); // x, y, z, P
         c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new ob::SO2StateSpace()), 0.0); // yaw
         c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new ob::RealVectorStateSpace(1)), 0.0); // surge
         c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new ob::RealVectorStateSpace(1)), 0.0); // heave
@@ -145,20 +150,20 @@ public:
 
         if (dim_ == 2)
         {
-            double dx = st->as<R2BeliefSpace::StateType>()->getX() - goal_state_[0];
-            double dy = st->as<R2BeliefSpace::StateType>()->getY() - goal_state_[1];
+            double dx = st->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getX() - goal_state_[0];
+            double dy = st->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getY() - goal_state_[1];
 
-            std::cout << dx << " " << dy << std::endl;
-            double radius = st->as<R2BeliefSpace::StateType>()->getCovariance()(0,0);
+            // std::cout << dx << " " << dy << std::endl;
+            double radius = st->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getCovariance()(0,0);
             radius = t_crit_*sqrt(radius);
             return sqrt(dx*dx + dy*dy) + radius;
         }
         else
         {
-            double dx = st->as<R2BeliefSpace::StateType>()->getX() - goal_state_[0];
-            double dy = st->as<R2BeliefSpace::StateType>()->getY() - goal_state_[1];
-            double dz = st->as<R3BeliefSpace::StateType>()->getZ() - goal_state_[2];
-            double radius = st->as<R3BeliefSpace::StateType>()->getCovariance()(0,0);
+            double dx = st->as<base::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getX() - goal_state_[0];
+            double dy = st->as<base::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getY() - goal_state_[1];
+            double dz = st->as<base::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getZ() - goal_state_[2];
+            double radius = st->as<base::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getCovariance()(0,0);
             radius = t_crit_*sqrt(radius);
             return sqrt(dx*dx + dy*dy + dz*dz) + radius;
         }
@@ -237,8 +242,8 @@ void OfflinePlannerUncertainty::planWithUnicycle(int sysType, double plan_time, 
         bounds_ctrl.setHigh(2, M_PI);
         bounds_ctrl.setLow(3, 0.05);
         bounds_ctrl.setHigh(3, 5.0);
-        bounds_ctrl.setLow(4, 0.0);
-        bounds_ctrl.setHigh(4, 1.0);
+        bounds_ctrl.setLow(4, 0.1);
+        bounds_ctrl.setHigh(4, 0.9);
     }
     else if (dimension == 3)
     {
@@ -254,8 +259,8 @@ void OfflinePlannerUncertainty::planWithUnicycle(int sysType, double plan_time, 
         bounds_ctrl.setHigh(4, 5.0);
         bounds_ctrl.setLow(5, -1.0); //heave
         bounds_ctrl.setHigh(5, 1.0);
-        bounds_ctrl.setLow(6, 0.0);
-        bounds_ctrl.setHigh(6, 1.0);
+        bounds_ctrl.setLow(6, 0.1);
+        bounds_ctrl.setHigh(6, 0.9);
     }
     else
         OMPL_ERROR("Invalid dimension. Must be 2 or 3");
@@ -319,11 +324,17 @@ void OfflinePlannerUncertainty::planWithUnicycle(int sysType, double plan_time, 
     // Perform setup steps for the planner
     //=======================================================================
     simple_setup_->setup();
-    OMPL_INFORM("Benchmarking starting");
-    this->solve(plan_time, goal_bias, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 1, file, true);
+    // OMPL_INFORM("Benchmarking starting");
+    // this->solve(plan_time, goal_bias, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 1, file, true);
     OMPL_INFORM("Full benchmarks starting");
     this->solve(plan_time, goal_bias, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 1, file, false);
 }
+
+ob::ValidStateSamplerPtr allocValidStateSampler(const ob::SpaceInformation *si)
+{
+    return std::make_shared<BeliefStateSampler>(si);
+}
+
 
 void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_time, double dt, double p_safe, double Q, double R, double R_bad, double K, std::string scene,  std::vector<std::vector<double>> measurement_region, std::vector<std::vector<double>> bounds_state, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file)
 {
@@ -369,6 +380,8 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
         bounds.setLow(i, bounds_control[i][0]);
         bounds.setHigh(i, bounds_control[i][1]);
     }
+    bounds.setLow(dimension, bounds_control[dimension][0]);
+    bounds.setHigh(dimension, bounds_control[dimension][1]);
     cspace->setBounds(bounds);
     
     //=======================================================================
@@ -427,14 +440,17 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     // simple_setup_->getStateSpace()->allocStateSampler(sampler);
 
     // simple_setup_->getStateSpace()->setStateSamplerAllocator(std::bind(&BeliefStateSampler, std::placeholders::_1));
+    // simple_setup_->getSpaceInformation()->
+    // BeliefStateSampler *sampler = new BeliefStateSampler(&(*simple_setup_->getSpaceInformation()));
+    simple_setup_->getSpaceInformation()->setValidStateSamplerAllocator(allocValidStateSampler);
 
     //=======================================================================
     // Perform setup steps for the planner
     //=======================================================================
     simple_setup_->setup();
     OMPL_INFORM("Benchmarking starting");
-    this->solve(plan_time, goal_bias, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 1, file, true);
-    OMPL_INFORM("Full benchmarks starting");
+    // this->solve(plan_time, goal_bias, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 1, file, true);
+    // OMPL_INFORM("Full benchmarks starting");
     this->solve(plan_time, goal_bias, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 1, file, false);
 }
 
@@ -566,7 +582,7 @@ int main(int argc, char **argv)
     std::vector<std::string> Boundsplt = split(Boundstr, ":"); // Split rows
     std::vector<std::string>::iterator iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> bounds_state;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());
@@ -582,7 +598,7 @@ int main(int argc, char **argv)
     Boundsplt = split(Boundstr, ":"); // Split rows
     iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> bounds_control;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());
@@ -597,7 +613,7 @@ int main(int argc, char **argv)
     Boundsplt = split(Boundstr, ":"); // Split rows
     iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> measurement_region;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());

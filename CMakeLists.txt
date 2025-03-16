@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(gbt)
 
 # SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=c++14 -march=native -funroll-all-loops -fpeel-loops -ftracer -ftree-vectorize -mavx2 -mfma -fomit-frame-pointer -fpermissive")
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=c++14")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=c++17")
 
 find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED)
@@ -13,14 +13,16 @@ find_package(yaml-cpp REQUIRED)
 include_directories(include ${EIGEN3_INCLUDE_DIRS} ${BOOST_INCLUDE_DIRS} ${ompl_INCLUDE_DIRS})
 
 
-add_library (rrbt_lib
+add_library (gbt_lib
     src/Spaces/RealVectorBeliefSpace.cpp
     src/Spaces/R2BeliefSpace.cpp
     src/Spaces/R2BeliefSpaceEuclidean.cpp
     src/Spaces/R3BeliefSpace.cpp
+    src/Spaces/RNBeliefSpace.cpp
     scenes/scenereplanning.cpp
     scenes/scenereplanning2.cpp
     src/StatePropagators/SimpleStatePropagator.cpp
+    src/StatePropagators/SimpleStatePropagatorFull.cpp
     src/StatePropagators/SimpleStatePropagatorfixedK.cpp
     src/StatePropagators/3DSimpleStatePropagator.cpp
     src/StatePropagators/3DSimpleStatePropagatorfixedK.cpp
@@ -28,6 +30,7 @@ add_library (rrbt_lib
     src/StatePropagators/2DUnicyclePropagatorfixedK.cpp
     src/StatePropagators/3DUnicyclePropagator.cpp
     src/StatePropagators/3DUnicyclePropagatorfixedK.cpp
+    src/StatePropagators/LinearStatePropagator.cpp
     src/OptimizationObjectives/expected_cost_objective.cpp
     src/OptimizationObjectives/state_cost_objective.cpp
     src/ValidityCheckers/state_validity_checker_pcc_blackmore.cpp
@@ -45,7 +48,7 @@ add_library (rrbt_lib
 )
 
 
-target_link_libraries (rrbt_lib
+target_link_libraries (gbt_lib
     ${Boost_LIBRARIES}
     ${EIGEN3_LIBRARIES}
     ${OMPL_LIBRARIES}
@@ -53,7 +56,7 @@ target_link_libraries (rrbt_lib
     yaml-cpp
 )
 
-target_include_directories(rrbt_lib
+target_include_directories(gbt_lib
     PUBLIC
     ${OMPL_INCLUDE_DIRS}
 )
@@ -69,16 +72,26 @@ target_include_directories(rrbt_lib
 add_executable (varyK benchmarks/benchmark_varyK.cpp)
 
 target_link_libraries (varyK
-    rrbt_lib
+    gbt_lib
     ${OMPL_LIBRARIES}
     ${Boost_LIBRARIES}
     yaml-cpp
 )
 
+add_executable (varyKfull benchmarks/benchmark_varyK_full.cpp)
+
+target_link_libraries (varyKfull
+    gbt_lib
+    ${OMPL_LIBRARIES}
+    ${Boost_LIBRARIES}
+    yaml-cpp
+)
+
+
 add_executable (rrbt benchmarks/benchmark_rrbt.cpp)
 
 target_link_libraries (rrbt
-    rrbt_lib
+    gbt_lib
     ${OMPL_LIBRARIES}
     ${Boost_LIBRARIES}
     yaml-cpp
@@ -87,7 +100,16 @@ target_link_libraries (rrbt
 add_executable (fixedK benchmarks/benchmark_fixedK.cpp)
 
 target_link_libraries (fixedK
-    rrbt_lib
+    gbt_lib
+    ${OMPL_LIBRARIES}
+    ${Boost_LIBRARIES}
+    yaml-cpp
+)
+
+add_executable (double benchmarks/benchmark_fixedK_general.cpp)
+
+target_link_libraries (double
+    gbt_lib
     ${OMPL_LIBRARIES}
     ${Boost_LIBRARIES}
     yaml-cpp

@@ -1,0 +1,17 @@
+scene:
+
+  obstacles:
+
+    - fx: 0
+      tx: 43
+      fy: 50
+      ty: 80
+      fz: 0
+      tz: 10
+
+    - fx: 50
+      tx: 100
+      fy: 50
+      ty: 80
+      fz: 0
+      tz: 10

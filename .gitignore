@@ -40,4 +40,7 @@ cmake_install.cmake
 #Build files
 build
 
+#results files
+results
+
 .vscode

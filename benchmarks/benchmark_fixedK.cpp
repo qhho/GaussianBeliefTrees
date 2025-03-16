@@ -13,6 +13,10 @@
 #include <string>
 #include <bits/stdc++.h>
 #include "benchmark_gbt.hpp"
+#include "StatePropagators/SimpleStatePropagatorfixedK.h"
+#include "StatePropagators/2DUnicyclePropagatorfixedK.h"
+#include "StatePropagators/3DSimpleStatePropagatorfixedK.h"
+#include "StatePropagators/3DUnicyclePropagatorfixedK.h"
 
 namespace ob = ompl::base;
 namespace oc = ompl::control;
@@ -46,7 +50,7 @@ ob::StateSpacePtr constructStateSpace(int dim)
 {
      ob::StateSpacePtr state_space;
     if (dim == 2)
-        state_space = ob::StateSpacePtr(new R2BeliefSpace(2.0));
+        state_space = ob::StateSpacePtr(new R2BeliefSpace(5.0));
     else if (dim == 3)
         state_space = ob::StateSpacePtr(new R3BeliefSpace(2.0));
     else
@@ -59,14 +63,14 @@ ob::StateSpacePtr constructUnicycleStateSpace(int dim)
     ob::StateSpacePtr c_space = ob::StateSpacePtr(new ob::CompoundStateSpace());
     if (dim == 2)
     {
-        c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new R2BeliefSpace(2.0)), 1.0); // x, y, P
+        c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new R2BeliefSpace(5.0)), 1.0); // x, y, P
         c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new ob::SO2StateSpace()), 0.0); // yaw
         c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new ob::RealVectorStateSpace(1)), 0.0); // surge
         c_space->as<ob::CompoundStateSpace>()->lock();
     }
     else if (dim == 3)
     {
-        c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new R3BeliefSpace(2.0)), 1.0); // x, y, z, P
+        c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new R3BeliefSpace(5.0)), 1.0); // x, y, z, P
         c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new ob::SO2StateSpace()), 0.0); // yaw
         c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new ob::RealVectorStateSpace(1)), 0.0); // surge
         c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new ob::RealVectorStateSpace(1)), 0.0); // heave
@@ -142,26 +146,29 @@ public:
         dim_ = dim;
     }
     virtual double distanceGoal(const State *st) const
-        {
+    {
+        
+        // std::cout << "Dimension: " <<  dim_ << std::endl;
+
         if (dim_ == 2)
         {
-            double dx = st->as<R2BeliefSpace::StateType>()->getX() - goal_state_[0];
-            double dy = st->as<R2BeliefSpace::StateType>()->getY() - goal_state_[1];
-            double radius = st->as<R2BeliefSpace::StateType>()->getCovariance()(0,0);
+            double dx = st->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getX() - goal_state_[0];
+            double dy = st->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getY() - goal_state_[1];
+
+            // std::cout << dx << " " << dy << std::endl;
+            double radius = st->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getCovariance()(0,0);
             radius = t_crit_*sqrt(radius);
-            
             return sqrt(dx*dx + dy*dy) + radius;
         }
         else
         {
-            double dx = st->as<R2BeliefSpace::StateType>()->getX() - goal_state_[0];
-            double dy = st->as<R2BeliefSpace::StateType>()->getY() - goal_state_[1];
-            double dz = st->as<R3BeliefSpace::StateType>()->getZ() - goal_state_[2];
-            double radius = st->as<R3BeliefSpace::StateType>()->getCovariance()(0,0);
+            double dx = st->as<base::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getX() - goal_state_[0];
+            double dy = st->as<base::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getY() - goal_state_[1];
+            double dz = st->as<base::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getZ() - goal_state_[2];
+            double radius = st->as<base::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getCovariance()(0,0);
             radius = t_crit_*sqrt(radius);
-            return sqrt(dx*dx + dy*dy + dz*dz) + radius; //TODO: check this
+            return sqrt(dx*dx + dy*dy + dz*dz) + radius;
         }
-
         return 0;
     }
 
@@ -298,9 +305,9 @@ void OfflinePlannerUncertainty::planWithUnicycle(int sysType, double plan_time, 
     simple_setup_->setGoal(std::make_shared<MyUnicycleGoalRegion>(si, p_safe, goal_state, goal_r, t_crit, dimension));
 
     if (dimension == 2)
-        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new DynUnicycleControlSpace(si, Q, R, R_bad, K, measurement_region))); //TODO: measurement
+        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new DynUnicycleControlSpaceFixedK(si, Q, R, R_bad, K, measurement_region))); //TODO: measurement
     else if (dimension == 3)
-        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new DynUnicycleControlSpace3D(si, Q, R, R_bad, K, measurement_region)));
+        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new DynUnicycleControlSpace3DFixedK(si, Q, R, R_bad, K, measurement_region)));
     else
         OMPL_ERROR("Invalid dimension. Must be 2 or 3");
 
@@ -313,8 +320,8 @@ void OfflinePlannerUncertainty::planWithUnicycle(int sysType, double plan_time, 
     // Perform setup steps for the planner
     //=======================================================================
     simple_setup_->setup();
-    OMPL_INFORM("Benchmarking starting");
-    this->solve(plan_time, goal_bias, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 1, file, true);
+    // OMPL_INFORM("Benchmarking starting");
+    // this->solve(plan_time, goal_bias, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 1, file, true);
     OMPL_INFORM("Full benchmarks starting");
     this->solve(plan_time, goal_bias, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 1, file, false);
 }
@@ -396,7 +403,7 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     if (dimension == 2)
         simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new SimpleStatePropagatorFixedK(si, Q, R, R_bad, K, measurement_region)));
     else if (dimension == 3)
-        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new ThreeDSimpleStatePropagator(si, Q, R, R_bad, K, measurement_region)));
+        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new ThreeDSimpleStatePropagatorFixedK(si, Q, R, R_bad, K, measurement_region)));
 
 	simple_setup_->getProblemDefinition()->setOptimizationObjective(getExpectedPathLengthObjective(si));
     ob::StateValidityCheckerPtr val_checker;
@@ -408,8 +415,8 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     //=======================================================================
     simple_setup_->setup();
     OMPL_INFORM("Benchmarking starting");
-    this->solve(plan_time, goal_bias, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 1, file, true);
-    OMPL_INFORM("Full benchmarks starting");
+    // this->solve(plan_time, goal_bias, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 1, file, true);
+    // OMPL_INFORM("Full benchmarks starting");
     this->solve(plan_time, goal_bias, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 1, file, false);
 }
 
@@ -541,7 +548,7 @@ int main(int argc, char **argv)
     std::vector<std::string> Boundsplt = split(Boundstr, ":"); // Split rows
     std::vector<std::string>::iterator iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> bounds_state;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());
@@ -557,7 +564,7 @@ int main(int argc, char **argv)
     Boundsplt = split(Boundstr, ":"); // Split rows
     iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> bounds_control;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());
@@ -572,7 +579,7 @@ int main(int argc, char **argv)
     Boundsplt = split(Boundstr, ":"); // Split rows
     iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> measurement_region;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());

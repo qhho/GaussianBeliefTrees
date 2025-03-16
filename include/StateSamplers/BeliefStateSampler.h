@@ -6,31 +6,34 @@
 #include "Spaces/R2BeliefSpace.h"
 #include "Spaces/R3BeliefSpace.h"
 #include "ompl/base/SpaceInformation.h"
+#include "ompl/control/SpaceInformation.h"
 
 namespace ob = ompl::base;
 
 
-class BeliefStateSampler : public ompl::base::StateSampler
+class BeliefStateSampler : public ompl::base::ValidStateSampler
 {
     public:
-        BeliefStateSampler(const ompl::base::StateSpace *ss);
+        BeliefStateSampler(const ompl::base::SpaceInformation *si);
 
 
     virtual ~BeliefStateSampler(void)
     {
     }
 
-    virtual void sample(ompl::base::State *state);
+    virtual bool sample(ompl::base::State *state) override;
 
-    virtual void sample(ompl::base::State *state, const double eigenvalue);
+    virtual bool sample(ompl::base::State *state, const double eigenvalue);
 
     virtual void sampleUniform(ompl::base::State *state);
 
-    virtual void sampleNear(ompl::base::State *state);
+    virtual bool sampleNear(ompl::base::State *state, const ompl::base::State *near, double distance) override;
 
-    virtual void sampleGaussian(ompl::base::State *state, const State *mean, double stdDev);
+    // virtual void sampleNear(ompl::base::State *state);
 
-    virtual void sampleUniformNear(ompl::base::State *state, const State *near, double distance);
+    // virtual void sampleGaussian(ompl::base::State *state, const State *mean, double stdDev);
+
+    // virtual void sampleUniformNear(ompl::base::State *state, const State *near, double distance);
 
     void sampleBias(ompl::base::State *state, const double eigenvalue);
 
@@ -63,6 +66,8 @@ class BeliefStateSampler : public ompl::base::StateSampler
     }
 
     protected:
+
+        ompl::RNG rng_;
         
         double bias_p;
         

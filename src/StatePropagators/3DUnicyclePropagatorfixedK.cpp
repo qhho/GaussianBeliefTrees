@@ -234,7 +234,7 @@ void DynUnicycleControlSpace3DFixedK::propagate(const ob::State *start, const oc
     Eigen::Matrix3d lambda_from = start_css->as<R3BeliefSpace::StateType>(0)->getLambda();
     Eigen::Matrix3d sigma_pred = A_cl_d_33_*sigma_from*A_cl_d_33_ + Q;
 
-    Mat K, lambda_pred;
+    Mat3 K, lambda_pred;
 
     Eigen::Matrix3f PX; PX.setZero();
     PX(0,0) = sigma_pred(0,0);
@@ -242,13 +242,13 @@ void DynUnicycleControlSpace3DFixedK::propagate(const ob::State *start, const oc
     PX(2,2) = sigma_pred(2,2);
 
     if (TheHyperplaneCCValidityChecker(A_list_.at(0), B_list_.at(0), result_css_rvs_pose->getX(), result_css_rvs_pose->getY(), result_css_rvs_pose->getZ(), PX)) {
-        Mat R = R_*Eigen::Matrix3d::Identity();
+        Mat3 R = R_*Eigen::Matrix3d::Identity();
         Eigen::Matrix3d S = (H * sigma_pred * H.transpose())+ R;
         K = (sigma_pred * H.transpose()) * S.inverse();
         lambda_pred = A_BK_*lambda_from*A_BK_;
     }
     else{
-        Mat R = R_bad_*Eigen::Matrix3d::Identity();
+        Mat3 R = R_bad_*Eigen::Matrix3d::Identity();
         Eigen::Matrix3d S = (H * sigma_pred * H.transpose())+ R;
         K = (sigma_pred * H.transpose()) * S.inverse();
         lambda_pred = A_BK_*lambda_from*A_BK_;

@@ -107,6 +107,12 @@ ompl::control::RRBT_Unicycle::RRBT_Unicycle(const SpaceInformationPtr &si)
     B_ol_ << 1.0, 0.0,
             0.0, 1.0;
 
+    // Eigen::Matrix4d A_ol_d_ = Eigen::MatrixXd::Identity(4, 4) + A_ol_ * myduration_;
+    // A_ol_d_22_(0, 0) = A_ol_d_(0, 0);  // x to x
+    // A_ol_d_22_(0, 1) = A_ol_d_(0, 2);  // x to y
+    // A_ol_d_22_(1, 0) = A_ol_d_(2, 0);  // y to x
+    // A_ol_d_22_(1, 1) = A_ol_d_(2, 2);  // y to y
+
     //=========================================================================
     // Close loop system definition
     //=========================================================================
@@ -120,7 +126,15 @@ ompl::control::RRBT_Unicycle::RRBT_Unicycle(const SpaceInformationPtr &si)
     // Discrete close loop system definition
     //=========================================================================
     A_cl_d_.resize(2, 2);
-    A_cl_d_ = Eigen::MatrixXd::Identity(2, 2) + A_cl_ * myduration_;
+    A_cl_d_ = Eigen::MatrixXd::Identity(2, 2) - A_cl_ * myduration_;
+    A_cl_d_ = A_cl_d_.inverse().eval();
+    A_cl_d_(0,0) = K_;
+    A_cl_d_(1,1) = K_;
+
+    // std::cout << A_ol_ << std::endl;
+
+    // std::cout << A_cl_d_ << std::endl;
+
 
     B_cl_d_.resize(2, 2);
     B_cl_d_ = A_cl_d_.inverse() * (A_cl_d_ - Eigen::MatrixXd::Identity(2, 2)) * B_cl_;
@@ -272,7 +286,7 @@ ompl::base::PlannerStatus ompl::control::RRBT_Unicycle::solve(const base::Planne
             // std::cout << "belief" << std::endl;
             auto *nbelief = new Belief();
             nbelief->motion = motion;
-            nbelief->sigma_ = 2.0*Eigen::MatrixXd::Identity(2,2);
+            nbelief->sigma_ = 5.0*Eigen::MatrixXd::Identity(2,2);
             nbelief->lambda_ = 0.0*Eigen::MatrixXd::Identity(2,2);
             nbelief->cost = motion->cost;
             nbelief->x = motion->state->as<ob::RealVectorStateSpace::StateType>()->values[0];
@@ -401,6 +415,8 @@ ompl::base::PlannerStatus ompl::control::RRBT_Unicycle::solve(const base::Planne
             dstate = xstate;
         }
 
+
+        // std::cout << "NEAREST NODE: " << nmotion->state->as<ob::RealVectorStateSpace::StateType>()->values[0] << " " << nmotion->state->as<ob::RealVectorStateSpace::StateType>()->values[1] << std::endl;
         // std::cout << "NEW MOTION CANDIDATE " << dstate->as<ob::RealVectorStateSpace::StateType>()->values[0] << " " << dstate->as<ob::RealVectorStateSpace::StateType>()->values[1] << std::endl;
         // Check if the motion between the nearest state and the state to add is valid
         if (checkMotion(nmotion, dstate))
@@ -494,8 +510,11 @@ ompl::base::PlannerStatus ompl::control::RRBT_Unicycle::solve(const base::Planne
                         const double diff_y = nbh_queue[i]->state->as<ob::RealVectorStateSpace::StateType>()->values[1] - belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[1];
                         //TODO: heuristically choose a distance: 5 distance per second
 
-                        unsigned int cd = ceil(std::max(abs(diff_x), abs(diff_y))/(5*stepSize_));
-                        if (cd > siC_->getMaxControlDuration() || std::max(abs(diff_x), abs(diff_y)) > maxDistance_){
+                        // std::cout << "steering from: " << nbh_queue[i]->state->as<ob::RealVectorStateSpace::StateType>()->values[0] << " " << nbh_queue[i]->state->as<ob::RealVectorStateSpace::StateType>()->values[1] << std::endl;
+                        // std::cout << "steering to: " << belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[0] << " " << belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[1] << std::endl;
+
+                        unsigned int cd = 40; //ceil(std::max(abs(diff_x), abs(diff_y))/(5*stepSize_)); //20
+                        if (std::max(abs(diff_x), abs(diff_y)) > maxDistance_){ //cd > siC_->getMaxControlDuration() || 
                             continue;
                         }
 
@@ -525,15 +544,13 @@ ompl::base::PlannerStatus ompl::control::RRBT_Unicycle::solve(const base::Planne
                             // dbelief->incCost = opt_->motionCost(dbelief->motion->state, belief->motion->state); //update inccost of new belief
                             dbelief->incCost = Cost(cost);
                             dbelief->cost = opt_->combineCosts(belief->cost, dbelief->incCost); //update cost of new belief
-                            // std::cout << "old belief: " << belief->x << " " << belief->y << std::endl;
-                            // std::cout << "new belief: " << dbelief->x << " " << dbelief->y << std::endl;
+                            
                             // std::cout << belief->cost.value() << " " << dbelief->incCost << std::endl;
                             // std::cout << dbelief->cost.value() << std::endl;
                             // if (belief->cost.value() > 250){
                             //     std::cout << belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[0] << " " << belief->motion->state->as<ob::RealVectorStateSpace::StateType>()->values[1] << std::endl;
                             //     std::cout << dbelief->incCost.value() << " " << dbelief->cost.value() << std::endl;
                             // }
-                            // std::cout << "here" << std::endl;
 
                             if (myisValid(dbelief))
                             {
@@ -549,6 +566,8 @@ ompl::base::PlannerStatus ompl::control::RRBT_Unicycle::solve(const base::Planne
                                     }
                                     belief->children.push_back(dbelief);
                                     BeliefQueue.emplace(dbelief);
+                                    // std::cout << "old belief: " << belief->x << " " << belief->y << " " << (belief->sigma_ + belief->lambda_).trace() << " " << belief->cost << std::endl;
+                                    // std::cout << "new belief: " << dbelief->x << " " << dbelief->y << " " << dbelief->sigma_.trace() + dbelief->lambda_.trace() << " " << dbelief->cost << std::endl;
                                 }
                                 else{
                                     // std::cout << "not appending" << std::endl;
@@ -615,7 +634,7 @@ ompl::base::PlannerStatus ompl::control::RRBT_Unicycle::solve(const base::Planne
                             OMPL_INFORM("%s: Found an initial solution with a cost of %.2f in %u iterations (%u "
                                 "vertices in the graph)",
                                 getName().c_str(), bestCost_.value(), iterations_, nn_->size());
-
+                            // exit(0);
                             // std::cout << "found an initial solution" << std::endl;
                         }
                     }
@@ -852,6 +871,8 @@ bool ompl::control::RRBT_Unicycle::checkMotion(Motion * nmotion, State* dstate)
     const double diff_x = abs(dstate->as<ob::RealVectorStateSpace::StateType>()->values[0] - nmotion->state->as<ob::RealVectorStateSpace::StateType>()->values[0]);
     const double diff_y = abs(dstate->as<ob::RealVectorStateSpace::StateType>()->values[1] - nmotion->state->as<ob::RealVectorStateSpace::StateType>()->values[1]);
 
+    // std::cout << "Initial: " << x << " " << y << " " << yaw << " " << surge << std::endl;
+    // std::cout << "distance: " << diff_x << " " << diff_y << std::endl;
     
     auto *motion = new Motion(siC_);
     siC_->nullControl(motion->control_);
@@ -862,18 +883,32 @@ bool ompl::control::RRBT_Unicycle::checkMotion(Motion * nmotion, State* dstate)
     rctrl->as<RealVectorControlSpace::ControlType>()->values[1]= y;
     rctrl->as<RealVectorControlSpace::ControlType>()->values[2]= yaw;
     rctrl->as<RealVectorControlSpace::ControlType>()->values[3]= surge;
-    unsigned int cd = ceil(std::max(abs(diff_x), abs(diff_y))/(5*stepSize_));
+    unsigned int cd = 40; //ceil(std::max(abs(diff_x), abs(diff_y))/(5*stepSize_)); //20
     auto *result = new Belief();
 
+    //print size of nmotion->beliefs
+    // std::cout << nmotion->beliefs.size() << std::endl;
     for (auto it:nmotion->beliefs){
         unsigned int propCd = mypropagateWhileValid(it, rctrl, cd, result);
+        // std::cout << "Final: " << result->x << " " << result->y << " " << result->yaw << " " << result->surge << std::endl;
+        // std::cout << propCd - cd << std::endl;
+        if (abs(result->x - x) > 0.5 || abs(result->y - y) > 0.5)
+        {
+            // std::cout << result->x << " " << result->y << " " << result->yaw << " " << result->surge << std::endl;
+            // std::cout << abs(result->x - x) << " " << abs(result->y - y) << std::endl;
+            // std::cout << "false" << std::endl;
+            // exit(0);
+            return false;
+        }
         result->x  = dstate->as<ob::RealVectorStateSpace::StateType>()->values[0];
         result->y = dstate->as<ob::RealVectorStateSpace::StateType>()->values[1];
         result->yaw = dstate->as<ob::RealVectorStateSpace::StateType>()->values[2];
         result->surge = dstate->as<ob::RealVectorStateSpace::StateType>()->values[3];
         // propCd = cd;
         // std::cout << "motion is " << propCd << " " << cd << std::endl;
+        // std::cout << "true" << std::endl;
         if (propCd == cd && myisValid(result)){
+            // std::cout << "TRUEEEE" << std::endl;
             return true;
         }
     }
@@ -903,6 +938,9 @@ unsigned int ompl::control::RRBT_Unicycle::mypropagateWhileValid(const Belief* b
     double signedStepSize = steps > 0 ? stepSize_ : -stepSize_;
     steps = abs(steps);
 
+    double x_goal = control->as<RealVectorControlSpace::ControlType>()->values[0];
+    double y_goal = control->as<RealVectorControlSpace::ControlType>()->values[1];
+
     // perform the first step of propagation
     mypropagate(belief, control, signedStepSize, result);
 
@@ -929,16 +967,23 @@ unsigned int ompl::control::RRBT_Unicycle::mypropagateWhileValid(const Belief* b
                 break;
             }
 
-            if (abs(temp1->x - temp2->x) < 0.5 && abs(temp1->y - temp2->y) < 0.5){
-                result = temp1;
+
+            // if (abs(temp1->x - temp2->x) < 0.1 && abs(temp1->y - temp2->y) < 0.1){
+            result = temp1;
+            // break;
+            // }
+
+            if (abs(result->x - x_goal) < 0.5 && abs(result->y - y_goal) < 0.5)
+            {
+                // std::cout << "yay" << std::endl;
                 break;
             }
         }
 
-        if (abs(temp1->x - temp2->x) < 0.5 && abs(temp1->y - temp2->y) < 0.5)
-            result = temp1;
-        else
-            r -=1;
+        // if (abs(temp1->x - temp2->x) < 0.1 && abs(temp1->y - temp2->y) < 0.1)
+        // result = temp1;
+        // else
+            // r -=1;
         // if we finished the for-loop without finding an invalid state, the last valid state is temp1
         // make sure result contains that information
         // if (result->x != temp1->x && result->y != temp1->y){
@@ -981,6 +1026,9 @@ unsigned int ompl::control::RRBT_Unicycle::mypropagateAndCostWhileValid(const Be
     double signedStepSize = steps > 0 ? stepSize_ : -stepSize_;
     steps = abs(steps);
 
+    double x_goal = control->as<RealVectorControlSpace::ControlType>()->values[0];
+    double y_goal = control->as<RealVectorControlSpace::ControlType>()->values[1];
+
     // perform the first step of propagation
     mypropagate(belief, control, signedStepSize, result);
 
@@ -1013,18 +1061,23 @@ unsigned int ompl::control::RRBT_Unicycle::mypropagateAndCostWhileValid(const Be
                 break;
             }
 
-            if (abs(temp1->x - temp2->x) < 0.5 && abs(temp1->y - temp2->y) < 0.5){
-                result = temp1;
+            // if (abs(temp1->x - temp2->x) < 0.1 && abs(temp1->y - temp2->y) < 0.1){
+            result = temp1;
+
+            if (abs(result->x - x_goal) < 0.5 && abs(result->y - y_goal) < 0.5)
+            {
                 break;
             }
+                // break;
+            // }
         }
 
         // if we finished the for-loop without finding an invalid state, the last valid state is temp1
         // make sure result contains that information
-        if (abs(temp1->x - temp2->x) < 0.5 && abs(temp1->y - temp2->y) < 0.5)
-            result = temp1;
-        else
-            r -=1;
+        // if (abs(temp1->x - temp2->x) < 0.1 && abs(temp1->y - temp2->y) < 0.1)
+            // result = temp1;
+        // else
+            // r -=1;
         // free the temporary memory
         delete toDelete;
         // std::cout << result->x << " " << result->y << std::endl;
@@ -1087,11 +1140,15 @@ void ompl::control::RRBT_Unicycle::mypropagate(const Belief *belief, const contr
     yaw_reference = control->as<oc::RealVectorControlSpace::ControlType>()->values[2];
     surge_reference = control->as<oc::RealVectorControlSpace::ControlType>()->values[3];
 
+
+    // controller_parameters_.push_back(0.0316);
+    // controller_parameters_.push_back(0.3054);
+
     //=========================================================================
     // Compute control inputs (dot(dot(x)) dot(dot(y))) with PD controller
     //=========================================================================
-    double u_0 = 0.316 * (x_pose_reference - x_pose) + 1.054 * (surge_reference * cos(yaw_reference) - surge * cos_y);
-    double u_1 = 1.054 * (y_pose_reference - y_pose) + 0.316 * (surge_reference * sin(yaw_reference) - surge * sin_y);
+    double u_0 = 0.0316 * (x_pose_reference - x_pose) + 0.3054 * (surge_reference * cos(yaw_reference) - surge * cos_y);
+    double u_1 = 0.3054 * (y_pose_reference - y_pose) + 0.0316 * (surge_reference * sin(yaw_reference) - surge * sin_y);
 
     // double u_0 = (x_pose_reference - x_pose) + (surge_reference * cos(yaw_reference) - surge * cos_y);
     // double u_1 = (y_pose_reference - y_pose) + (surge_reference * sin(yaw_reference) - surge * sin_y);
@@ -1135,7 +1192,7 @@ void ompl::control::RRBT_Unicycle::mypropagate(const Belief *belief, const contr
 
     Eigen::Matrix2d sigma_from = belief->sigma_;
     Eigen::Matrix2d lambda_from = belief->lambda_;
-    Eigen::Matrix2d sigma_pred = A_cl_d_*sigma_from*A_cl_d_.transpose() + Q;
+    Eigen::Matrix2d sigma_pred = A_ol_*sigma_from*A_ol_.transpose() + Q;
 
     Mat lambda_pred, K;
 
@@ -1144,19 +1201,26 @@ void ompl::control::RRBT_Unicycle::mypropagate(const Belief *belief, const contr
         Mat R = R_*Eigen::MatrixXd::Identity(2, 2);
         Mat S = (H * sigma_pred * H.transpose()) + R;
         K = (sigma_pred * H.transpose()) * S.inverse();
-        lambda_pred = A_cl_*lambda_from*A_cl_;
+        lambda_pred = A_cl_d_*lambda_from*A_cl_d_.transpose();
     }
     else{
         Mat R = R_bad_*Eigen::MatrixXd::Identity(2, 2);
         Mat S = (H * sigma_pred * H.transpose()) + R;
         K = (sigma_pred * H.transpose()) * S.inverse();
-        lambda_pred = A_cl_*lambda_from*A_cl_;
+        lambda_pred = A_cl_d_*lambda_from*A_cl_d_.transpose();
 
     }
     Mat sigma_to = (I - (K*H)) * sigma_pred;
     Mat lambda_to = lambda_pred + K*H*sigma_pred;
     result->sigma_ = sigma_to;
     result->lambda_ = lambda_to;
+
+    // std::cout << sigma_from << " " << lambda_from << std::endl;
+    // std::cout << Q << std::endl;
+    // std::cout << R_ << " " << R_bad_ << std::endl;
+
+    // std::cout << sigma_to << " " << lambda_to << std::endl;
+    // exit(0);
 }
 
 /*
@@ -1331,8 +1395,8 @@ bool ompl::control::RRBT_Unicycle::myisValid(const Belief *state) const
 	exit_switch:;
 	return valid;
 
-    // return true;
-    return !(inCollision(state));
+    return true;
+    // return !(inCollision(state));
 }
 
 bool ompl::control::RRBT_Unicycle::HyperplaneCCValidityChecker(const Eigen::MatrixXf &A, const Eigen::MatrixXf &B, const double &x_pose, const double &y_pose, const double &z_pose, const Eigen::MatrixXf &PX) const {
@@ -1396,7 +1460,7 @@ bool ompl::control::RRBT_Unicycle::appendBelief(Motion* motion, Belief* newbelie
             // delete existingbelief;
             toBeDeleted.push_back(existingbelief);
         }
-        else if (!dominates(newbelief, existingbelief)){
+        else if (!epsilon_dominates(newbelief, existingbelief)){
             nbeliefs.push_back(existingbelief);
             if (motion->cost.value() > existingbelief->cost.value()){
                 motion->cost = existingbelief->cost;
@@ -1911,7 +1975,11 @@ void ompl::control::RRBT_Unicycle::calculateRewiringLowerBounds()
 
 bool ompl::control::RRBT_Unicycle::epsilon_dominates(Belief *a, Belief *b) const{
         //returns true if vertex a epsilon dominates vertex b
-        double eps = 2.0;
+        double eps = 0.1;
+
+        if (a->sigma_.trace() == b->sigma_.trace() && a->lambda_.trace() == b->lambda_.trace() && a->cost.value() == b->cost.value()){
+            return true;
+        }
         // std::cout << a->x << " "  << a->sigma_.trace() << " " << a->lambda_.trace() << " " << a->cost << std::endl;
         // std::cout << b->sigma_.trace() << " " << b->lambda_.trace() << " " << b->cost << std::endl;
         // std::cout << "cost is " << a->cost << " " << b->cost << std::endl;
@@ -1921,8 +1989,8 @@ bool ompl::control::RRBT_Unicycle::epsilon_dominates(Belief *a, Belief *b) const
         else if (a->lambda_.trace() >= b->lambda_.trace() + eps){
             return false;
         }
-        // else return (opt_->isCostBetterThan(a->cost, b->cost));  //TODO: add epsilon
-        else return (opt_->isCostBetterThan(a->cost, ob::Cost(b->cost.value() + 0.01)));  //TODO: add epsilon
+        else return (opt_->isCostBetterThan(a->cost, b->cost));  //TODO: add epsilon
+        // else return (opt_->isCostBetterThan(a->cost, ob::Cost(b->cost.value() + eps)));  //TODO: add epsilon
         return true;
     }
 
@@ -1946,8 +2014,13 @@ double ompl::control::RRBT_Unicycle::expectedPathLengthmotionCost(const Belief *
 
     double diff_sq = x_diff*x_diff + y_diff*y_diff;
 
+    // std::cout << s1->x << " " << s2->x << " " << s1->y << " " << s2->y << " " <<  s1->sigma_.trace() + s1->lambda_.trace() << std::endl;
+
     return sqrt(diff_sq + s1->sigma_.trace() + s2->sigma_.trace() + s1->lambda_.trace() + s2->lambda_.trace());
 }
+
+// Eigen::Vector2d diff = s1->as<R2BeliefSpace::StateType>()->getXY() - s2->as<R2BeliefSpace::StateType>()->getXY();
+// return Cost(sqrt(diff.norm()*diff.norm() + s1->as<R2BeliefSpace::StateType>()->getCovariance().trace() + s2->as<R2BeliefSpace::StateType>()->getCovariance().trace()));
 
 double ompl::control::RRBT_Unicycle::distanceGoal(const oc::RRBT_Unicycle::Belief *st) const //TODO: update this for unicycle
 {

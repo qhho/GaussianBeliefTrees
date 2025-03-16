@@ -382,7 +382,8 @@ namespace ompl
                 dimensions_ = dim;
             }
 
-            Eigen::Matrix2d A_ol_, B_ol_, A_cl_, B_cl_, A_cl_d_, B_cl_d_;
+            
+            Eigen::Matrix2d A_ol_, B_ol_, A_cl_, B_cl_, A_cl_d_, B_cl_d_, A_ol_d_22_;
 
             unsigned int n_obstacles_;
             std::vector<Eigen::Matrix<float, 6, 3> > A_list_;

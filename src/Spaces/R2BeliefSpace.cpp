@@ -48,9 +48,15 @@ void R2BeliefSpace::freeState(State *state) const
 double R2BeliefSpace::distance(const State* state1, const State *state2) const //wasserstein distance
 {
 
+    // std::cout << "checking distance " << std::endl;
     //returns the wasserstein distance
+    // std::cout << " one: " <<  state1->as<StateType>()->getX() << std::endl;
+    // std::cout << " two: " << state2->as<StateType>()->getX() << std::endl;
+    
     double dx = state1->as<StateType>()->getX() - state2->as<StateType>()->getX();
     double dy = state1->as<StateType>()->getY() - state2->as<StateType>()->getY();
+
+
 
     Eigen::Matrix2d cov1 = state1->as<StateType>()->getCovariance();
     Eigen::Matrix2d cov2 = state2->as<StateType>()->getCovariance();

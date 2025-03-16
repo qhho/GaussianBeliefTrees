@@ -38,6 +38,11 @@
 #include "Spaces/R2BeliefSpace.h"
 #include "Spaces/R2BeliefSpaceEuclidean.h"
 
+inline bool isCompoundStateSpace(const ompl::base::StateSpacePtr &space)
+{
+    return dynamic_cast<ompl::base::CompoundStateSpace*>(space.get()) != nullptr;
+}
+
 ompl::control::mod_RRT::mod_RRT(const SpaceInformationPtr &si) : base::Planner(si, "mod_RRT")
 {
     specs_.approximateSolutions = true;
@@ -150,6 +155,8 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
     Control *rctrl = rmotion->control;
     base::State *xstate = si_->allocState();
     // std::cout << "here" << std::endl;
+
+    bool compound =  isCompoundStateSpace(si_->getStateSpace());
     max_eigenvalue_ = 10.0;
     while (ptc == false)
     {
@@ -160,13 +167,18 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
             sampler_->sampleUniform(rstate);
 
 
+        auto rmotionbelief = rmotion->state->as<R2BeliefSpace::StateType>();
+        if (compound)
+        {
+            rmotionbelief = rmotion->state->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0);
+        }
         if (DISTANCE_FUNC_ == 1){
             if (rng_.uniform01() < samplingBias_){
-                rmotion->state->as<R2BeliefSpace::StateType>()->setSigma(0.5); //TODO: fix this
+                rmotionbelief->setSigma(0.5); //TODO: fix this
             }
             else{
-                rmotion->state->as<R2BeliefSpace::StateType>()->setSigmaX(rng_.uniform01()*max_eigenvalue_);
-                rmotion->state->as<R2BeliefSpace::StateType>()->setSigmaY(rng_.uniform01()*max_eigenvalue_);
+                rmotionbelief->setSigmaX(rng_.uniform01()*max_eigenvalue_);
+                rmotionbelief->setSigmaY(rng_.uniform01()*max_eigenvalue_);
             }
         }
         // rmotion->state->as<R2BeliefSpace::StateType>()->setSigma(0.1);
@@ -196,24 +208,34 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
                 lastmotion = motion;
                 nn_->add(motion);
 
+                // std::cout << "Old belief: " << nmotion->state->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getX() << " " << nmotion->state->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getY() << " " << nmotion->state->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getCovariance().trace()  << std::endl;
+                // std::cout << "New belief: " << motion->state->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getX() << " " << motion->state->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getY() << " " << motion->state->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getCovariance().trace()  << std::endl;
+
+
+                auto beliefstate =  motion->state->as<R2BeliefSpace::StateType>();
+                if (compound)
+                {
+                    beliefstate =  motion->state->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0);
+                }
+
                 if (DISTANCE_FUNC_ == 0){
-                    if (motion->state->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(0,0) > max_eigenvalue_)
+                    if (beliefstate->getCovariance()(0,0) > max_eigenvalue_)
                     {
-                        max_eigenvalue_ = motion->state->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(0,0);
+                        max_eigenvalue_ = beliefstate->getCovariance()(0,0);
                     }
-                    else if (motion->state->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(1,1) > max_eigenvalue_)
+                    else if (beliefstate->getCovariance()(1,1) > max_eigenvalue_)
                     {
-                        max_eigenvalue_ = motion->state->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(1,1);
+                        max_eigenvalue_ = beliefstate->getCovariance()(1,1);
                     }
                 }
                 else if (DISTANCE_FUNC_ == 1){
-                    if (motion->state->as<R2BeliefSpace::StateType>()->getCovariance()(0,0) > max_eigenvalue_)
+                    if (beliefstate->getCovariance()(0,0) > max_eigenvalue_)
                     {
-                        max_eigenvalue_ = motion->state->as<R2BeliefSpace::StateType>()->getCovariance()(0,0);
+                        max_eigenvalue_ = beliefstate->getCovariance()(0,0);
                     }
-                    else if (motion->state->as<R2BeliefSpace::StateType>()->getCovariance()(1,1) > max_eigenvalue_)
+                    else if (beliefstate->getCovariance()(1,1) > max_eigenvalue_)
                     {
-                        max_eigenvalue_ = motion->state->as<R2BeliefSpace::StateType>()->getCovariance()(1,1);
+                        max_eigenvalue_ = beliefstate->getCovariance()(1,1);
                     }
                 }
 

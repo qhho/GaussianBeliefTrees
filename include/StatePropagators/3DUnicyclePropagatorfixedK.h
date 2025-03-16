@@ -17,7 +17,7 @@
 namespace ob = ompl::base;
 namespace oc = ompl::control;
 
-typedef Eigen::Matrix<double, 3, 3, Eigen::DontAlign> Mat;
+typedef Eigen::Matrix<double, 3, 3, Eigen::DontAlign> Mat3;
 typedef Eigen::Matrix<double, 4, 4, Eigen::DontAlign> Mat44;
 typedef Eigen::Matrix<double, 2, 4, Eigen::DontAlign> Mat24;
 typedef Eigen::Matrix<double, 4, 2, Eigen::DontAlign> Mat42;
@@ -35,7 +35,7 @@ class DynUnicycleControlSpace3DFixedK : public oc::StatePropagator {
     private:
         double duration_, cxx_, cyy_, czz_;
         std::vector<double> controller_parameters_, forward_acceleration_bounds_, turning_rate_bounds_, heave_acceleration_bounds_, surge_bounds_, heave_bounds_, system_noise_;
-        Eigen::MatrixXf A_ol_, B_ol_, K_, Pw_, A_cl_, B_cl_, A_cl_d_, B_cl_d_;
+        Eigen::MatrixXf A_ol_, B_ol_, K_, Pw_, A_cl_, B_cl_, A_cl_d_, B_cl_d_, A_ol_d_, A_ol_d_33_;
 
         // in execution
         mutable double x_pose, y_pose, z_pose, yaw, surge, heave, Pxx_init, Pyy_init, Pzz_init;

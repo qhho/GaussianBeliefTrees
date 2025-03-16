@@ -51,7 +51,7 @@ std::vector<std::string> split(std::string str, std::string delimiter)
 
 ob::StateSpacePtr constructStateSpace(void)
 {
-    ob::StateSpacePtr state_space = ob::StateSpacePtr(new R2BeliefSpace(2.0));
+    ob::StateSpacePtr state_space = ob::StateSpacePtr(new R2BeliefSpace(5.0));
     return state_space;
 }
 
@@ -60,6 +60,8 @@ ob::StateSpacePtr constructRealVectorStateSpace(void)
     ob::StateSpacePtr state_space = ob::StateSpacePtr(new ob::RealVectorStateSpace(2));
     return state_space;
 }
+
+
 
 class MyGoalRegion : public ompl::base::GoalRegion
 {
@@ -96,6 +98,151 @@ public:
     double t_crit_;
 };
 
+
+class MyUnicycleGoalRegion : public ompl::base::GoalRegion
+{
+public:
+    MyUnicycleGoalRegion(const SpaceInformationPtr &si, double p_safe, std::vector<double> goal_state, double goal_r, double t_crit,  double dim) : ompl::base::GoalRegion(si)
+    {
+        setThreshold(goal_r);
+        goal_state_ = goal_state;
+        // std::cout << goal_state_[0] << " " << goal_state_[1] << std::endl;
+        t_crit_ = t_crit;
+        p_safe_ = p_safe;
+        dim_ = dim;
+    }
+    virtual double distanceGoal(const State *st) const
+    {
+        
+        // std::cout << "Dimension: " <<  dim_ << std::endl;
+
+        if (dim_ == 2)
+        {
+            double dx = st->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getX() - goal_state_[0];
+            double dy = st->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getY() - goal_state_[1];
+
+            // std::cout << dx << " " << dy << std::endl;
+            double radius = st->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getCovariance()(0,0);
+            radius = t_crit_*sqrt(radius);
+            return sqrt(dx*dx + dy*dy) + radius;
+        }
+        else
+        {
+            double dx = st->as<base::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getX() - goal_state_[0];
+            double dy = st->as<base::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getY() - goal_state_[1];
+            double dz = st->as<base::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getZ() - goal_state_[2];
+            double radius = st->as<base::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getCovariance()(0,0);
+            radius = t_crit_*sqrt(radius);
+            return sqrt(dx*dx + dy*dy + dz*dz) + radius;
+        }
+        return 0;
+    }
+
+    double p_safe_;
+    std::vector<double> goal_state_;
+    double goal_r_;
+    double t_crit_;
+    int dim_;
+};
+
+void OfflinePlannerUncertainty::planWithUnicycle(int sysType, double plan_time, double dt, double p_safe, double Q, double R, double R_bad, double K, std::string scene,  std::vector<std::vector<double>> measurement_region, std::vector<std::vector<double>> bounds_state, std::vector<std::vector<double> > bounds_surge, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file)
+{
+
+    int dimension;
+
+    if (sysType == 2)
+        dimension = 2;
+    else if (sysType == 3)
+        dimension = 3;
+    else
+        OMPL_ERROR("Invalid system type. Must be 2 or 3");
+
+    //Instantiate the state space
+
+    ob::StateSpacePtr state_space = ob::StateSpacePtr(new ob::RealVectorStateSpace(4));
+    ob::StateSpacePtr space(state_space); // [x y surge yaw covariance(16)] -> size = 20
+
+
+    ob::RealVectorBounds bounds_se2(4);
+    bounds_se2.setLow(0, 0.0);
+    bounds_se2.setHigh(0, 100.0);
+    bounds_se2.setLow(1, 0.0);
+    bounds_se2.setHigh(1, 100.0);
+    bounds_se2.setLow(2, -M_PI);
+    bounds_se2.setHigh(2, M_PI);
+    bounds_se2.setLow(3, bounds_surge[0][0]);
+    bounds_se2.setHigh(3, bounds_surge[0][1]);
+
+    space->as<ob::RealVectorStateSpace>()->setBounds(bounds_se2);
+
+    auto cspace(std::make_shared<oc::RealVectorControlSpace>(space, 4));
+
+    ob::RealVectorBounds bounds_xy(4);
+	bounds_xy.setLow(0, 0);
+	bounds_xy.setHigh(0, 100);
+	bounds_xy.setLow(1, 0);
+	bounds_xy.setHigh(1, 100);
+	bounds_xy.setLow(2, -M_PI);
+	bounds_xy.setHigh(2, M_PI);
+	bounds_xy.setLow(3, bounds_surge[0][0]);
+	bounds_xy.setHigh(3, bounds_surge[0][1]);
+	cspace->as<oc::RealVectorControlSpace>()->setBounds(bounds_xy);
+
+       
+    simple_setup_ = oc::SimpleSetupPtr( new oc::SimpleSetup(cspace) );
+    oc::SpaceInformationPtr si = simple_setup_->getSpaceInformation();
+    
+    // Set minimum and maximum duration of control action
+    si->setMinMaxControlDuration(control_duration_low, control_duration_high);
+    si->setPropagationStepSize(dt);
+
+
+    //=======================================================================
+    // Create a start and goal states
+    //=======================================================================
+    ob::ScopedState<> start(space);
+
+    if (dimension == 2)
+    {
+        start[0] = double(initial_state[0]); //x
+        start[1] = double(initial_state[1]); //y
+        start[2] = double(0.0); // yaw
+        start[3] = 1.0; //surge
+    }
+    else if (dimension == 3)
+    {
+        start[0] = double(initial_state[0]); //x
+        start[1] = double(initial_state[1]); //y
+        start[2] = double(initial_state[2]); //z
+        start[3] = double(0.0); // yaw
+        start[4] = 1.0; //surge
+    }
+    else
+        OMPL_ERROR("Invalid dimension. Must be 2 or 3");
+
+
+
+    simple_setup_->setStartState(start);
+    double t_crit = quantile(boost::math::chi_squared(dimension), p_safe);
+    simple_setup_->setGoal(std::make_shared<MyUnicycleGoalRegion>(si, p_safe, goal_state, goal_r, t_crit, dimension));
+
+    if (dimension == 2)
+        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new DynUnicycleControlSpaceFixedK(si, Q, R, R_bad, K, measurement_region))); //TODO: measurement
+    else if (dimension == 3)
+        simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new DynUnicycleControlSpace3DFixedK(si, Q, R, R_bad, K, measurement_region)));
+    else
+        OMPL_ERROR("Invalid dimension. Must be 2 or 3");
+
+	simple_setup_->getProblemDefinition()->setOptimizationObjective(getExpectedPathLengthObjective(si));
+
+
+    simple_setup_->setup();
+    OMPL_INFORM("Benchmarking starting");
+    this->solve(sysType, plan_time, goal_bias, goal_state, scene, measurement_region, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 0, file, true);
+    this->solve(sysType, plan_time, goal_bias, goal_state, scene, measurement_region, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 0, file, false);
+}
+
+
 void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_time, double dt, double p_safe, double Q, double R, double R_bad, double K, std::string scene,  std::vector<std::vector<double>> measurement_region, std::vector<std::vector<double>> bounds_state, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file)
 {
     //=======================================================================
@@ -108,7 +255,7 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     bounds_se2.setHigh(0, bounds_state[0][1]);
     bounds_se2.setLow(1, bounds_state[1][0]);
     bounds_se2.setHigh(1, bounds_state[1][1]);
-    space->as<R2BeliefSpace>()->setBounds(bounds_se2);
+    space->as<ob::RealVectorStateSpace>()->setBounds(bounds_se2);
     
 
     std::cout << bounds_state[0][0] << " " << bounds_state[0][1] << " " << bounds_state[1][0] << " " << bounds_state[1][1] << std::endl;
@@ -155,20 +302,20 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
 //	//=======================================================================
 //	//path length Objective
 	simple_setup_->getProblemDefinition()->setOptimizationObjective(getExpectedPathLengthObjective(si));
-    ob::StateValidityCheckerPtr val_checker;
-    val_checker = ob::StateValidityCheckerPtr(new StateValidityCheckerPCCBlackmore(scene, simple_setup_->getSpaceInformation(), p_safe, sysType));
-    simple_setup_->setStateValidityChecker(val_checker);
+    // ob::StateValidityCheckerPtr val_checker;
+    // val_checker = ob::StateValidityCheckerPtr(new StateValidityCheckerPCCBlackmore(scene, simple_setup_->getSpaceInformation(), p_safe, sysType));
+    // simple_setup_->setStateValidityChecker(val_checker);
 
     //=======================================================================
     // Perform setup steps for the planner
     //=======================================================================
     simple_setup_->setup();
     OMPL_INFORM("Benchmarking starting");
-    this->solve(plan_time, goal_bias, goal_state, scene, measurement_region, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 0, file, true);
-    this->solve(plan_time, goal_bias, goal_state, scene, measurement_region, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 0, file, false);
+    // this->solve(sysType, plan_time, goal_bias, goal_state, scene, measurement_region, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 0, file, true);
+    this->solve(sysType, plan_time, goal_bias, goal_state, scene, measurement_region, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 0, file, false);
 }
 
-void OfflinePlannerUncertainty::solve(double plan_time, double goal_bias, std::vector<double> goal_state, std::string scene, std::vector<std::vector<double>> measurement_region, double Q, double R, double R_bad, double sampling_bias, double selection_radius, double pruning_radius, int distance_function, std::string file, bool first_solution)
+void OfflinePlannerUncertainty::solve(int sysType, double plan_time, double goal_bias, std::vector<double> goal_state, std::string scene, std::vector<std::vector<double>> measurement_region, double Q, double R, double R_bad, double sampling_bias, double selection_radius, double pruning_radius, int distance_function, std::string file, bool first_solution)
 {
 
     ompl::tools::MyBenchmarkRRBT b(*simple_setup_, "rrbt");
@@ -181,7 +328,7 @@ void OfflinePlannerUncertainty::solve(double plan_time, double goal_bias, std::v
     else
     {
         simple_setup_->getProblemDefinition()->getOptimizationObjective()->setCostThreshold(ob::Cost(0.0));
-        b.addExperimentParameter("first_solution", "bool", "0");
+        b.addExperimentParameter("final_solution", "bool", "0");
         resultsfile = "../results/final/rrbt/" + file + "/";
     }
 
@@ -192,15 +339,32 @@ void OfflinePlannerUncertainty::solve(double plan_time, double goal_bias, std::v
     b.setDir(resultsfile);
     double goal_bias_ = goal_bias;
     ob::PlannerPtr RRBT_Planner;
-    RRBT_Planner = ob::PlannerPtr(new oc::RRBT(simple_setup_->getSpaceInformation()));
-    RRBT_Planner->as<oc::RRBT>()->setGoalBias(goal_bias_);
-    RRBT_Planner->as<oc::RRBT>()->setRange(10.0);
-    RRBT_Planner->as<oc::RRBT>()->setGoal(goal_state);
-    RRBT_Planner->as<oc::RRBT>()->setScene(scene);
-    RRBT_Planner->as<oc::RRBT>()->setMeasurementRegion(measurement_region);
-    RRBT_Planner->as<oc::RRBT>()->setR(R);
-    RRBT_Planner->as<oc::RRBT>()->setR_bad(R_bad);
-    RRBT_Planner->as<oc::RRBT>()->setQ(Q);
+
+    if (sysType == 0)
+    {
+        RRBT_Planner = ob::PlannerPtr(new oc::RRBT(simple_setup_->getSpaceInformation()));
+        RRBT_Planner->as<oc::RRBT>()->setGoalBias(goal_bias_);
+        RRBT_Planner->as<oc::RRBT>()->setRange(10.0);
+        RRBT_Planner->as<oc::RRBT>()->setGoal(goal_state);
+        RRBT_Planner->as<oc::RRBT>()->setScene(scene);
+        RRBT_Planner->as<oc::RRBT>()->setMeasurementRegion(measurement_region);
+        RRBT_Planner->as<oc::RRBT>()->setR(R);
+        RRBT_Planner->as<oc::RRBT>()->setR_bad(R_bad);
+        RRBT_Planner->as<oc::RRBT>()->setQ(Q);
+    }
+    else if (sysType == 2)
+    {
+        RRBT_Planner = ob::PlannerPtr(new oc::RRBT_Unicycle(simple_setup_->getSpaceInformation()));
+        RRBT_Planner->as<oc::RRBT_Unicycle>()->setGoalBias(goal_bias_);
+        RRBT_Planner->as<oc::RRBT_Unicycle>()->setRange(10.0);
+        RRBT_Planner->as<oc::RRBT_Unicycle>()->setGoal(goal_state);
+        RRBT_Planner->as<oc::RRBT_Unicycle>()->setScene(scene);
+        RRBT_Planner->as<oc::RRBT_Unicycle>()->setMeasurementRegion(measurement_region);
+        RRBT_Planner->as<oc::RRBT_Unicycle>()->setR(R);
+        RRBT_Planner->as<oc::RRBT_Unicycle>()->setR_bad(R_bad);
+        RRBT_Planner->as<oc::RRBT_Unicycle>()->setQ(Q);
+    }
+
     b.addPlanner(RRBT_Planner);
     ompl::tools::MyBenchmarkRRBT::MyRequest req;
     req.maxTime = plan_time;
@@ -275,7 +439,7 @@ int main(int argc, char **argv)
     std::vector<std::string> Boundsplt = split(Boundstr, ":"); // Split rows
     std::vector<std::string>::iterator iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> bounds_state;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());
@@ -291,7 +455,7 @@ int main(int argc, char **argv)
     Boundsplt = split(Boundstr, ":"); // Split rows
     iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> bounds_control;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());
@@ -306,7 +470,7 @@ int main(int argc, char **argv)
     Boundsplt = split(Boundstr, ":"); // Split rows
     iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
     std::vector< std::vector<double>> measurement_region;
-    for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+    for(; iterBound < Boundsplt.end(); iterBound++)
     {
         std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
         std::vector<double> rowsBound_doub(spltStrBound_rows.size());
@@ -318,10 +482,10 @@ int main(int argc, char **argv)
     }
 
     OMPL_INFORM("USING P_SAFE: %3f, Q: %3f, R: %3f", p_safe, Q, R);
-    if(sysType==1){
+    if(sysType==2){
         OMPL_INFORM("Using linearized unicycle system");
     } else if (sysType==0){
-        OMPL_INFORM("Using linear system");
+        OMPL_INFORM("Using 2d linear system");
     }
     else{
         OMPL_ERROR("Invalid system type");
@@ -331,7 +495,42 @@ int main(int argc, char **argv)
     std::vector< double > initial_state = {initial_state_x, initial_state_y};
 
     OfflinePlannerUncertainty offline_planner_uncertainty;
-    offline_planner_uncertainty.planWithSimpleSetup(sysType, plan_time, dt, p_safe, Q, R, R_bad, K, scene, measurement_region, bounds_state, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
+    
 
+
+    if(sysType==1){
+        OMPL_INFORM("Using 3d linear system");
+                offline_planner_uncertainty.planWithSimpleSetup(sysType, plan_time, dt, p_safe, Q, R, R_bad, K, scene, measurement_region, bounds_state, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
+    } else if (sysType==0){
+        OMPL_INFORM("Using linear system");
+        offline_planner_uncertainty.planWithSimpleSetup(sysType, plan_time, dt, p_safe, Q, R, R_bad, K, scene, measurement_region, bounds_state, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
+    }
+    else if (sysType==2){
+        OMPL_INFORM("Using linearized unicycle system");
+        // Bounds on surge
+        std::string Boundstr = pt.get<std::string>("Environment.bounds_surge");
+        std::vector<std::string> Boundsplt = split(Boundstr, ":"); // Split rows
+        std::vector<std::string>::iterator iterBound = Boundsplt.begin(); // Iterate through and build vector of doubles
+        std::vector< std::vector<double>> bounds_surge;
+        for(iterBound; iterBound < Boundsplt.end(); iterBound++)
+        {
+            std::vector<std::string> spltStrBound_rows = split(*iterBound, ","); // Split rows
+            std::vector<double> rowsBound_doub(spltStrBound_rows.size());
+            std::transform(spltStrBound_rows.begin(), spltStrBound_rows.end(), rowsBound_doub.begin(), [](const std::string& val)
+                {
+                    return std::stod(val);
+                });
+            bounds_surge.push_back(rowsBound_doub);
+        }
+        offline_planner_uncertainty.planWithUnicycle(sysType, plan_time, dt, p_safe, Q, R, R_bad, K, scene, measurement_region, bounds_state, bounds_surge, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
+    }
+    else{
+        OMPL_ERROR("Invalid system type");
+    }    
+
+    // if (sysType == 0)
+        // offline_planner_uncertainty.planWithSimpleSetup(sysType, plan_time, dt, p_safe, Q, R, R_bad, K, scene, measurement_region, bounds_state, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
+    // else if (sysType == 2)
+        // offline_planner_uncertainty.planWithUnicycle(sysType, plan_time, dt, p_safe, Q, R, R_bad, K, scene, measurement_region, bounds_state, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
     return 0;
 }

@@ -54,6 +54,15 @@ DynUnicycleControlSpaceFixedK::DynUnicycleControlSpaceFixedK(const oc::SpaceInfo
     controller_parameters_.push_back(0.0);
     controller_parameters_.push_back(0.3054);
     controller_parameters_.push_back(0.0316);
+
+
+    A_ol_d_ = Eigen::MatrixXd::Identity(4, 4) + A_ol_ * duration_;
+    A_ol_d_22_(0, 0) = A_ol_d_(0, 0);  // x to x
+    A_ol_d_22_(0, 1) = A_ol_d_(0, 2);  // x to y
+    A_ol_d_22_(1, 0) = A_ol_d_(2, 0);  // y to x
+    A_ol_d_22_(1, 1) = A_ol_d_(2, 2);  // y to y
+
+
     //=========================================================================
     // Close loop system definition
     //=========================================================================
@@ -66,6 +75,10 @@ DynUnicycleControlSpaceFixedK::DynUnicycleControlSpaceFixedK(const oc::SpaceInfo
     A_cl_d_22_(0, 1) = A_cl_d_(0, 2);
     A_cl_d_22_(1, 0) = A_cl_d_(2, 0);
     A_cl_d_22_(1, 1) = K_default;
+
+    // std::cout << A_ol_d_22_ << std::endl;
+
+    // std::cout << A_cl_d_22_ << std::endl;
 
     Q = pow(processNoise, 2) * Eigen::MatrixXd::Identity(dimensions_, dimensions_);
     R_ = R*R;
@@ -148,7 +161,7 @@ void DynUnicycleControlSpaceFixedK::propagate(const ob::State *start, const oc::
 
     Eigen::Matrix2d sigma_from = start_css->as<R2BeliefSpace::StateType>(0)->getSigma();
     Eigen::Matrix2d lambda_from = start_css->as<R2BeliefSpace::StateType>(0)->getLambda();
-    Eigen::Matrix2d sigma_pred = F*sigma_from*F + Q;
+    Eigen::Matrix2d sigma_pred = A_ol_d_22_*sigma_from*A_ol_d_22_ + Q;
     Mat K, lambda_pred;
 
     double x_new = result_css_rvs_pose->getX();
@@ -158,13 +171,13 @@ void DynUnicycleControlSpaceFixedK::propagate(const ob::State *start, const oc::
         Mat R = R_*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
         Eigen::Matrix2d S = (H * sigma_pred * H.transpose())+ R;
         K = (sigma_pred * H.transpose()) * S.inverse();
-        lambda_pred = A_cl_d_22_*lambda_from*A_cl_d_22_;
+        lambda_pred = A_cl_d_22_*lambda_from*A_cl_d_22_.transpose();
     }
     else{
         Mat R = R_bad_*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
         Eigen::Matrix2d S = (H * sigma_pred * H.transpose())+ R;
         K = (sigma_pred * H.transpose()) * S.inverse();
-        lambda_pred = A_cl_d_22_*lambda_from*A_cl_d_22_;
+        lambda_pred = A_cl_d_22_*lambda_from*A_cl_d_22_.transpose();
     }
 
     Eigen::Matrix2d sigma_to = (I - (K*H)) * sigma_pred;
@@ -172,6 +185,12 @@ void DynUnicycleControlSpaceFixedK::propagate(const ob::State *start, const oc::
 
     result_css_rvs_pose->setSigma(sigma_to);
     result_css_rvs_pose->setLambda(lambda_to);
+
+    // std::cout << sigma_from << " " << lambda_from << std::endl;
+    // std::cout << Q << std::endl;
+    // std::cout << R_ << " " << R_bad_ << std::endl;
+    // std::cout << sigma_to << " " << lambda_to << std::endl;
+    // exit(0);
 }
 
 bool DynUnicycleControlSpaceFixedK::canPropagateBackward(void) const

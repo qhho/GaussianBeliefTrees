@@ -78,10 +78,9 @@ class DynUnicycleControlSpaceFixedK : public oc::StatePropagator {
         Eigen::Matrix2d  Pw_22_;
         Mat24 K_;
 
-        Eigen::Matrix4d A_cl_, A_cl_d_;
+        Eigen::Matrix4d A_cl_, A_cl_d_, A_ol_d_;
         
-        Eigen::Matrix2d A_cl_d_22_;
-
+        Eigen::Matrix2d A_cl_d_22_, A_ol_d_22_;
 
         Eigen::Matrix2d B_cl_d_;
 

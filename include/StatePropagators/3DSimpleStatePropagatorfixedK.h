@@ -44,7 +44,7 @@
 namespace ob = ompl::base;
 namespace oc = ompl::control;
 
-typedef Eigen::Matrix<double, 3, 3, Eigen::DontAlign> Mat;
+typedef Eigen::Matrix<double, 3, 3, Eigen::DontAlign> Mat3;
 
 /** \brief State propagation for a 3d point motion model. */
 class ThreeDSimpleStatePropagatorFixedK : public oc::StatePropagator

@@ -768,8 +768,6 @@ void ompl::tools::MyBenchmark::benchmark(const MyRequest &req)
                     break;
             }
         }
-
-        // std::cout << total_cost/req.runCount << std::endl;
     }
 
     status_.running = false;

@@ -127,6 +127,8 @@ void DynUnicycleControlSpace::propagate(const ob::State *start, const oc::Contro
     surge_reference = control->as<oc::RealVectorControlSpace::ControlType>()->values[3];
     K_sample = control->as<oc::RealVectorControlSpace::ControlType>()->values[4];
 
+    // std::cout << K_sample << std::endl;
+
     Eigen::Matrix2d A_cl_sample;
     A_cl_sample(0, 0) = K_sample;
     A_cl_sample(0,1) = A_cl_d_22_(0, 1);

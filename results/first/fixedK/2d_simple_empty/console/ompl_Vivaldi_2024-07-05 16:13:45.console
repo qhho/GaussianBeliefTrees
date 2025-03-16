@@ -1,8 +1,0 @@
-Info:    Beginning benchmark
-Info:    Preparing for run 0 of control_SSBT
-Info:    SSBT: Starting planning with 1 states already in datastructure
-
-Info:    Found solution with cost 134.41
-Info:    Solution state:90.191214 89.816611 
-Info:    SSBT: Created 4685 states in 17449 iterations
-Info:    Preparing for run 1 of control_SSBT
