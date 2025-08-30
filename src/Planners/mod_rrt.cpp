@@ -35,8 +35,13 @@
 #include "ompl/base/goals/GoalSampleableRegion.h"
 #include "ompl/tools/config/SelfConfig.h"
 #include <limits>
+#include "ompl/base/objectives/MinimaxObjective.h"
+#include "ompl/base/objectives/MaximizeMinClearanceObjective.h"
+#include "ompl/base/objectives/PathLengthOptimizationObjective.h"
+#include "ompl/base/objectives/MechanicalWorkOptimizationObjective.h"
 #include "Spaces/R2BeliefSpace.h"
 #include "Spaces/R2BeliefSpaceEuclidean.h"
+#include "Spaces/RNBeliefSpace.h"
 
 inline bool isCompoundStateSpace(const ompl::base::StateSpacePtr &space)
 {
@@ -49,8 +54,11 @@ ompl::control::mod_RRT::mod_RRT(const SpaceInformationPtr &si) : base::Planner(s
     siC_ = si.get();
 
     Planner::declareParam<double>("goal_bias", this, &mod_RRT::setGoalBias, &mod_RRT::getGoalBias, "0.:.05:1.");
+    Planner::declareParam<double>("goal_bias", this, &mod_RRT::setSamplingBias, &mod_RRT::getSamplingBias, "0.:.05:1.");
     Planner::declareParam<bool>("intermediate_states", this, &mod_RRT::setIntermediateStates, &mod_RRT::getIntermediateStates,
                                 "0,1");
+
+    addPlannerProgressProperty("best cost REAL", [this] { return bestCostProperty(); });
 }
 
 ompl::control::mod_RRT::~mod_RRT()
@@ -66,27 +74,27 @@ void ompl::control::mod_RRT::setup()
     nn_->setDistanceFunction([this](const Motion *a, const Motion *b) { return distanceFunction(a, b); });
 
 
-    // if (pdef_)
-    // {
-    //     if (pdef_->hasOptimizationObjective())
-    //     {
-    //         opt_ = pdef_->getOptimizationObjective();
-    //         if (dynamic_cast<base::MaximizeMinClearanceObjective *>(opt_.get()) ||
-    //             dynamic_cast<base::MinimaxObjective *>(opt_.get()))
-    //             OMPL_WARN("%s: Asymptotic near-optimality has only been proven with Lipschitz continuous cost "
-    //                       "functions w.r.t. state and control. This optimization objective will result in undefined "
-    //                       "behavior",
-    //                       getName().c_str());
-    //     }
-    //     else
-    //     {
-    //         OMPL_WARN("%s: No optimization object set. Using path length", getName().c_str());
-    //         opt_ = std::make_shared<base::PathLengthOptimizationObjective>(si_);
-    //         pdef_->setOptimizationObjective(opt_);
-    //     }
-    // }
+    if (pdef_)
+    {
+        if (pdef_->hasOptimizationObjective())
+        {
+            opt_ = pdef_->getOptimizationObjective();
+            if (dynamic_cast<base::MaximizeMinClearanceObjective *>(opt_.get()) ||
+                dynamic_cast<base::MinimaxObjective *>(opt_.get()))
+                OMPL_WARN("%s: Asymptotic near-optimality has only been proven with Lipschitz continuous cost "
+                          "functions w.r.t. state and control. This optimization objective will result in undefined "
+                          "behavior",
+                          getName().c_str());
+        }
+        else
+        {
+            OMPL_WARN("%s: No optimization object set. Using path length", getName().c_str());
+            opt_ = std::make_shared<base::PathLengthOptimizationObjective>(si_);
+            pdef_->setOptimizationObjective(opt_);
+        }
+    }
 
-    // prevSolutionCost_ = opt_->infiniteCost();
+    prevSolutionCost_ = opt_->infiniteCost();
 
 }
 
@@ -167,10 +175,10 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
             sampler_->sampleUniform(rstate);
 
 
-        auto rmotionbelief = rmotion->state->as<R2BeliefSpace::StateType>();
+        auto rmotionbelief = rmotion->state->as<RNBeliefSpace::StateType>();
         if (compound)
         {
-            rmotionbelief = rmotion->state->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0);
+            rmotionbelief = rmotion->state->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0);
         }
         if (DISTANCE_FUNC_ == 1){
             if (rng_.uniform01() < samplingBias_){
@@ -212,10 +220,10 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
                 // std::cout << "New belief: " << motion->state->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getX() << " " << motion->state->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getY() << " " << motion->state->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getCovariance().trace()  << std::endl;
 
 
-                auto beliefstate =  motion->state->as<R2BeliefSpace::StateType>();
+                auto beliefstate =  motion->state->as<RNBeliefSpace::StateType>();
                 if (compound)
                 {
-                    beliefstate =  motion->state->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0);
+                    beliefstate =  motion->state->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0);
                 }
 
                 if (DISTANCE_FUNC_ == 0){
@@ -319,7 +327,22 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
         solved = true;
         pdef_->addSolutionPath(path, approximate, approxdif, getName());
 
+
+        base::Cost totalIncCost = opt_->identityCost();
         //compute cost of solution
+        //add cost of intermediate states as well
+        base::Cost solcost(0.0);
+        for (int i = mpath.size() - 1 ; i >= 0 ; --i)
+        {
+            std::vector<base::State *> pstates;
+            siC_->propagateWhileValid(mpath[i]->state, mpath[i]->control, mpath[i]->steps, pstates, true);
+            for (size_t p = 0; p < pstates.size(); ++p)
+            {
+                base::Cost incCost = opt_->motionCost(mpath[i]->state, pstates[p]);
+                totalIncCost = opt_->combineCosts(totalIncCost, incCost);
+            }
+        }
+        std::cout << "Cost of solution: " << solcost << std::endl;
     }
 
     if (rmotion->state)

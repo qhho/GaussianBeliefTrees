@@ -54,6 +54,14 @@ void RNBeliefSpace::StateType::setZ(double z)
     if (sigma_.rows() > 2) values[2] = z;
 }
 
+void RNBeliefSpace::StateType::SetSigmaRandom(double max)
+{
+    unsigned int dim = sigma_.rows();
+    for (unsigned int i = 0; i < dim; i++) {
+        sigma_(i,i) = rng_.uniform01()*max;
+    }
+}
+
 Eigen::VectorXd RNBeliefSpace::StateType::getMatrixData() const
 {
     unsigned int dim = sigma_.rows();
@@ -79,12 +87,28 @@ const Eigen::MatrixXd& RNBeliefSpace::StateType::getCovariance() const
     return getSigma();
 }
 
+void RNBeliefSpace::StateType::setSigma(double val)
+{
+    sigma_ = val*Eigen::MatrixXd::Identity(sigma_.rows(),sigma_.cols());
+}
+
+
 void RNBeliefSpace::StateType::setSigma(const Eigen::MatrixXd &sigma)
 {
     if (sigma.rows() != sigma_.rows() || sigma.cols() != sigma_.cols()) {
         throw ompl::Exception("Sigma matrix dimension mismatch");
     }
     sigma_ = sigma;
+}
+
+void RNBeliefSpace::StateType::setSigmaX(double val)
+{
+    sigma_(0,0) = val;
+}
+
+void RNBeliefSpace::StateType::setSigmaY(double val)
+{
+    sigma_(1,1) = val;
 }
 
 void RNBeliefSpace::StateType::setLambda(const Eigen::MatrixXd &lambda)
@@ -113,7 +137,18 @@ bool RNBeliefSpace::StateType::isReached(ob::State *state, bool relaxedConstrain
 }
 
 RNBeliefSpace::RNBeliefSpace(unsigned int dimension, const Eigen::MatrixXd &sigma_init)
-    : ob::RealVectorStateSpace(dimension), dimension_(dimension), sigma_init_(sigma_init)
+    : ob::RealVectorStateSpace(dimension), dimension_(dimension), sigma_init_(sigma_init), wasserstein_(1)
+{
+    // Validate covariance matrix dimensions
+    if (sigma_init.rows() != dimension || sigma_init.cols() != dimension) {
+        throw ompl::Exception("Initial covariance matrix dimensions must match state dimension");
+    }
+    
+    setName("RNBeliefSpace");
+}
+
+RNBeliefSpace::RNBeliefSpace(unsigned int dimension, bool wasserstein, const Eigen::MatrixXd &sigma_init)
+    : ob::RealVectorStateSpace(dimension), dimension_(dimension), sigma_init_(sigma_init), wasserstein_(wasserstein)
 {
     // Validate covariance matrix dimensions
     if (sigma_init.rows() != dimension || sigma_init.cols() != dimension) {
@@ -166,15 +201,26 @@ double RNBeliefSpace::distance(const ob::State *state1, const ob::State *state2)
         double diff = s1->getComponent(i) - s2->getComponent(i);
         dx += diff * diff;
     }
+
+    if (!wasserstein_)
+    {
+        return std::sqrt(dx);
+    }
     
     // Get covariance matrices
     Eigen::MatrixXd cov1 = s1->getCovariance();
     Eigen::MatrixXd cov2 = s2->getCovariance();
+
+    // std::cout << " --- COVARIANCE--- " << std::endl;
+    // std::cout << cov1 << std::endl;
+    // std::cout << cov2 << std::endl;
+
+    // std::cout << " ----------- " << std::endl;
     
     // Calculate covariance component of Wasserstein distance
     try {
         // Numerical safeguard
-        const double epsilon = 1e-10;
+        const double epsilon = 1e-9;
         Eigen::MatrixXd cov2_sqrt;
         
         try {
@@ -185,9 +231,20 @@ double RNBeliefSpace::distance(const ob::State *state1, const ob::State *state2)
         
         Eigen::MatrixXd inner;
         try {
-            inner = (cov2_sqrt * cov1 * cov2_sqrt).sqrt();
+            
+            // std::cout << cov2_sqrt*cov1*cov2_sqrt << std::endl;
+            // std::cout <<"computing inner " << std::endl;
+
+
+            // Eigen::LLT<Eigen::MatrixXd> lltOfA(cov2_sqrt*cov1*cov2_sqrt); // compute the Cholesky decomposition of A
+            //     if(lltOfA.info() == Eigen::NumericalIssue)
+            //     {
+            //         throw std::runtime_error("Possibly non semi-positive definitie matrix!");
+            //     }
+            inner = (cov1 * cov2 + epsilon * Eigen::MatrixXd::Identity(dimension_, dimension_)).sqrt();
+            // std::cout << "computed inner" << std::endl;
         } catch (...) {
-            Eigen::MatrixXd temp = cov2_sqrt * cov1 * cov2_sqrt;
+            Eigen::MatrixXd temp = cov1 * cov2;
             inner = (temp + epsilon * Eigen::MatrixXd::Identity(dimension_, dimension_)).sqrt();
         }
         
@@ -199,8 +256,10 @@ double RNBeliefSpace::distance(const ob::State *state1, const ob::State *state2)
         }
         
         // Return weighted combination
-        return std::sqrt(dx) + StateType::covNormWeight_ * covDist;
+        // std::cout << "done ---" << std::endl;
+        return std::sqrt(dx) + covDist;
     } catch (...) {
+        
         // Fallback to just mean distance if any numerical issues
         return std::sqrt(dx);
     }

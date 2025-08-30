@@ -142,6 +142,11 @@ namespace ompl
                 setup();
             }
 
+            ompl::base::Cost bestCost() const
+            {
+                return prevSolutionCost_;
+            }
+
             void setup() override;
 
         protected:
@@ -220,6 +225,11 @@ namespace ompl
 
             /** \brief The optimization objective. */
             base::OptimizationObjectivePtr opt_;
+
+            std::string bestCostProperty() const
+            {
+                return std::to_string(bestCost().value());
+            }
 
         };
     }

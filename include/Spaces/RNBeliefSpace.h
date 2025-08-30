@@ -5,6 +5,7 @@
 #include <ompl/base/spaces/RealVectorStateSpace.h>
 #include <Eigen/Dense>
 #include <unsupported/Eigen/MatrixFunctions>
+#include <ompl/util/RandomNumbers.h>
 
 namespace ob = ompl::base;
 
@@ -46,19 +47,41 @@ public:
         const Eigen::MatrixXd& getCovariance() const;
         
         void setSigma(const Eigen::MatrixXd &sigma);
+        void setSigma(double val);
         void setLambda(const Eigen::MatrixXd &lambda);
+
+        void setSigmaX(double sigma);
+        void setSigmaY(double sigma);
+        void SetSigmaRandom(double max);
 
         // Check if this state is reached by another state
         bool isReached(ob::State *state, bool relaxedConstraint = false) const;
+
+        const Eigen::Vector2d getXY(void) const
+        {
+            const Eigen::Vector2d stateVec(getX(), getY());
+            return stateVec;
+        }
+
+        void setCost(double cost){
+            cost_ = cost;
+        }
+
+        double getCost(void) const{ 
+            return cost_;
+        }
 
         // Static parameters for distance and reachability
         static double meanNormWeight_;
         static double covNormWeight_;
         static double reachDist_;
 
+        ompl::RNG rng_;
+
     private:
         Eigen::MatrixXd sigma_;  // Covariance matrix
         Eigen::MatrixXd lambda_; // Information matrix
+        double cost_;
     };
 
     /**
@@ -66,6 +89,8 @@ public:
      * @param dim Dimension of the state space
      * @param sigma_init Initial covariance matrix
      */
+    RNBeliefSpace(unsigned int dim, bool wasserstein, const Eigen::MatrixXd &sigma_init);
+
     RNBeliefSpace(unsigned int dim, const Eigen::MatrixXd &sigma_init);
 
     /**
@@ -88,6 +113,7 @@ public:
 private:
     unsigned int dimension_;            // Dimension of the state space
     Eigen::MatrixXd sigma_init_;        // Initial covariance for new states
+    bool wasserstein_;                    // Use Euclidean distance for state space
 };
 
 #endif // RN_BELIEF_SPACE_H

@@ -43,7 +43,7 @@ std::vector<std::string> split(std::string str, std::string delimiter)
         } while (true);
         v.push_back(str.substr(start));
     }
- 
+
     return v;
 }
 
@@ -51,9 +51,9 @@ ob::StateSpacePtr constructStateSpace(int dim)
 {
      ob::StateSpacePtr state_space;
     if (dim == 2)
-        state_space = ob::StateSpacePtr(new R2BeliefSpace(5.0));
+        state_space = ob::StateSpacePtr(new RNBeliefSpace(2, 5.0 * Eigen::MatrixXd::Identity(2, 2)));
     else if (dim == 3)
-        state_space = ob::StateSpacePtr(new R3BeliefSpace(2.0));
+        state_space = ob::StateSpacePtr(new RNBeliefSpace(3, 2.0 * Eigen::MatrixXd::Identity(3, 3)));
     else
         OMPL_ERROR("Invalid dimension. Must be 2 or 3");
     return state_space;
@@ -64,7 +64,7 @@ ob::StateSpacePtr constructUnicycleStateSpace(int dim)
     ob::StateSpacePtr c_space = ob::StateSpacePtr(new ob::CompoundStateSpace());
     if (dim == 2)
     {
-        c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new R2BeliefSpace(5.0)), 1.0); // x, y, P
+        c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new RNBeliefSpace(2, 5.0 * Eigen::MatrixXd::Identity(2,2))), 1.0); // x, y, P
         c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new ob::SO2StateSpace()), 0.0); // yaw
         c_space->as<ob::CompoundStateSpace>()->addSubspace(ob::StateSpacePtr(new ob::RealVectorStateSpace(1)), 0.0); // surge
         c_space->as<ob::CompoundStateSpace>()->lock();
@@ -106,18 +106,18 @@ public:
     
         if (dim_ == 2)
         {
-            double dx = st->as<R2BeliefSpace::StateType>()->getX() - goal_state_[0];
-            double dy = st->as<R2BeliefSpace::StateType>()->getY() - goal_state_[1];
-            double radius = st->as<R2BeliefSpace::StateType>()->getCovariance()(0,0);
+            double dx = st->as<RNBeliefSpace::StateType>()->getX() - goal_state_[0];
+            double dy = st->as<RNBeliefSpace::StateType>()->getY() - goal_state_[1];
+            double radius = st->as<RNBeliefSpace::StateType>()->getCovariance()(0,0);
             radius = t_crit_*sqrt(radius);
             return sqrt(dx*dx + dy*dy) + radius;
         }
         else
         {
-            double dx = st->as<R2BeliefSpace::StateType>()->getX() - goal_state_[0];
-            double dy = st->as<R2BeliefSpace::StateType>()->getY() - goal_state_[1];
-            double dz = st->as<R3BeliefSpace::StateType>()->getZ() - goal_state_[2];
-            double radius = st->as<R3BeliefSpace::StateType>()->getCovariance()(0,0);
+            double dx = st->as<RNBeliefSpace::StateType>()->getX() - goal_state_[0];
+            double dy = st->as<RNBeliefSpace::StateType>()->getY() - goal_state_[1];
+            double dz = st->as<RNBeliefSpace::StateType>()->getZ() - goal_state_[2];
+            double radius = st->as<RNBeliefSpace::StateType>()->getCovariance()(0,0);
             radius = t_crit_*sqrt(radius);
             return sqrt(dx*dx + dy*dy + dz*dz) + radius;
         }
@@ -150,11 +150,11 @@ public:
 
         if (dim_ == 2)
         {
-            double dx = st->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getX() - goal_state_[0];
-            double dy = st->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getY() - goal_state_[1];
+            double dx = st->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0)->getX() - goal_state_[0];
+            double dy = st->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0)->getY() - goal_state_[1];
 
             // std::cout << dx << " " << dy << std::endl;
-            double radius = st->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getCovariance()(0,0);
+            double radius = st->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0)->getCovariance()(0,0);
             radius = t_crit_*sqrt(radius);
             return sqrt(dx*dx + dy*dy) + radius;
         }
@@ -200,7 +200,7 @@ void OfflinePlannerUncertainty::planWithUnicycle(int sysType, double plan_time, 
 
     if (dimension == 2)
     {
-        space->as<ob::CompoundStateSpace>()->as<R2BeliefSpace>(0)->setBounds(bounds_se2);
+        space->as<ob::CompoundStateSpace>()->as<RNBeliefSpace>(0)->setBounds(bounds_se2);
     }
     else if (dimension == 3)
     {
@@ -360,9 +360,10 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
         bounds_se2.setHigh(i, bounds_state[i][1]);
     }
 
+    
     if (dimension == 2)
     {
-        space->as<R2BeliefSpace>()->setBounds(bounds_se2);
+        space->as<RNBeliefSpace>()->setBounds(bounds_se2);
     }
     else if (dimension == 3)
     {
@@ -460,7 +461,7 @@ void OfflinePlannerUncertainty::solve(double plan_time, double goal_bias, double
     // Set state validity checking for this space
     //=======================================================================
     ompl::tools::MyBenchmark b(*simple_setup_, "wasserstein");
-    std::string resultsfile = "../results/first/varyK/" + file + "/";
+    std::string resultsfile = "../results/special/varyK/" + file + "/";
     if (first_solution)
     {
     simple_setup_->getProblemDefinition()->getOptimizationObjective()->setCostThreshold(ob::Cost(10000.0));
@@ -470,7 +471,7 @@ void OfflinePlannerUncertainty::solve(double plan_time, double goal_bias, double
     {
         simple_setup_->getProblemDefinition()->getOptimizationObjective()->setCostThreshold(ob::Cost(0.0));
         b.addExperimentParameter("first_solution", "bool", "0");
-        resultsfile = "../results/final/varyK/" + file + "/";
+        resultsfile = "../results/special/varyK/" + file + "/";
     }
 
     b.addExperimentParameter("Q_value", "double",std::to_string(Q));
@@ -488,6 +489,11 @@ void OfflinePlannerUncertainty::solve(double plan_time, double goal_bias, double
     // SST
     double selection_radius_ = selection_radius;
     double pruning_radius_ = pruning_radius;
+
+    std::vector<double > sampling_biases = {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
+
+    // for (int i = 0; i < 11; ++i)
+    // {
     
     ob::PlannerPtr planner;
     planner = ob::PlannerPtr(new oc::SSBT(simple_setup_->getSpaceInformation()));
@@ -504,13 +510,15 @@ void OfflinePlannerUncertainty::solve(double plan_time, double goal_bias, double
     planner_rrt->as<oc::mod_RRT>()->setSamplingBias(sampling_bias_);
     planner_rrt->as<oc::mod_RRT>()->setDistanceFunction(distance_function); //wasserstein
     b.addPlanner(planner_rrt);
+
+    // }
     
     OMPL_INFORM("Benchmarking");
 
     ompl::tools::MyBenchmark::MyRequest req;
     req.maxTime = plan_time;
-    req.maxMem = 1000.0;
-    req.runCount = 100;
+    req.maxMem = 10000.0;
+    req.runCount = 10;
     req.displayProgress = true;
     b.benchmark(req);
     b.saveResultsToFile();

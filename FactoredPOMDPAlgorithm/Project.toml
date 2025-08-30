@@ -1,0 +1,4 @@
+name = "FactoredPOMDPAlgorithm"
+uuid = "d1a5cb9e-5fce-4aff-a31a-50a737c9af60"
+authors = ["qhho <qi.ho@colorado.edu>"]
+version = "0.1.0"

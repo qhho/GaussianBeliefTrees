@@ -3,163 +3,6 @@ using Statistics
 using Plots
 using StatsPlots
 
-
-function parse_data_file(filepath)
-    # Read the entire file content
-    content = read(filepath, String)
-    
-    # Split the content based on "100 runs" marker to separate different sections
-    sections = split(content, "100 runs")
-    
-    # First section: Main results data
-    main_results_lines = filter(line -> !isempty(line) && startswith(line, "0;"), 
-                                split(sections[3], '\n'))
-    
-    # Extract cost and time from main results
-    main_costs = Float64[]
-    main_times = Float64[]
-    
-    for line in main_results_lines
-        values = split(line, ';')
-        if length(values) >= 10
-            push!(main_costs, parse(Float64, strip(values[2])))
-            push!(main_times, parse(Float64, strip(values[9])))
-        end
-    end
-    
-    # Second section: Progress properties
-    progress_lines = filter(line -> !isempty(line) && !startswith(line, "progress") && !startswith(line, "100 runs"), 
-                            split(sections[4], '\n'))
-    
-    # Extract best cost, iterations, and time from progress properties
-    progress_costs = Float64[]
-    progress_iterations = Int[]
-    progress_times = Float64[]
-    run_ids = Int[]  # Track which run each data point belongs to
-    
-    run_id = 1
-    prev_time = 0.0
-    
-    for line in progress_lines
-        # Format is like: inf,381,0.0500599,;inf,440,0.10014,;...
-        entries = split(line, ';')
-        
-        # Each line represents a new run
-        run_id += 1
-        prev_time = 0.0
-        
-        for entry in entries
-            if !isempty(strip(entry))
-                values = split(entry, ',')
-                if length(values) >= 3
-                    # Handle "inf" values
-                    cost_val = strip(values[1])
-                    cost = cost_val == "inf" ? Inf : parse(Float64, cost_val)
-                    
-                    # Get time value (either in position 2 or 3 depending on format)
-                    time_val = length(values) >= 4 ? values[3] : values[2]
-                    time = parse(Float64, strip(time_val))
-                    
-                    # Get iteration value if available
-                    iter = 0
-                    if length(values) >= 4
-                        iter = parse(Int, strip(values[2]))
-                    end
-                    
-                    # Add the data
-                    push!(progress_costs, cost)
-                    push!(progress_times, time)
-                    push!(progress_iterations, iter)
-                    push!(run_ids, run_id)
-                end
-            end
-        end
-    end
-    
-    return main_costs, main_times, progress_costs, progress_iterations, progress_times, run_ids
-end
-
-
-# function parse_data_file(filepath)
-#     # Read the entire file content
-#     content = read(filepath, String)
-    
-#     # Split the content based on "100 runs" marker to separate different sections
-#     sections = split(content, "100 runs")
-
-#     # @show sections[1]
-
-#     # @show sections[2]
-#     # @show sections[4]
-    
-#     # First section: Main results data
-#     main_results_lines = filter(line -> !isempty(line) && startswith(line, "0;"), 
-#                                 split(sections[3], '\n'))
-    
-#     # Extract cost and time from main results
-#     main_costs = Float64[]
-#     main_times = Float64[]
-    
-#     for line in main_results_lines
-#         values = split(line, ';')
-#         if length(values) >= 10
-#             push!(main_costs, parse(Float64, strip(values[2])))
-#             push!(main_times, parse(Float64, strip(values[9])))
-#         end
-#     end
-    
-#     # Second section: Progress properties
-#     progress_lines = filter(line -> !isempty(line) && !startswith(line, "progress") && !startswith(line, "100 runs"), 
-#                             split(sections[4], '\n'))
-    
-#     # print(progress_lines)
-
-#     # Extract best cost, iterations, and time from progress properties
-#     progress_costs = Float64[]
-#     progress_iterations = Int[]
-#     progress_times = Float64[]
-    
-#     for line in progress_lines
-#         # Format is like: inf,381,0.0500599,;inf,440,0.10014,;...
-#         entries = split(line, ';')
-#         # @show entries
-#         for entry in entries
-#             if !isempty(strip(entry))
-#                 values = split(entry, ',')
-#                 if length(values) >= 4
-#                     # Handle "inf" values
-#                     # print(values)
-#                     cost_val = strip(values[1])
-#                     if cost_val == "inf"
-#                         push!(progress_costs, Inf)
-#                     else
-#                         push!(progress_costs, parse(Float64, cost_val))
-#                     end
-#                     # @show values
-#                     push!(progress_iterations, parse(Int, strip(values[2])))
-#                     push!(progress_times, parse(Float64, strip(values[3])))
-#                 elseif length(values) >= 3
-#                     # Handle "inf" values
-#                     # print(values)
-#                     cost_val = strip(values[1])
-#                     if cost_val == "inf"
-#                         push!(progress_costs, Inf)
-#                     else
-#                         push!(progress_costs, parse(Float64, cost_val))
-#                     end
-                    
-#                     push!(progress_times, parse(Float64, strip(values[2])))
-#                 end
-                
-#             end
-#         end
-#     end
-
-#     # print(progress_times)
-    
-#     return main_costs, main_times, progress_costs, progress_iterations, progress_times
-# end
-
 function plot_main_results(main_costs, main_times)
     # Create box plots for main results
     p1 = boxplot(["Cost"], main_costs, 
@@ -335,7 +178,9 @@ function parse_data_file(filepath)
     
     # Split the content based on "100 runs" marker to separate different sections
     sections = split(content, "100 runs")
-    
+    println("Number of sections: ", length(sections))
+    # @show sections
+
     # First section: Main results data
     main_results_lines = filter(line -> !isempty(line) && startswith(line, "0;"), 
                                 split(sections[3], '\n'))
@@ -360,8 +205,11 @@ function parse_data_file(filepath)
     progress_costs = Float64[]
     progress_iterations = Int[]
     progress_times = Float64[]
+    run_ids = Int[]
     
-    for line in progress_lines
+    for (run_id, line) in enumerate(progress_lines)
+        # @show line
+        # break
         # Format is like: inf,381,0.0500599,;inf,440,0.10014,;...
         entries = split(line, ';')
         for entry in entries
@@ -377,6 +225,7 @@ function parse_data_file(filepath)
                     end
                     push!(progress_iterations, parse(Int, strip(values[2])))
                     push!(progress_times, parse(Float64, strip(values[3])))
+                    push!(run_ids, run_id) 
                 elseif length(values) >= 3
                     # Handle "inf" values
                     cost_val = strip(values[1])
@@ -387,12 +236,13 @@ function parse_data_file(filepath)
                     end
                     
                     push!(progress_times, parse(Float64, strip(values[2])))
+                    push!(run_ids, run_id) 
                 end
             end
         end
     end
     
-    return main_costs, main_times, progress_costs, progress_iterations, progress_times
+    return main_costs, main_times, progress_costs, progress_iterations, progress_times, run_ids
 end
 
 function get_latest_file(dir_path)
@@ -885,150 +735,6 @@ function compare_methods_by_time_buckets(environment_name, methods_info, time_bu
     return p, method_bucketed_costs, bucket_labels
 end
 
-function analyze_time_to_first_solution(environment_name, methods_info)
-    """
-    Analyze and visualize the time to first solution for different methods.
-    
-    Arguments:
-    - environment_name: String name of the environment (e.g., "2d_simple_narrow")
-    - methods_info: Dictionary mapping method names to their respective log file paths
-    """
-    # Colors for different methods
-    method_colors = Dict(
-        "fixedK" => :blue,
-        "varyK" => :red,
-        "RRBT" => :green
-    )
-    
-    # Initialize data containers
-    method_times_to_first = Dict()
-    method_first_solution_costs = Dict()
-    
-    # Process data for each method
-    for (method_name, filepath) in methods_info
-        if isfile(filepath)
-            # Parse the data file
-            _, _, progress_costs, _, progress_times = parse_data_file(filepath)
-            
-            # Initialize arrays for this method
-            times_to_first = Float64[]
-            first_solution_costs = Float64[]
-            
-            # Sort data by time to ensure chronological processing
-            indices = sortperm(progress_times)
-            sorted_times = progress_times[indices]
-            sorted_costs = progress_costs[indices]
-            
-            # Find run boundaries (significant jumps back in time)
-            run_start_indices = [1]
-            for i in 2:length(sorted_times)
-                # If time decreases significantly, likely a new run started
-                if sorted_times[i] < sorted_times[i-1] * 0.5
-                    push!(run_start_indices, i)
-                end
-            end
-            push!(run_start_indices, length(sorted_times) + 1)  # Add end boundary
-            
-            # For each detected run, find the first finite cost solution and its time
-            for i in 1:(length(run_start_indices)-1)
-                start_idx = run_start_indices[i]
-                end_idx = run_start_indices[i+1] - 1
-                
-                run_times = sorted_times[start_idx:end_idx]
-                run_costs = sorted_costs[start_idx:end_idx]
-                
-                # Find the first finite cost solution
-                first_finite_idx = findfirst(isfinite, run_costs)
-                
-                if !isnothing(first_finite_idx)
-                    push!(times_to_first, run_times[first_finite_idx])
-                    push!(first_solution_costs, run_costs[first_finite_idx])
-                end
-            end
-            
-            # Store results for this method
-            method_times_to_first[method_name] = times_to_first
-            method_first_solution_costs[method_name] = first_solution_costs
-            
-            println("Processed $method_name with $(length(times_to_first)) detected runs")
-            if !isempty(times_to_first)
-                println("  Time to first solution - Mean: $(mean(times_to_first)), Median: $(median(times_to_first))")
-                println("                         - Min: $(minimum(times_to_first)), Max: $(maximum(times_to_first))")
-                println("  First solution cost   - Mean: $(mean(first_solution_costs)), Median: $(median(first_solution_costs))")
-            else
-                println("  No valid first solutions detected")
-            end
-        else
-            println("Warning: File $filepath does not exist")
-        end
-    end
-    
-    # Create boxplots for time to first solution
-    p_times = boxplot(
-        title="Time to First Solution - $environment_name",
-        ylabel="Time (seconds)",
-        legend=false,
-        size=(800, 500),
-        xrotation=30,
-        margin=10Plots.mm
-    )
-    
-    # Add boxplots for each method
-    for (method_name, times) in method_times_to_first
-        if !isempty(times)
-            boxplot!(
-                p_times,
-                [method_name],
-                [times],
-                linewidth=1.5,
-                fillalpha=0.7,
-                color=method_colors[method_name],
-                outliers=true,
-                whisker_width=0.5,
-                width=0.5
-            )
-        end
-    end
-    
-    # Create boxplots for first solution costs
-    p_costs = boxplot(
-        title="First Solution Cost - $environment_name",
-        ylabel="Cost",
-        legend=false,
-        size=(800, 500),
-        xrotation=30,
-        margin=10Plots.mm
-    )
-    
-    # Add boxplots for each method
-    for (method_name, costs) in method_first_solution_costs
-        if !isempty(costs)
-            boxplot!(
-                p_costs,
-                [method_name],
-                [costs],
-                linewidth=1.5,
-                fillalpha=0.7,
-                color=method_colors[method_name],
-                outliers=true,
-                whisker_width=0.5,
-                width=0.5
-            )
-        end
-    end
-    
-    # Create a combined plot
-    p_combined = plot(p_times, p_costs, layout=(1,2), size=(1600, 600))
-    
-    # Save the plots
-    savefig(p_times, "$(environment_name)_time_to_first_solution.png")
-    savefig(p_costs, "$(environment_name)_first_solution_cost.png")
-    savefig(p_combined, "$(environment_name)_first_solution_combined.png")
-    
-    return p_combined, method_times_to_first, method_first_solution_costs
-end
-
-
 # Example usage
 latest_file_rrbt = get_latest_file("results/final/rrbt/2d_simple_underwater/log/")
 # println("Latest file: ", latest_file)
@@ -1063,7 +769,9 @@ base_path = "/home/qiheng/phd/BeliefSpaceMotionPlanning/GaussianBeliefTrees/resu
 # Define environment names
 environments = ["2d_simple_block", "2d_simple_narrow", "2d_simple_underwater"]
 
-environments = ["2d_unicycle_narrow"]
+environments = ["2d_unicycle_underwater"]
+
+environments = ["2d_double_block", "2d_double_narrow", "2d_double_underwater"]
 
 # Define methods
 methods = Dict(
@@ -1106,7 +814,7 @@ for env in environments
     for (method_key, method_path) in methods
         if method_key == "RRBT"
             env_methods[method_key] = get_latest_file("$base_path/rrbt/$env/log/")
-        elseif env == "2d_simple_narrow" && (method_key == "fixedK")
+        elseif (method_key == "fixedK")
             env_methods[method_key] = get_latest_file("$base_path/fixedK/$env/log/")
         else
             env_methods[method_key] = get_latest_file("$base_path/varyK/$env/log/")

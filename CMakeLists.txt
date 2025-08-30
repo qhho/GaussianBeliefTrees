@@ -41,6 +41,7 @@ add_library (gbt_lib
     src/Planners/mod_rrt.cpp
     src/Planners/rrbt.cpp
     src/Planners/rrbt_unicycle.cpp
+    src/Planners/rrbt_double.cpp
     # src/Planners/rrbt_fixedwing.cpp
     src/Scene/Scene.cpp
     src/StateSamplers/BeliefStateSampler.cpp
@@ -106,7 +107,7 @@ target_link_libraries (fixedK
     yaml-cpp
 )
 
-add_executable (double benchmarks/benchmark_fixedK_general.cpp)
+add_executable (double benchmarks/benchmark_varyK_general.cpp)
 
 target_link_libraries (double
     gbt_lib

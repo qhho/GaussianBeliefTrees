@@ -15,7 +15,6 @@ LinearRNBeliefPropagator::LinearRNBeliefPropagator(
 {
     // Store dimensions
     dimensions_ = stateDim;
-    controlDim_ = B_ol_.cols();
     K_default_ = K_default;
     
     // Get propagation step size
@@ -85,8 +84,10 @@ LinearRNBeliefPropagator::LinearRNBeliefPropagator(
     if (A_ol.rows() != A_ol.cols()) {
         throw ompl::Exception("System matrix A must be square");
     }
-    
+
+
     dimensions_ = A_ol.rows();
+    controlDim_ = B_ol.cols();
     K_default_ = K_default;
     
     // Get propagation step size
@@ -104,20 +105,31 @@ LinearRNBeliefPropagator::LinearRNBeliefPropagator(
     //=========================================================================
     // Closed loop system definition
     //=========================================================================
+
+    // Create custom gain matrix using the K_sample
+    Eigen::MatrixXd K_mat = Eigen::MatrixXd::Zero(controlDim_, dimensions_);
+
+    std::cout << K_mat << std::endl;
+
+    // Control 0 (ax) affects state 2 (vx)
+    K_mat(0, 2) = K_default_;
+    // Control 1 (ay) affects state 3 (vy)
+    K_mat(1, 3) = K_default_;
+
     A_cl_.resize(dimensions_, dimensions_);
-    A_cl_ = A_ol_ - B_ol_ * K_default_;
+    A_cl_ = A_ol_ - B_ol_ * K_mat;
 
     B_cl_.resize(dimensions_, dimensions_);
-    B_cl_ = B_ol_ * K_default_;
+    B_cl_ = B_ol_ * K_mat;
 
     //=========================================================================
     // Discrete closed loop system definition
     //=========================================================================
-    A_cl_d_.resize(dimensions_, dimensions_);
-    A_cl_d_ = Eigen::MatrixXd::Identity(dimensions_, dimensions_) + A_cl_ * duration_;
+    // A_cl_d_.resize(dimensions_, dimensions_);
+    // A_cl_d_ = Eigen::MatrixXd::Identity(dimensions_, dimensions_) + A_cl_ * duration_;
 
-    B_cl_d_.resize(dimensions_, dimensions_);
-    B_cl_d_ = A_cl_d_.inverse() * (A_cl_d_ - Eigen::MatrixXd::Identity(dimensions_, dimensions_)) * B_cl_;
+    // B_cl_d_.resize(dimensions_, dimensions_);
+    // B_cl_d_ = A_cl_d_.inverse() * (A_cl_d_ - Eigen::MatrixXd::Identity(dimensions_, dimensions_)) * B_cl_;
 
     // Set up noise matrices
     Q = pow(processNoise, 2) * Eigen::MatrixXd::Identity(dimensions_, dimensions_);
@@ -173,16 +185,15 @@ void LinearRNBeliefPropagator::propagate(
     
     // Create custom gain matrix using the K_sample
     Eigen::MatrixXd K_mat = Eigen::MatrixXd::Zero(controlDim_, dimensions_);
-    for (unsigned int i = 0; i < std::min(dimensions_, controlDim_); i++) {
-        K_mat(i, i) = K_sample;
-    }
+    // Control 0 (ax) affects state 2 (vx)
+    K_mat(0, 2) = K_sample;
+    // Control 1 (ay) affects state 3 (vy)
+    K_mat(1, 3) = K_sample;
     
-
-
-    std::cout << "A_ol dimensions: " << A_ol_.rows() << "x" << A_ol_.cols() << std::endl;
-    std::cout << "B_ol dimensions: " << B_ol_.rows() << "x" << B_ol_.cols() << std::endl;
-    std::cout << "K_mat dimensions: " << K_mat.rows() << "x" << K_mat.cols() << std::endl;
-    std::cout << "B_ol * K_mat dimensions: " << (B_ol_ * K_mat).rows() << "x" << (B_ol_ * K_mat).cols() << std::endl;
+    // std::cout << "A_ol dimensions: " << A_ol_.rows() << "x" << A_ol_.cols() << std::endl;
+    // std::cout << "B_ol dimensions: " << B_ol_.rows() << "x" << B_ol_.cols() << std::endl;
+    // std::cout << "K_mat dimensions: " << K_mat.rows() << "x" << K_mat.cols() << std::endl;
+    // std::cout << "B_ol * K_mat dimensions: " << (B_ol_ * K_mat).rows() << "x" << (B_ol_ * K_mat).cols() << std::endl;
 
     // Create custom closed-loop matrix using the K_sample
     Eigen::MatrixXd A_cl_custom = A_ol_ - B_ol_ * K_mat;
@@ -190,6 +201,13 @@ void LinearRNBeliefPropagator::propagate(
     // Propagate mean state
     // For a linear system: x_new = A*x + B*u
     Eigen::VectorXd new_state = A_ol_ * current_state + B_ol_ * u;
+
+
+    // std::cout << " --- STATE--- " << std::endl;
+    // std::cout << current_state.transpose() << std::endl;
+    // std::cout << new_state.transpose() << std::endl;
+    // std::cout << " --------------------- " << std::endl;
+    // exit(0);
     
     // Set the new mean state
     auto* result_belief = result->as<RNBeliefSpace::StateType>();
@@ -228,9 +246,13 @@ void LinearRNBeliefPropagator::propagate(
     if (inGoodRegion) {
         // Good measurement region
         R = R_ * Eigen::MatrixXd::Identity(dimensions_, dimensions_);
+        R(2,2) = 0.001;
+        R(3,3) = 0.001;
     } else {
         // Bad measurement region
         R = R_bad_ * Eigen::MatrixXd::Identity(dimensions_, dimensions_);
+        R(2,2) = 0.001;
+        R(3,3) = 0.001;
     }
     
     // Innovation covariance: S = H*Σ_pred*H^T + R
@@ -244,11 +266,28 @@ void LinearRNBeliefPropagator::propagate(
     
     // Final covariance update: Σ_new = (I - K*H)*Σ_pred
     Eigen::MatrixXd sigma_to = (I - (K * H)) * sigma_pred;
-    
     // Final information update: λ_new = λ_pred + K*H*Σ_pred
     Eigen::MatrixXd lambda_to = lambda_pred + K * H * sigma_pred;
     
     // Set the updated covariance and information matrices
+
+    // std::cout << " --- COVARIANCE--- " << std::endl;
+    // std::cout << sigma_from + lambda_from << std::endl;
+
+
+    // std::cout << sigma_to + lambda_to << std::endl;
+
+    // std::cout << " ----------- " << std::endl;
+
+    // exit(0);
+
+    // Eigen::LLT<Eigen::MatrixXd> lltOfA(sigma_from + lambda_from); // compute the Cholesky decomposition of A
+    // if(lltOfA.info() == Eigen::NumericalIssue)
+    // {
+    //     throw std::runtime_error("Possibly non semi-positive definitie matrix!");
+    // }    
+
+
     result_belief->setSigma(sigma_to);
     result_belief->setLambda(lambda_to);
 }

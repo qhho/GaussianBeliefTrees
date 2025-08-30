@@ -39,6 +39,7 @@
 #include "ompl/control/SpaceInformation.h"
 #include <ompl/control/spaces/RealVectorControlSpace.h>
 #include "Spaces/R2BeliefSpace.h"
+#include "Spaces/RNBeliefSpace.h"
 #include "Spaces/R2BeliefSpaceEuclidean.h"
 
 namespace ob = ompl::base;
@@ -77,7 +78,7 @@ private:
     mutable double x_pose, x_pose_reference, y_pose, y_pose_reference;
     mutable double K_sample;
 
-    mutable const R2BeliefSpace::StateType *start_css;
+    mutable const RNBeliefSpace::StateType *start_css;
 
     
     mutable oc::RealVectorControlSpace::ControlType *control_css;
@@ -98,7 +99,7 @@ private:
 
     std::vector<std::vector<double>> measurementRegions_;
 
-    mutable const R2BeliefSpace::StateType *result_css;
+    mutable const RNBeliefSpace::StateType *result_css;
     ob::RealVectorStateSpace::StateType *result_css_rvs_pose;
     Eigen::Matrix2d result_css_rvs_cov;
 

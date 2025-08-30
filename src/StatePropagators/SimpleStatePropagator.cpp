@@ -54,7 +54,7 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
     //=========================================================================
     // Get CX vector (RRT near vertex)
     //=========================================================================
-    start_css = state->as<R2BeliefSpace::StateType >();
+    start_css = state->as<RNBeliefSpace::StateType >();
 
     x_pose = start_css->getX();
     y_pose = start_css->getY();
@@ -91,15 +91,15 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
     //=========================================================================
     double x_new = x_pose + duration * u_0;
     double y_new = y_pose + duration * u_1;
-    result->as<R2BeliefSpace::StateType>()->setX(x_new);
-    result->as<R2BeliefSpace::StateType>()->setY(y_new);
+    result->as<RNBeliefSpace::StateType>()->setX(x_new);
+    result->as<RNBeliefSpace::StateType>()->setY(y_new);
 
     //=========================================================================
     // Propagate covariance in the equivalent closed loop system
     //=========================================================================
 
-    Eigen::Matrix2d sigma_from = state->as<R2BeliefSpace::StateType>()->getSigma();
-    Eigen::Matrix2d lambda_from = state->as<R2BeliefSpace::StateType>()->getLambda();
+    Eigen::Matrix2d sigma_from = state->as<RNBeliefSpace::StateType>()->getSigma();
+    Eigen::Matrix2d lambda_from = state->as<RNBeliefSpace::StateType>()->getLambda();
     Eigen::Matrix2d sigma_pred = F*sigma_from*F + Q;
 
     Mat lambda_pred, K;
@@ -121,8 +121,8 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
     Mat sigma_to = (I - (K*H)) * sigma_pred;
     Mat lambda_to = lambda_pred + K*H*sigma_pred;
 
-    result->as<R2BeliefSpace::StateType>()->setSigma(sigma_to);
-    result->as<R2BeliefSpace::StateType>()->setLambda(lambda_to);
+    result->as<RNBeliefSpace::StateType>()->setSigma(sigma_to);
+    result->as<RNBeliefSpace::StateType>()->setLambda(lambda_to);
 }
 
 bool SimpleStatePropagator::canPropagateBackward(void) const

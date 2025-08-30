@@ -46,7 +46,7 @@
 #include <ompl/base/spaces/SO2StateSpace.h>
 #include <ompl/base/spaces/RealVectorStateSpace.h>
 #include <ompl/control/spaces/RealVectorControlSpace.h>
-#include "Spaces/R2BeliefSpace.h"
+#include "Spaces/RNBeliefSpace.h"
 #include "Spaces/R2BeliefSpaceEuclidean.h"
 
 inline bool isCompoundStateSpace(const ompl::base::StateSpacePtr &space)
@@ -64,6 +64,7 @@ ompl::control::SSBT::SSBT(const SpaceInformationPtr &si) : base::Planner(si, "SS
     prevSolutionSteps_.clear();
 
     Planner::declareParam<double>("goal_bias", this, &SSBT::setGoalBias, &SSBT::getGoalBias, "0.:.05:1.");
+    Planner::declareParam<double>("sampling_bias", this, &SSBT::setSamplingBias, &SSBT::getSamplingBias, "0.:.05:1.");
     Planner::declareParam<double>("selection_radius", this, &SSBT::setSelectionRadius, &SSBT::getSelectionRadius, "0.:.1:"
                                                                                                                 "100");
     Planner::declareParam<double>("pruning_radius", this, &SSBT::setPruningRadius, &SSBT::getPruningRadius, "0.:.1:100");
@@ -289,11 +290,11 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
 
         // if (DISTANCE_FUNC_ == 1){
         //     if (rng_.uniform01() < samplingBias_){
-        //         rmotion->state_->as<R2BeliefSpace::StateType>()->setSigma(0.5); //TODO: fix this
+        //         rmotion->state_->as<RNBeliefSpace::StateType>()->setSigma(0.5); //TODO: fix this
         //     }
         //     else{
-        //         rmotion->state_->as<R2BeliefSpace::StateType>()->setSigmaX(rng_.uniform01()*max_eigenvalue_);
-        //         rmotion->state_->as<R2BeliefSpace::StateType>()->setSigmaY(rng_.uniform01()*max_eigenvalue_);
+        //         rmotion->state_->as<RNBeliefSpace::StateType>()->setSigmaX(rng_.uniform01()*max_eigenvalue_);
+        //         rmotion->state_->as<RNBeliefSpace::StateType>()->setSigmaY(rng_.uniform01()*max_eigenvalue_);
         //     }
         // }
 
@@ -303,22 +304,23 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
             {
                 if (compound)
                 {
-                rmotion->state_->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->setSigma(0.5); // TODO: fix this
+                rmotion->state_->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0)->setSigma(0.5); // TODO: fix this
                 }
                 else
-                    rmotion->state_->as<R2BeliefSpace::StateType>()->setSigma(0.5); // TODO: fix this
+                    rmotion->state_->as<RNBeliefSpace::StateType>()->setSigma(0.5); // TODO: fix this
             }
             else
             {
                 if (compound)
                 {
-                    rmotion->state_->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->setSigmaX(rng_.uniform01() * max_eigenvalue_);
-                    rmotion->state_->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->setSigmaY(rng_.uniform01() * max_eigenvalue_);
+                    rmotion->state_->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0)->setSigmaX(rng_.uniform01() * max_eigenvalue_);
+                    rmotion->state_->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0)->setSigmaY(rng_.uniform01() * max_eigenvalue_);
                 }
                 else
                 {
-                    rmotion->state_->as<R2BeliefSpace::StateType>()->setSigmaX(rng_.uniform01() * max_eigenvalue_);
-                    rmotion->state_->as<R2BeliefSpace::StateType>()->setSigmaY(rng_.uniform01() * max_eigenvalue_);
+                    // rmotion->state_->as<RNBeliefSpace::StateType>()->setSigmaX(rng_.uniform01() * max_eigenvalue_);
+                    // rmotion->state_->as<RNBeliefSpace::StateType>()->setSigmaY(rng_.uniform01() * max_eigenvalue_);
+                    rmotion->state_->as<RNBeliefSpace::StateType>()->SetSigmaRandom(max_eigenvalue_);
                 }
             }
         }
@@ -373,9 +375,9 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
                 auto *motion = new Motion(siC_);
                 motion->accCost_ = cost;
                 if (compound)
-                    motion->state_->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->setCost(cost.value());
+                    motion->state_->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0)->setCost(cost.value());
                 else
-                    motion->state_->as<R2BeliefSpace::StateType>()->setCost(cost.value());
+                    motion->state_->as<RNBeliefSpace::StateType>()->setCost(cost.value());
                 si_->copyState(motion->state_, rmotion->state_);
                 siC_->copyControl(motion->control_, rctrl);
                 motion->steps_ = cd;
@@ -385,37 +387,46 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
 
                 nn_->add(motion);
 
-                // std::cout << "Old belief: " << nmotion->state_->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getX() << " " << nmotion->state_->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getY() << " " << nmotion->state_->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getCovariance().trace() << " " << nmotion->accCost_ << std::endl;
-                // std::cout << "New belief: " << motion->state_->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getX() << " " << motion->state_->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getY() << " " << motion->state_->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0)->getCovariance().trace() << " " << motion->accCost_ << std::endl;
+                // std::cout << "Old belief: " << nmotion->state_->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0)->getX() << " " << nmotion->state_->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0)->getY() << " " << nmotion->state_->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0)->getCovariance().trace() << " " << nmotion->accCost_ << std::endl;
+                // std::cout << "New belief: " << motion->state_->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0)->getX() << " " << motion->state_->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0)->getY() << " " << motion->state_->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0)->getCovariance().trace() << " " << motion->accCost_ << std::endl;
 
-                auto beliefstate =  motion->state_->as<R2BeliefSpace::StateType>();
+                auto beliefstate =  motion->state_->as<RNBeliefSpace::StateType>();
 
                 if (compound)
                 {
-                    beliefstate =  motion->state_->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0);
+                    beliefstate =  motion->state_->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0);
+                }
+
+                if (beliefstate->getCovariance()(0,0) > max_eigenvalue_)
+                {
+                    max_eigenvalue_ = beliefstate->getCovariance()(0,0);
+                }
+                else if (beliefstate->getCovariance()(1,1) > max_eigenvalue_)
+                {
+                    max_eigenvalue_ = beliefstate->getCovariance()(1,1);
                 }
 
 
-                if (DISTANCE_FUNC_ == 0){
-                    if (motion->state_->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(0,0) > max_eigenvalue_)
-                    {
-                        max_eigenvalue_ = motion->state_->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(0,0);
-                    }
-                    else if (motion->state_->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(1,1) > max_eigenvalue_)
-                    {
-                        max_eigenvalue_ = motion->state_->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(1,1);
-                    }
-                }
-                else if (DISTANCE_FUNC_ == 1){
-                    if (beliefstate->getCovariance()(0,0) > max_eigenvalue_)
-                    {
-                        max_eigenvalue_ = beliefstate->getCovariance()(0,0);
-                    }
-                    else if (beliefstate->getCovariance()(1,1) > max_eigenvalue_)
-                    {
-                        max_eigenvalue_ = beliefstate->getCovariance()(1,1);
-                    }
-                }
+                // if (DISTANCE_FUNC_ == 0){
+                //     if (beliefstate->getCovariance()(0,0) > max_eigenvalue_)
+                //     {
+                //         max_eigenvalue_ = motion->state_->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(0,0);
+                //     }
+                //     else if (motion->state_->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(1,1) > max_eigenvalue_)
+                //     {
+                //         max_eigenvalue_ = motion->state_->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(1,1);
+                //     }
+                // }
+                // else if (DISTANCE_FUNC_ == 1){
+                //     if (beliefstate->getCovariance()(0,0) > max_eigenvalue_)
+                //     {
+                //         max_eigenvalue_ = beliefstate->getCovariance()(0,0);
+                //     }
+                //     else if (beliefstate->getCovariance()(1,1) > max_eigenvalue_)
+                //     {
+                //         max_eigenvalue_ = beliefstate->getCovariance()(1,1);
+                //     }
+                // }
 
                 // print state x and y
                 // std::cout << beliefstate->getX() << " " << beliefstate->getY() << std::endl;
@@ -460,7 +471,7 @@ ompl::base::PlannerStatus ompl::control::SSBT::solve(const base::PlannerTerminat
                     // << std::fixed << std::setprecision(3) << elapsed.count()
                     // << std::endl;
                     
-                    // OMPL_INFORM("Solution state:%f %f ", solution->state_->as<CompoundStateas<R2BeliefSpace::StateType>()->getX(), solution->state_->as<R2BeliefSpace::StateType>()->getY());
+                    // OMPL_INFORM("Solution state:%f %f ", solution->state_->as<CompoundStateas<RNBeliefSpace::StateType>()->getX(), solution->state_->as<RNBeliefSpace::StateType>()->getY());
                     // exit(0);
                     sufficientlyShort = opt_->isSatisfied(solution->accCost_);
                     if (sufficientlyShort)

@@ -20,6 +20,7 @@
 #include "Spaces/R2BeliefSpace.h"
 #include "Spaces/R2BeliefSpaceEuclidean.h"
 #include "Spaces/R3BeliefSpace.h"
+#include "Spaces/RNBeliefSpace.h"
 
 // scenes
 #include "Scene/Scene.h"

@@ -425,7 +425,7 @@ ompl::base::PlannerStatus ompl::control::RRBT_Unicycle::solve(const base::Planne
             auto *motion = new Motion(siC_);
             si_->copyState(motion->state, dstate);
             motion->parent = nmotion;
-            motion->incCost = opt_->motionCost(nmotion->state, motion->state);
+            motion->incCost = Cost(0); //opt_->motionCost(nmotion->state, motion->state);
             motion->cost = opt_->combineCosts(nmotion->cost, motion->incCost);
             
             // std::cout << " NEW MOTION " << dstate->as<ob::RealVectorStateSpace::StateType>()->values[0] << " " << dstate->as<ob::RealVectorStateSpace::StateType>()->values[1] << " " << nmotion->cost << std::endl;
@@ -904,7 +904,7 @@ bool ompl::control::RRBT_Unicycle::checkMotion(Motion * nmotion, State* dstate)
         result->y = dstate->as<ob::RealVectorStateSpace::StateType>()->values[1];
         result->yaw = dstate->as<ob::RealVectorStateSpace::StateType>()->values[2];
         result->surge = dstate->as<ob::RealVectorStateSpace::StateType>()->values[3];
-        // propCd = cd;
+        propCd = cd;
         // std::cout << "motion is " << propCd << " " << cd << std::endl;
         // std::cout << "true" << std::endl;
         if (propCd == cd && myisValid(result)){
@@ -966,7 +966,6 @@ unsigned int ompl::control::RRBT_Unicycle::mypropagateWhileValid(const Belief* b
                 r = i;
                 break;
             }
-
 
             // if (abs(temp1->x - temp2->x) < 0.1 && abs(temp1->y - temp2->y) < 0.1){
             result = temp1;

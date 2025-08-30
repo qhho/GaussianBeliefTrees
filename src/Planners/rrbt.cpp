@@ -107,7 +107,7 @@ ompl::control::RRBT::RRBT(const SpaceInformationPtr &si)
     addPlannerProgressProperty("iterations INTEGER", [this] { return numIterationsProperty(); });
     addPlannerProgressProperty("best cost REAL", [this] { return bestCostProperty(); });
 
-    double K_ = 0.7;
+    double K_ = 9;
     double myduration_ = si->getPropagationStepSize();
     A_ol_.resize(2, 2);
     A_ol_ << 1.0, 0.0,

@@ -78,7 +78,7 @@
      return matrix;
  }
  
- ob::StateSpacePtr constructStateSpace(int dim)
+ ob::StateSpacePtr constructStateSpace(int dim, bool euclidean)
  {
       ob::StateSpacePtr state_space;
      if (dim == 2)
@@ -86,7 +86,7 @@
      else if (dim == 3)
          state_space = ob::StateSpacePtr(new R3BeliefSpace(2.0));
      else if (dim == 4) // For double integrator in 2D
-         state_space = ob::StateSpacePtr(new RNBeliefSpace(dim, 5.0 * Eigen::MatrixXd::Identity(dim, dim)));
+         state_space = ob::StateSpacePtr(new RNBeliefSpace(dim, euclidean, 5.0 * Eigen::MatrixXd::Identity(dim, dim)));
      else
          OMPL_ERROR("Invalid dimension. Must be 2, 3, or 4");
      return state_space;
@@ -149,18 +149,18 @@
          {
              double dx = st->as<RNBeliefSpace::StateType>()->getComponent(0) - goal_state_[0]; // x position
              double dy = st->as<RNBeliefSpace::StateType>()->getComponent(1) - goal_state_[1]; // y position
-             double dvx = st->as<RNBeliefSpace::StateType>()->getComponent(2) - goal_state_[2]; // x velocity
-             double dvy = st->as<RNBeliefSpace::StateType>()->getComponent(3) - goal_state_[3]; // y velocity
+            //  double dvx = st->as<RNBeliefSpace::StateType>()->getComponent(2) - goal_state_[2]; // x velocity
+            //  double dvy = st->as<RNBeliefSpace::StateType>()->getComponent(3) - goal_state_[3]; // y velocity
              
              double position_dist = sqrt(dx*dx + dy*dy);
-             double velocity_dist = sqrt(dvx*dvx + dvy*dvy);
+            //  double velocity_dist = sqrt(dvx*dvx + dvy*dvy);
              
              // Use position uncertainty (first diagonal element of covariance)
              double radius = st->as<RNBeliefSpace::StateType>()->getCovariance()(0,0);
              radius = t_crit_*sqrt(radius);
              
              // Weighted sum of position and velocity distances
-             return position_dist + 0.1 * velocity_dist + radius;
+             return position_dist + radius;
          }
          else
          {
@@ -896,13 +896,15 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
              //       [1 0]
              //       [0 1]
              
-             A_matrix = Eigen::MatrixXd::Zero(4, 4);
-             A_matrix(0, 2) = 1.0; // x' = vx
-             A_matrix(1, 3) = 1.0; // y' = vy
+             A_matrix = Eigen::MatrixXd::Identity(4, 4);
+             A_matrix(0, 2) = dt; // x' = vx
+             A_matrix(1, 3) = dt; // y' = vy
              
              B_matrix = Eigen::MatrixXd::Zero(4, 2);
-             B_matrix(2, 0) = 1.0; // vx' = ax
-             B_matrix(3, 1) = 1.0; // vy' = ay
+             B_matrix(0,0) = 0.5*dt*dt;
+             B_matrix(1,1) = 0.5*dt*dt;
+             B_matrix(2, 0) = dt; // vx' = ax
+             B_matrix(3, 1) = dt; // vy' = ay
              
              OMPL_INFORM("Using default double integrator dynamics");
              std::cout << "A matrix:" << std::endl << A_matrix << std::endl;

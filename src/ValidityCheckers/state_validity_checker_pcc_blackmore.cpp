@@ -78,16 +78,16 @@ bool StateValidityCheckerPCCBlackmore::isValid(const ob::State *state) const {
 
 	if (sysType_ == 0)
 	{
-		const double x = state->as<R2BeliefSpace::StateType>()->getX();
-		const double y = state->as<R2BeliefSpace::StateType>()->getY();
+		const double x = state->as<RNBeliefSpace::StateType>()->getX();
+		const double y = state->as<RNBeliefSpace::StateType>()->getY();
 		if (x > 100.0 || x < 0.0 || y < 0.0 || y > 100.0){
 			return false;
 		}
-		x_pose = state->as<R2BeliefSpace::StateType>()->getX();
-		y_pose = state->as<R2BeliefSpace::StateType>()->getY();
+		x_pose = state->as<RNBeliefSpace::StateType>()->getX();
+		y_pose = state->as<RNBeliefSpace::StateType>()->getY();
 		z_pose = 4.0;
-		PX(0,0) = state->as<R2BeliefSpace::StateType>()->getCovariance()(0,0);
-		PX(1,1) = state->as<R2BeliefSpace::StateType>()->getCovariance()(1,1);
+		PX(0,0) = state->as<RNBeliefSpace::StateType>()->getCovariance()(0,0);
+		PX(1,1) = state->as<RNBeliefSpace::StateType>()->getCovariance()(1,1);
 		PX(2,2) = 0.000001;
 	}
 	else if (sysType_ == 1)
@@ -124,6 +124,16 @@ bool StateValidityCheckerPCCBlackmore::isValid(const ob::State *state) const {
 		PX(0,0) = state->as<ob::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getCovariance()(0,0);
 		PX(1,1) = state->as<ob::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getCovariance()(1,1);
 		PX(2,2) = state->as<ob::CompoundStateSpace::StateType>()->as<R3BeliefSpace::StateType>(0)->getCovariance()(2,2);
+	}
+	else if (sysType_ == 4)
+	{
+		x_pose = state->as<RNBeliefSpace::StateType>()->getX();
+		y_pose = state->as<RNBeliefSpace::StateType>()->getY();
+		if (x_pose > 100.0 || x_pose < 0.0 || y_pose < 0.0 || y_pose > 100.0){
+			return false;
+		}
+		PX(0,0) = state->as<RNBeliefSpace::StateType>()->getCovariance()(0,0);
+		PX(1,1) = state->as<RNBeliefSpace::StateType>()->getCovariance()(1,1);
 	}
 	else
 		OMPL_ERROR("Unknown system type");

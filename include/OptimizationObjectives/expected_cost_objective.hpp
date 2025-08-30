@@ -16,6 +16,7 @@
 #include <ompl/control/spaces/RealVectorControlSpace.h>
 // #include <ompl/base/objectives/ControlDurationObjective.h>
 #include "../Spaces/R2BeliefSpace.h"
+#include "../Spaces/RNBeliefSpace.h"
 
 namespace ob = ompl::base;
 namespace oc = ompl::control;
@@ -32,12 +33,12 @@ class ExpectedPathLengthObjective : public ob::PathLengthOptimizationObjective
  
         ob::Cost motionCost(const State *s1, const State *s2) const override
         {
-            auto beliefstate_s1 = s1->as<R2BeliefSpace::StateType>();
-            auto beliefstate_s2 = s2->as<R2BeliefSpace::StateType>();
+            auto beliefstate_s1 = s1->as<RNBeliefSpace::StateType>();
+            auto beliefstate_s2 = s2->as<RNBeliefSpace::StateType>();
             if (compound_)
             {
-                beliefstate_s1 =  s1->as<ob::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0);
-                beliefstate_s2 =  s2->as<ob::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0);
+                beliefstate_s1 =  s1->as<ob::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0);
+                beliefstate_s2 =  s2->as<ob::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0);
             }
 
 

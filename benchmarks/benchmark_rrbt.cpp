@@ -61,6 +61,12 @@ ob::StateSpacePtr constructRealVectorStateSpace(void)
     return state_space;
 }
 
+ob::StateSpacePtr constructDoubleIntegratorStateSpace(void)
+{
+    ob::StateSpacePtr state_space = ob::StateSpacePtr(new ob::RealVectorStateSpace(4));
+    return state_space;
+}
+
 
 
 class MyGoalRegion : public ompl::base::GoalRegion
@@ -238,7 +244,7 @@ void OfflinePlannerUncertainty::planWithUnicycle(int sysType, double plan_time, 
 
     simple_setup_->setup();
     OMPL_INFORM("Benchmarking starting");
-    this->solve(sysType, plan_time, goal_bias, goal_state, scene, measurement_region, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 0, file, true);
+    // this->solve(sysType, plan_time, goal_bias, goal_state, scene, measurement_region, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 0, file, true);
     this->solve(sysType, plan_time, goal_bias, goal_state, scene, measurement_region, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 0, file, false);
 }
 
@@ -315,6 +321,90 @@ void OfflinePlannerUncertainty::planWithSimpleSetup(int sysType, double plan_tim
     this->solve(sysType, plan_time, goal_bias, goal_state, scene, measurement_region, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 0, file, false);
 }
 
+void OfflinePlannerUncertainty::planWithDoubleIntegrator(int sysType, double plan_time, double dt, double p_safe, double Q, double R, double R_bad, double K, std::string scene,  std::vector<std::vector<double>> measurement_region, std::vector<std::vector<double>> bounds_state, std::vector<std::vector<double>> bounds_control, std::vector< double> goal_state, double goal_r, std::vector< double> initial_state, double goal_bias, double selection_radius, double pruning_radius, double sampling_bias, double control_duration_low, double control_duration_high, std::string file)
+{
+    //=======================================================================
+    // Instantiate the state space
+    //=======================================================================
+    ob::StateSpacePtr space(constructDoubleIntegratorStateSpace()); // [x y surge yaw covariance(16)] -> size = 20
+    // set the bounds for the R^2 part of R2BeliefSpace();
+    ob::RealVectorBounds bounds_se2(4);
+    bounds_se2.setLow(0, bounds_state[0][0]);
+    bounds_se2.setHigh(0, bounds_state[0][1]);
+    bounds_se2.setLow(1, bounds_state[1][0]);
+    bounds_se2.setHigh(1, bounds_state[1][1]);
+    bounds_se2.setLow(2, bounds_state[2][0]);
+    bounds_se2.setHigh(2, bounds_state[2][1]);
+    bounds_se2.setLow(3, bounds_state[3][0]);
+    bounds_se2.setHigh(3, bounds_state[3][1]);
+    space->as<ob::RealVectorStateSpace>()->setBounds(bounds_se2);
+    
+
+    std::cout << bounds_state[0][0] << " " << bounds_state[0][1] << " " << bounds_state[1][0] << " " << bounds_state[1][1] << std::endl;
+
+    //=======================================================================
+    // Instantiate the control space
+    //=======================================================================
+    auto cspace(std::make_shared<oc::RealVectorControlSpace>(space, 4));
+
+    ob::RealVectorBounds bounds(4);
+    bounds.setLow(0, bounds_state[0][0]);
+    bounds.setHigh(0, bounds_state[0][1]);
+    bounds.setLow(1, bounds_state[1][0]);
+    bounds.setHigh(1, bounds_state[1][1]);
+    bounds.setLow(2, bounds_state[2][0]);
+    bounds.setHigh(2, bounds_state[2][1]);
+    bounds.setLow(3, bounds_state[3][0]);
+    bounds.setHigh(3, bounds_state[3][1]);
+    cspace->setBounds(bounds);
+    
+    //=======================================================================
+    // Define a simple setup class
+    //=======================================================================
+    
+    simple_setup_ = oc::SimpleSetupPtr( new oc::SimpleSetup(cspace) );
+    oc::SpaceInformationPtr si = simple_setup_->getSpaceInformation();
+    
+    // Set minimum and maximum duration of control action
+    si->setMinMaxControlDuration(control_duration_low, control_duration_high);
+    si->setPropagationStepSize(dt);
+
+    //=======================================================================
+    // Create a start and goal states
+    //=======================================================================
+    ob::ScopedState<> start(space);
+    start[0] = double(initial_state[0]); //x
+    start[1] = double(initial_state[1]); //y
+    start[2] = double(initial_state[2]); //x
+    start[3] = double(initial_state[3]); //y
+
+    std::cout << "Initial state: " << start[0] << " " << start[1] << " " << start[2] << " " << start[3] << std::endl;
+
+    simple_setup_->setStartState(start);
+    double t_crit = quantile(boost::math::chi_squared(2), p_safe);
+    simple_setup_->setGoal(std::make_shared<MyGoalRegion>(si, p_safe, goal_state, goal_r, t_crit));
+    //=======================================================================
+    // set the propagation routine for this space
+    //=======================================================================
+    simple_setup_->setStatePropagator(oc::StatePropagatorPtr(new SimpleStatePropagator(si, Q, R, R_bad, K, measurement_region)));
+//	//=======================================================================
+//	// Set optimization objective
+//	//=======================================================================
+//	//path length Objective
+	simple_setup_->getProblemDefinition()->setOptimizationObjective(getExpectedPathLengthObjective(si));
+    // ob::StateValidityCheckerPtr val_checker;
+    // val_checker = ob::StateValidityCheckerPtr(new StateValidityCheckerPCCBlackmore(scene, simple_setup_->getSpaceInformation(), p_safe, sysType));
+    // simple_setup_->setStateValidityChecker(val_checker);
+
+    //=======================================================================
+    // Perform setup steps for the planner
+    //=======================================================================
+    simple_setup_->setup();
+    OMPL_INFORM("Benchmarking starting");
+    // this->solve(sysType, plan_time, goal_bias, goal_state, scene, measurement_region, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 0, file, true);
+    this->solve(sysType, plan_time, goal_bias, goal_state, scene, measurement_region, Q, R, R_bad, sampling_bias, selection_radius, pruning_radius, 0, file, false);
+}
+
 void OfflinePlannerUncertainty::solve(int sysType, double plan_time, double goal_bias, std::vector<double> goal_state, std::string scene, std::vector<std::vector<double>> measurement_region, double Q, double R, double R_bad, double sampling_bias, double selection_radius, double pruning_radius, int distance_function, std::string file, bool first_solution)
 {
 
@@ -364,12 +454,24 @@ void OfflinePlannerUncertainty::solve(int sysType, double plan_time, double goal
         RRBT_Planner->as<oc::RRBT_Unicycle>()->setR_bad(R_bad);
         RRBT_Planner->as<oc::RRBT_Unicycle>()->setQ(Q);
     }
+    else if (sysType == 4)
+    {
+        RRBT_Planner = ob::PlannerPtr(new oc::RRBT_Double(simple_setup_->getSpaceInformation()));
+        RRBT_Planner->as<oc::RRBT_Double>()->setGoalBias(goal_bias_);
+        RRBT_Planner->as<oc::RRBT_Double>()->setRange(10.0);
+        RRBT_Planner->as<oc::RRBT_Double>()->setGoal(goal_state);
+        RRBT_Planner->as<oc::RRBT_Double>()->setScene(scene);
+        RRBT_Planner->as<oc::RRBT_Double>()->setMeasurementRegion(measurement_region);
+        RRBT_Planner->as<oc::RRBT_Double>()->setR(R);
+        RRBT_Planner->as<oc::RRBT_Double>()->setR_bad(R_bad);
+        RRBT_Planner->as<oc::RRBT_Double>()->setQ(Q);
+    }
 
     b.addPlanner(RRBT_Planner);
     ompl::tools::MyBenchmarkRRBT::MyRequest req;
     req.maxTime = plan_time;
-    req.maxMem = 10000.0;
-    req.runCount = 100;
+    req.maxMem = 5000.0;
+    req.runCount = 1;
     req.displayProgress = true;
     b.benchmark(req);
     // // This will generate a file of the form ompl_host_time.log
@@ -409,8 +511,19 @@ int main(int argc, char **argv)
     double goal_r = std::stod(pt.get<std::string>("Planner.goal_radius"));
     std::string init = pt.get<std::string>("Planner.initial_state");
     spltStr = split(init, ",");
-    double initial_state_x = std::stod(spltStr[0]);
-    double initial_state_y = std::stod(spltStr[1]);
+    
+    // Parse initial state based on system type
+    std::vector<double> initial_state;
+    for (size_t i = 0; i < spltStr.size(); i++) {
+        initial_state.push_back(std::stod(spltStr[i]));
+    }
+    
+    // If we're using a double integrator, ensure initial state has velocity components
+    if (sysType == 4 && initial_state.size() == 2) {
+        // Add zero initial velocities if not specified
+        initial_state.push_back(0.0); // vx = 0
+        initial_state.push_back(0.0); // vy = 0
+    }
 
     double pruning_radius = std::stod(pt.get<std::string>("Planner.pruning_radius"));
     double selection_radius = std::stod(pt.get<std::string>("Planner.selection_radius"));
@@ -487,12 +600,15 @@ int main(int argc, char **argv)
     } else if (sysType==0){
         OMPL_INFORM("Using 2d linear system");
     }
+    else if (sysType==4){
+        OMPL_INFORM("Using double integrator system");
+    }
     else{
         OMPL_ERROR("Invalid system type");
     }
 
     std::vector< double > goal_state = {goal_x, goal_y};
-    std::vector< double > initial_state = {initial_state_x, initial_state_y};
+    // std::vector< double > initial_state = {initial_state_x, initial_state_y};
 
     OfflinePlannerUncertainty offline_planner_uncertainty;
     
@@ -523,6 +639,10 @@ int main(int argc, char **argv)
             bounds_surge.push_back(rowsBound_doub);
         }
         offline_planner_uncertainty.planWithUnicycle(sysType, plan_time, dt, p_safe, Q, R, R_bad, K, scene, measurement_region, bounds_state, bounds_surge, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
+    }
+    else if (sysType == 4){
+        OMPL_INFORM("Using double integrator system");
+        offline_planner_uncertainty.planWithDoubleIntegrator(sysType, plan_time, dt, p_safe, Q, R, R_bad, K, scene, measurement_region, bounds_state, bounds_control, goal_state, goal_r, initial_state, goal_bias, selection_radius, pruning_radius, sampling_bias, control_duration_low, control_duration_high, file);
     }
     else{
         OMPL_ERROR("Invalid system type");
