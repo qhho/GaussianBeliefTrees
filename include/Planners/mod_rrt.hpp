@@ -183,6 +183,16 @@ namespace ompl
             /** \brief Free the memory allocated by this planner */
             void freeMemory();
 
+            /** \brief Check trajectory validity using the barrier checker */
+            bool checkTrajectoryValidity(const Motion *parent_motion, 
+                                       const Control *control, 
+                                       unsigned int duration) const;
+
+            /** \brief Check trajectory validity for a single step */
+            bool checkTrajectoryValidityAtStep(const base::State *current_state, 
+                                   const Control *control, 
+                                   double step_duration) const;
+
             /** \brief Compute distance between motions (actually distance between contained states) */
             double distanceFunction(const Motion *a, const Motion *b) const
             {
@@ -230,6 +240,11 @@ namespace ompl
             {
                 return std::to_string(bestCost().value());
             }
+
+            unsigned int propagateWhileValidWithTrajectoryChecking(const base::State *state, 
+                                                       const Control *control, 
+                                                       unsigned int steps, 
+                                                       std::vector<base::State *> &result) const;
 
         };
     }

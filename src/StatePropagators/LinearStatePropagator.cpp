@@ -271,13 +271,13 @@ void LinearRNBeliefPropagator::propagate(
     
     // Set the updated covariance and information matrices
 
-    // std::cout << " --- COVARIANCE--- " << std::endl;
-    // std::cout << sigma_from + lambda_from << std::endl;
+    std::cout << " --- COVARIANCE--- " << std::endl;
+    std::cout << sigma_from + lambda_from << std::endl;
 
 
-    // std::cout << sigma_to + lambda_to << std::endl;
+    std::cout << sigma_to + lambda_to << std::endl;
 
-    // std::cout << " ----------- " << std::endl;
+    std::cout << " ----------- " << std::endl;
 
     // exit(0);
 

@@ -19,8 +19,6 @@ StateValidityCheckerPCCBlackmoreEuclidean::StateValidityCheckerPCCBlackmoreEucli
 		n_obstacles_ = scene.n_obstacles_;
 		A_list_.resize(n_obstacles_); A_list_ = scene.A_list_;
 		B_list_.resize(n_obstacles_); B_list_ = scene.B_list_;
-        // std::cout << "done" << std::endl;
-        // std::cout << A_list_(0,0) << std::endl;
 	}
 
 	erf_inv_result_ = computeInverseErrorFunction(1 - 2 * p_collision_ / n_obstacles_);
@@ -58,11 +56,6 @@ bool StateValidityCheckerPCCBlackmoreEuclidean::isValid(const ob::State *state) 
     PX(0,0) = state->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(0,0);
     PX(1,1) = state->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance()(1,1);
     PX(2,2) = 0.1;
-	// PX(0,0) = state->as<ob::CompoundStateSpace::StateType>()->as<ob::RealVectorStateSpace::StateType>(4)->values[0];
-	// PX(1,1) = state->as<ob::CompoundStateSpace::StateType>()->as<ob::RealVectorStateSpace::StateType>(4)->values[1];
-	// PX(2,2) = state->as<ob::CompoundStateSpace::StateType>()->as<ob::RealVectorStateSpace::StateType>(4)->values[2];
-
-
 
 	//=========================================================================
 	// Probabilistic collision checker
@@ -97,18 +90,5 @@ bool StateValidityCheckerPCCBlackmoreEuclidean::HyperplaneCCValidityChecker(cons
 			break;
 		}
 	}
-    // if (valid){
-    //     if (x_pose < 40 && y_pose > 50 && y_pose < 80){
-    //         std::cout << x_pose << " " << y_pose << std::endl;
-    //     } 
-    //     // if (x_pose > 50 && y_pose > 50 && y_pose < 80){
-    //     //     std::cout << x_pose << " " << y_pose << std::endl;
-    //     // } 
-    // }
-
-    // if (valid == false){
-    //     std::cout << "false!!" << std::endl;
-    //     std::cout << x_pose << " " << y_pose << std::endl;
-    // }
 	return valid;
 }

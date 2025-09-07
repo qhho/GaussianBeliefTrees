@@ -87,6 +87,11 @@ const Eigen::MatrixXd& RNBeliefSpace::StateType::getCovariance() const
     return getSigma();
 }
 
+unsigned int RNBeliefSpace::StateType::getDimension() const
+{
+    return sigma_.rows();
+}
+
 void RNBeliefSpace::StateType::setSigma(double val)
 {
     sigma_ = val*Eigen::MatrixXd::Identity(sigma_.rows(),sigma_.cols());

@@ -34,11 +34,12 @@ add_library (gbt_lib
     src/OptimizationObjectives/expected_cost_objective.cpp
     src/OptimizationObjectives/state_cost_objective.cpp
     src/ValidityCheckers/state_validity_checker_pcc_blackmore.cpp
+    src/ValidityCheckers/BarrierTrajectoryValidityChecker.cpp
     # src/ValidityCheckers/state_validity_checker_pcc_blackmore_euclidean.cpp
     src/Benchmarking/MyBenchmark.cpp
     src/Benchmarking/MyBenchmarkRRBT.cpp
     src/Planners/SSBT.cpp
-    src/Planners/mod_rrt.cpp
+    src/Planners/continuous_rrt_with_trajectory_checking.cpp
     src/Planners/rrbt.cpp
     src/Planners/rrbt_unicycle.cpp
     src/Planners/rrbt_double.cpp
@@ -110,6 +111,24 @@ target_link_libraries (fixedK
 add_executable (double benchmarks/benchmark_varyK_general.cpp)
 
 target_link_libraries (double
+    gbt_lib
+    ${OMPL_LIBRARIES}
+    ${Boost_LIBRARIES}
+    yaml-cpp
+)
+
+add_executable (barrier_trajectory_example examples/barrier_trajectory_example.cpp)
+
+target_link_libraries (barrier_trajectory_example
+    gbt_lib
+    ${OMPL_LIBRARIES}
+    ${Boost_LIBRARIES}
+    yaml-cpp
+)
+
+add_executable (test_barrier_rrt examples/test_barrier_rrt.cpp)
+
+target_link_libraries (test_barrier_rrt
     gbt_lib
     ${OMPL_LIBRARIES}
     ${Boost_LIBRARIES}

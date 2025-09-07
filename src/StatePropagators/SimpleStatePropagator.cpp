@@ -47,6 +47,21 @@ SimpleStatePropagator::SimpleStatePropagator(const oc::SpaceInformationPtr &si, 
     R_bad_ = R_bad*R_bad;
 
     measurementRegions_ = measurement_regions;
+
+
+    // std::cout << "Print State Propagator" << std::endl;
+    // std::cout << "A_ol_: " << A_ol_ << std::endl;
+    // std::cout << "B_ol_: " << B_ol_ << std::endl;
+    // std::cout << "A_cl_: " << A_cl_ << std::endl;
+    // std::cout << "B_cl_: " << B_cl_ << std::endl;
+    // std::cout << "A_cl_d_: " << A_cl_d_ << std::endl;
+    // std::cout << "B_cl_d_: " << B_cl_d_ << std::endl;
+    // std::cout << "H: " << H << std::endl;
+    // std::cout << "I: " << I << std::endl;
+    // std::cout << "F: " << F << std::endl;
+    // std::cout << "Q: " << Q << std::endl;
+    // std::cout << "R: " << R << std::endl;
+    // std::cout << "R_bad: " << R_bad << std::endl;
 }
 
 void SimpleStatePropagator::propagate(const base::State *state, const control::Control* control, const double duration, base::State *result) const
@@ -65,7 +80,7 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
 
     double u_0 = control->as<oc::RealVectorControlSpace::ControlType>()->values[0];
     double u_1 = control->as<oc::RealVectorControlSpace::ControlType>()->values[1];
-    K_sample = control->as<oc::RealVectorControlSpace::ControlType>()->values[2];
+    // K_sample = control->as<oc::RealVectorControlSpace::ControlType>()->values[2];
 
     // std::cout << K_sample << std::endl;
     //=========================================================================
@@ -108,21 +123,34 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
         Mat R = R_*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
         Mat S = (H * sigma_pred * H.transpose())+ R;
         K = (sigma_pred * H.transpose()) * S.inverse();
-        lambda_pred = (A_ol_ - B_ol_ * K_sample)*lambda_from*(A_ol_ - B_ol_ * K_sample);
-        // lambda_pred = A_cl_*lambda_from*A_cl_;
+        // lambda_pred = (A_ol_ - B_ol_ * K_sample)*lambda_from*(A_ol_ - B_ol_ * K_sample);
+        lambda_pred = A_cl_*lambda_from*A_cl_;
     }
     else{
         Mat R = R_bad_*Eigen::MatrixXd::Identity(dimensions_, dimensions_);
         Mat S = (H * sigma_pred * H.transpose()) + R;
         K = (sigma_pred * H.transpose()) * S.inverse();
-        lambda_pred =  (A_ol_ - B_ol_ * K_sample)*lambda_from*(A_ol_ - B_ol_ * K_sample);
-        // lambda_pred = A_cl_*lambda_from*A_cl_;
+        // lambda_pred =  (A_ol_ - B_ol_ * K_samp/le)*lambda_from*(A_ol_ - B_ol_ * K_sample);
+        lambda_pred = A_cl_*lambda_from*A_cl_;
     }
     Mat sigma_to = (I - (K*H)) * sigma_pred;
     Mat lambda_to = lambda_pred + K*H*sigma_pred;
 
     result->as<RNBeliefSpace::StateType>()->setSigma(sigma_to);
     result->as<RNBeliefSpace::StateType>()->setLambda(lambda_to);
+
+
+    // std::cout << "Print States" << std::endl;
+    // std::cout << "X: " << x_pose << std::endl;
+    // std::cout << "Y: " << y_pose << std::endl;
+    // std::cout << "X_new: " << x_new << std::endl;
+    // std::cout << "Y_new: " << y_new << std::endl;
+    // std::cout << "Sigma from: " << sigma_from.trace() << std::endl;
+    // std::cout << "Lambda from: " << lambda_from.trace() << std::endl;
+    // std::cout << "Sigma pred: " << sigma_pred.trace() << std::endl;
+    // std::cout << "Lambda pred: " << lambda_pred.trace() << std::endl;
+    // std::cout << "Sigma to: " << sigma_to.trace() << std::endl;
+    // std::cout << "Lambda to: " << lambda_to.trace() << std::endl;
 }
 
 bool SimpleStatePropagator::canPropagateBackward(void) const
