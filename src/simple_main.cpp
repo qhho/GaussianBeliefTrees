@@ -214,7 +214,8 @@ void EuclideanMain::planWithSimpleSetup()
     //=======================================================================
 
     // std::cout << "a" << std::endl;
-    si->setStatePropagator(oc::StatePropagatorPtr(new SimpleStatePropagator(si)));
+    std::vector<std::vector<double>> measurement_regions = {{0.0, 100.0}, {0.0, 100.0}};
+    si->setStatePropagator(oc::StatePropagatorPtr(new SimpleStatePropagator(si, 0.2, 0.1, 5.0, 0.9, measurement_regions)));
 //	//=======================================================================
 //	// Set optimization objective
 //	//=======================================================================
@@ -235,7 +236,7 @@ void EuclideanMain::planWithSimpleSetup()
 //	//simple_setup_->getProblemDefinition()->setOptimizationObjective(getBalancedObjective2(si));
     ob::StateValidityCheckerPtr om_stat_val_check;
     // om_stat_val_check = ob::StateValidityCheckerPtr(new Scenario2ValidityChecker(si));
-    om_stat_val_check = ob::StateValidityCheckerPtr(new StateValidityCheckerPCCBlackmore("scene3", si, 0.99));
+    om_stat_val_check = ob::StateValidityCheckerPtr(new StateValidityCheckerPCCBlackmore("scene3", si, 0.99, 0));
     // simple_setup_->setStateValidityChecker(om_stat_val_check);
     si->setStateValidityChecker(om_stat_val_check);
 

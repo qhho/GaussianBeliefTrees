@@ -63,72 +63,81 @@ target_include_directories(gbt_lib
     ${OMPL_INCLUDE_DIRS}
 )
 
-# add_executable (main src/simple_main.cpp)
+add_executable (main src/simple_main.cpp)
 
-# target_link_libraries (main
-#     rrbt_lib
+target_link_libraries (main
+    gbt_lib
+    ${OMPL_LIBRARIES}
+    ${Boost_LIBRARIES}
+)
+
+# add_executable (varyK benchmarks/benchmark_varyK.cpp)
+
+# target_link_libraries (varyK
+#     gbt_lib
 #     ${OMPL_LIBRARIES}
 #     ${Boost_LIBRARIES}
+#     yaml-cpp
 # )
 
-add_executable (varyK benchmarks/benchmark_varyK.cpp)
+# add_executable (varyKfull benchmarks/benchmark_varyK_full.cpp)
 
-target_link_libraries (varyK
-    gbt_lib
-    ${OMPL_LIBRARIES}
-    ${Boost_LIBRARIES}
-    yaml-cpp
-)
-
-add_executable (varyKfull benchmarks/benchmark_varyK_full.cpp)
-
-target_link_libraries (varyKfull
-    gbt_lib
-    ${OMPL_LIBRARIES}
-    ${Boost_LIBRARIES}
-    yaml-cpp
-)
+# target_link_libraries (varyKfull
+#     gbt_lib
+#     ${OMPL_LIBRARIES}
+#     ${Boost_LIBRARIES}
+#     yaml-cpp
+# )
 
 
-add_executable (rrbt benchmarks/benchmark_rrbt.cpp)
+# add_executable (rrbt benchmarks/benchmark_rrbt.cpp)
 
-target_link_libraries (rrbt
-    gbt_lib
-    ${OMPL_LIBRARIES}
-    ${Boost_LIBRARIES}
-    yaml-cpp
-)
+# target_link_libraries (rrbt
+#     gbt_lib
+#     ${OMPL_LIBRARIES}
+#     ${Boost_LIBRARIES}
+#     yaml-cpp
+# )
 
-add_executable (fixedK benchmarks/benchmark_fixedK.cpp)
+# add_executable (fixedK benchmarks/benchmark_fixedK.cpp)
 
-target_link_libraries (fixedK
-    gbt_lib
-    ${OMPL_LIBRARIES}
-    ${Boost_LIBRARIES}
-    yaml-cpp
-)
+# target_link_libraries (fixedK
+#     gbt_lib
+#     ${OMPL_LIBRARIES}
+#     ${Boost_LIBRARIES}
+#     yaml-cpp
+# )
 
-add_executable (double benchmarks/benchmark_varyK_general.cpp)
+# add_executable (double benchmarks/benchmark_varyK_general.cpp)
 
-target_link_libraries (double
-    gbt_lib
-    ${OMPL_LIBRARIES}
-    ${Boost_LIBRARIES}
-    yaml-cpp
-)
+# target_link_libraries (double
+#     gbt_lib
+#     ${OMPL_LIBRARIES}
+#     ${Boost_LIBRARIES}
+#     yaml-cpp
+# )
 
-add_executable (barrier_trajectory_example examples/barrier_trajectory_example.cpp)
+# add_executable (barrier_trajectory_example examples/barrier_trajectory_example.cpp)
 
-target_link_libraries (barrier_trajectory_example
-    gbt_lib
-    ${OMPL_LIBRARIES}
-    ${Boost_LIBRARIES}
-    yaml-cpp
-)
+# target_link_libraries (barrier_trajectory_example
+#     gbt_lib
+#     ${OMPL_LIBRARIES}
+#     ${Boost_LIBRARIES}
+#     yaml-cpp
+# )
 
 add_executable (test_barrier_rrt examples/test_barrier_rrt.cpp)
 
 target_link_libraries (test_barrier_rrt
+    gbt_lib
+    ${OMPL_LIBRARIES}
+    ${Boost_LIBRARIES}
+    yaml-cpp
+)
+
+add_executable (barrier_rrt examples/barrier_rrt_test.cpp examples/barrier_rrt_main.cpp)
+
+target_link_libraries (barrier_rrt
     gbt_lib
     ${OMPL_LIBRARIES}
     ${Boost_LIBRARIES}
