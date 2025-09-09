@@ -244,7 +244,7 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
         // Use the new step-by-step propagation method
         std::vector<base::State *> pstates;
         cd = propagateWhileValidWithTrajectoryChecking(nmotion->state, rctrl, cd, pstates);
-        std::cout << "cd: " << cd << std::endl;
+        // std::cout << "cd: " << cd << std::endl;
         if (cd >= siC_->getMinControlDuration())
         {
             Motion *lastmotion = nmotion;

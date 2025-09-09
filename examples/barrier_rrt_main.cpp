@@ -281,6 +281,7 @@ void BarrierRRTMain::setupBarrierConstraints()
     // Store for later use
     a_list_ = a_list;
     gamma_list_ = gamma_list;
+
 }
 
 void BarrierRRTMain::planWithBarrierRRT()
@@ -334,6 +335,7 @@ void BarrierRRTMain::planWithBarrierRRT()
     // Set half-space constraints
     validity_checker->setHalfSpaceConstraints(a_list_, gamma_list_, risk_threshold_);
     validity_checker->setTimeParameters(time_steps_, step_duration_);
+    validity_checker->setNumConstraints(static_cast<int>(a_list_.size()));
     
     // Set the validity checker
     si->setStateValidityChecker(validity_checker);

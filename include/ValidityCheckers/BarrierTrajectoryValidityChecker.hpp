@@ -38,6 +38,8 @@ public:
     // Set time discretization parameters
     void setTimeParameters(int N, double dt);
 
+    void setNumConstraints(int n);
+
 private:
     // System matrices for belief propagation
     Eigen::MatrixXd A_, B_, K_, G_, Q_;
@@ -46,6 +48,8 @@ private:
     std::vector<Eigen::VectorXd> a_list_;
     std::vector<double> gamma_list_;
     double delta_;
+
+     int numConstraints_;
     
     // Time discretization
     int N_;

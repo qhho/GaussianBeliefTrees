@@ -39,7 +39,7 @@ struct RiskAwareResult {
 };
 
 BarrierTrajectoryValidityChecker::BarrierTrajectoryValidityChecker(const SpaceInformationPtr &si)
-    : StateValidityChecker(si), delta_(0.01), N_(10), dt_(0.1)
+    : StateValidityChecker(si), delta_(0.01), N_(10), dt_(0.1), numConstraints_(1)
 {
     // Initialize system matrices with default values
     A_ = Eigen::MatrixXd::Identity(2, 2);
@@ -90,6 +90,12 @@ void BarrierTrajectoryValidityChecker::setTimeParameters(int N, double dt)
     N_ = N;
     dt_ = dt;
 }
+
+void BarrierTrajectoryValidityChecker::setNumConstraints(int n)
+{
+    numConstraints_ = n;
+}
+
 
 //--------------------------------------------------
 // Propagate belief given control u (copied from BarrierValidityChecker.cpp)
@@ -153,6 +159,7 @@ static bool barrierCheckMultiple(
     const std::vector<Eigen::VectorXd> &a_list,
     const std::vector<double> &gamma_list,
     double delta,
+    int numConstraints,
     const BeliefDerivative &b_dot,
     const Eigen::MatrixXd &B,
     const Eigen::VectorXd &u)
@@ -162,7 +169,15 @@ static bool barrierCheckMultiple(
     // Iterate over all half-space constraints
     for(size_t l = 0; l < a_list.size(); ++l)
     {
-        RiskAwareResult res = riskAwareHalfspaceWithGradient(b, a_list[l], gamma_list[l], delta);
+        // Divide delta by the number of constraints (from YAML)
+        int n_constraints = std::max(1, numConstraints);
+        double delta_per_constraint = delta / static_cast<double>(n_constraints);
+
+        RiskAwareResult res = riskAwareHalfspaceWithGradient(
+            b, a_list[l], gamma_list[l], delta_per_constraint);
+
+
+        // RiskAwareResult res = riskAwareHalfspaceWithGradient(b, a_list[l], gamma_list[l], delta);
 
         // std::cout << "      Constraint " << l << ":" << std::endl;
         // std::cout << "        a: [" << a_list[l].transpose() << "]" << std::endl;
@@ -240,7 +255,7 @@ bool BarrierTrajectoryValidityChecker::checkTrajectoryBarrierConstraints(
             // std::cout << "      dLambda:\n" << b_dot.dLambda << std::endl;
             
             // Check all half-space constraints in a risk-aware manner
-            bool constraint_satisfied = barrierCheckMultiple(b, a_list_, gamma_list_, delta_, b_dot, B_, u);
+            bool constraint_satisfied = barrierCheckMultiple(b, a_list_, gamma_list_, delta_, numConstraints_, b_dot, B_, u);
             // std::cout << "    Constraint satisfied: " << (constraint_satisfied ? "YES" : "NO") << std::endl;
             
             if (!constraint_satisfied)
