@@ -1,0 +1,10 @@
+scene:
+  obstacles:
+    # Approximate circle at (25,25) with radius 10 using rectangular obstacles
+    # This creates a square that roughly approximates the circle
+    - fx: 15
+      tx: 35
+      fy: 15
+      ty: 35
+      fz: -1
+      tz: 1 

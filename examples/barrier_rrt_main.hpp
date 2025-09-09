@@ -21,19 +21,22 @@ using namespace ompl;
 using namespace ompl::base;
 using namespace ompl::control;
 
+
 class BarrierRRTMain
 {
 public:
-    BarrierRRTMain();
-    void planWithBarrierRRT();
+    BarrierRRTMain(const std::string& config_file = "");
     void loadConfig(const std::string& config_file);
     void loadScene(const std::string& scene_file);
-    
-    // Make scene_name_ public so it can be accessed from main
+    void setupBarrierConstraints();
+    void planWithBarrierRRT();
+    void saveSolutionPath(const PathControl& path_control, const StateSpacePtr& space, const std::string& filepath);
+
+    // Make scene_name_ public for access
     std::string scene_name_;
-    
+
 private:
-    // Configuration parameters
+    // Environment parameters
     std::vector<double> planning_bounds_x_;
     std::vector<double> planning_bounds_y_;
     std::vector<double> start_configuration_;
@@ -41,8 +44,8 @@ private:
     Eigen::MatrixXd initial_covariance_;
     
     // System parameters
-    Eigen::MatrixXd A_, B_, K_, G_, Q_;
-    double dt_;
+    Eigen::MatrixXd A_, B_, K_, G_, Q_;  // Change Q_ back to Eigen::MatrixXd
+    double R_, R_bad_, K_default_, dt_;
     
     // Planner parameters
     double planning_time_;
@@ -56,15 +59,11 @@ private:
     int time_steps_;
     double step_duration_;
     
-    // Scene parameters
+    // Obstacle constraints
     std::vector<Eigen::VectorXd> obstacle_constraints_a_;
     std::vector<double> obstacle_constraints_gamma_;
-    
-    // Helper methods
-    void setupBarrierConstraints();
-    void saveSolutionPath(const PathControl& path_control, 
-                         const StateSpacePtr& space, 
-                         const std::string& filepath);
+    std::vector<Eigen::VectorXd> a_list_;
+    std::vector<double> gamma_list_;
 };
 
 #endif // BARRIER_RRT_MAIN_HPP 

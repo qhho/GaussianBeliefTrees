@@ -220,10 +220,10 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
         else
             sampler_->sampleUniform(rstate);
 
-        auto rmotionbelief = rmotion->state->as<R2BeliefSpace::StateType>();
+        auto rmotionbelief = rmotion->state->as<RNBeliefSpace::StateType>();
         if (compound)
         {
-            rmotionbelief = rmotion->state->as<base::CompoundStateSpace::StateType>()->as<R2BeliefSpace::StateType>(0);
+            rmotionbelief = rmotion->state->as<base::CompoundStateSpace::StateType>()->as<RNBeliefSpace::StateType>(0);
         }
         if (DISTANCE_FUNC_ == 1){
             if (rng_.uniform01() < samplingBias_){
@@ -244,6 +244,7 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
         // Use the new step-by-step propagation method
         std::vector<base::State *> pstates;
         cd = propagateWhileValidWithTrajectoryChecking(nmotion->state, rctrl, cd, pstates);
+        std::cout << "cd: " << cd << std::endl;
         if (cd >= siC_->getMinControlDuration())
         {
             Motion *lastmotion = nmotion;

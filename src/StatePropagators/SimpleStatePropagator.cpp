@@ -106,6 +106,8 @@ void SimpleStatePropagator::propagate(const base::State *state, const control::C
     //=========================================================================
     double x_new = x_pose + duration * u_0;
     double y_new = y_pose + duration * u_1;
+
+
     result->as<RNBeliefSpace::StateType>()->setX(x_new);
     result->as<RNBeliefSpace::StateType>()->setY(y_new);
 

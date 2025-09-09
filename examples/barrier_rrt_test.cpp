@@ -12,7 +12,7 @@ int main(int argc, char **argv)
         barrier_planner.loadConfig(config_file);
         
         // Load scene file
-        std::string scene_file = "scenes/" + barrier_planner.scene_name_ + ".yaml";
+        std::string scene_file = barrier_planner.scene_name_;
         std::cout << "Loading scene from: " << scene_file << std::endl;
         barrier_planner.loadScene(scene_file);
     } else {

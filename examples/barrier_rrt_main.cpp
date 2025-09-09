@@ -25,6 +25,11 @@ public:
         double dx = state_belief->getX() - goal_belief->getX();
         double dy = state_belief->getY() - goal_belief->getY();
         
+        if (std::sqrt(dx*dx + dy*dy) < threshold_)
+        {
+            return 0.0;
+        }
+        
         return std::sqrt(dx*dx + dy*dy);
     }
 
@@ -33,7 +38,7 @@ private:
     double threshold_;
 };
 
-BarrierRRTMain::BarrierRRTMain()
+BarrierRRTMain::BarrierRRTMain(const std::string& config_file)
 {
     // Initialize with default values
     planning_bounds_x_.resize(2);
@@ -41,37 +46,48 @@ BarrierRRTMain::BarrierRRTMain()
     start_configuration_.resize(2);
     goal_configuration_.resize(2);
     
-    planning_bounds_x_[0] = 0.0;
-    planning_bounds_x_[1] = 50.0;
-    planning_bounds_y_[0] = 0.0;
-    planning_bounds_y_[1] = 50.0;
-    
-    start_configuration_[0] = 5.0;
-    start_configuration_[1] = 5.0;
-    goal_configuration_[0] = 45.0;
-    goal_configuration_[1] = 45.0;
-    
-    initial_covariance_ = 0.5 * Eigen::MatrixXd::Identity(2, 2);
-    
-    // Default system matrices
-    A_ = Eigen::MatrixXd::Identity(2, 2);
-    B_ = Eigen::MatrixXd::Identity(2, 2);
-    K_ = Eigen::MatrixXd::Zero(2, 2);
-    G_ = Eigen::MatrixXd::Identity(2, 2);
-    Q_ = 0.1 * Eigen::MatrixXd::Identity(2, 2);
-    dt_ = 0.1;
-    
-    // Default planner parameters
-    planning_time_ = 10.0;
-    goal_bias_ = 0.1;
-    sampling_bias_ = 0.3;
-    intermediate_states_ = false;
-    control_duration_ = {1, 5};
-    
-    // Default barrier parameters
-    risk_threshold_ = 0.01;
-    time_steps_ = 50;
-    step_duration_ = 0.002;
+    if (!config_file.empty()) {
+        loadConfig(config_file);
+    } else {
+        // Default values if no config file
+        planning_bounds_x_[0] = 0.0;
+        planning_bounds_x_[1] = 50.0;
+        planning_bounds_y_[0] = 0.0;
+        planning_bounds_y_[1] = 50.0;
+        
+        start_configuration_[0] = 5.0;
+        start_configuration_[1] = 5.0;
+        goal_configuration_[0] = 45.0;
+        goal_configuration_[1] = 45.0;
+        
+        initial_covariance_ = 1.0 * Eigen::MatrixXd::Identity(2, 2);
+        
+        // Default system matrices
+        A_ = Eigen::MatrixXd::Identity(2, 2);
+        B_ = Eigen::MatrixXd::Identity(2, 2);
+        K_ = Eigen::MatrixXd::Zero(2, 2);
+        G_ = Eigen::MatrixXd::Identity(2, 2);
+        Q_ = 1.0 * Eigen::MatrixXd::Identity(2, 2);  // Keep as matrix
+        R_ = 1.0;
+        R_bad_ = 10.0;
+        K_default_ = 0.8;
+        dt_ = 0.1;
+        
+        // Default planner parameters
+        planning_time_ = 10.0;
+        goal_bias_ = 0.1;
+        sampling_bias_ = 0.3;
+        intermediate_states_ = false;
+        control_duration_ = {1, 5};
+        
+        // Default barrier parameters
+        risk_threshold_ = 0.01;
+        time_steps_ = 50;
+        step_duration_ = 0.002;
+        
+        scene_name_ = "scenes/2d_circle_approximation.yaml";
+        std::cout << "Using default scene name: '" << scene_name_ << "'" << std::endl;
+    }
 }
 
 void BarrierRRTMain::loadConfig(const std::string& config_file)
@@ -79,9 +95,48 @@ void BarrierRRTMain::loadConfig(const std::string& config_file)
     boost::property_tree::ptree pt;
     boost::property_tree::ini_parser::read_ini(config_file, pt);
     
+    // Load environment bounds
+    std::string x_bounds = pt.get<std::string>("Environment.x_bounds");
+    std::string y_bounds = pt.get<std::string>("Environment.y_bounds");
+    
+    // Parse bounds (format: "min,max")
+    size_t comma_pos = x_bounds.find(',');
+    planning_bounds_x_[0] = std::stod(x_bounds.substr(0, comma_pos));
+    planning_bounds_x_[1] = std::stod(x_bounds.substr(comma_pos + 1));
+    
+    comma_pos = y_bounds.find(',');
+    planning_bounds_y_[0] = std::stod(y_bounds.substr(0, comma_pos));
+    planning_bounds_y_[1] = std::stod(y_bounds.substr(comma_pos + 1));
+    
+    // Load start and goal configurations
+    std::string start_config = pt.get<std::string>("Environment.start_configuration");
+    std::string goal_config = pt.get<std::string>("Environment.goal_configuration");
+    
+    comma_pos = start_config.find(',');
+    start_configuration_[0] = std::stod(start_config.substr(0, comma_pos));
+    start_configuration_[1] = std::stod(start_config.substr(comma_pos + 1));
+    
+    comma_pos = goal_config.find(',');
+    goal_configuration_[0] = std::stod(goal_config.substr(0, comma_pos));
+    goal_configuration_[1] = std::stod(goal_config.substr(comma_pos + 1));
+    
     // Load system parameters
+    double initial_cov = pt.get<double>("System.initial_covariance");
+    initial_covariance_ = initial_cov * Eigen::MatrixXd::Identity(2, 2);
+    
+    // Load system matrices
+    double Q_scalar = pt.get<double>("System.Q");
+    R_ = pt.get<double>("System.R");
+    R_bad_ = pt.get<double>("System.R_bad");
+    K_default_ = pt.get<double>("System.K_default");
     dt_ = pt.get<double>("System.dt");
-    Q_(0,0) = Q_(1,1) = pt.get<double>("System.Q");
+    
+    // Set system matrices
+    A_ = Eigen::MatrixXd::Identity(2, 2);
+    B_ = Eigen::MatrixXd::Identity(2, 2);
+    K_ = Eigen::MatrixXd::Zero(2, 2);
+    G_ = Eigen::MatrixXd::Identity(2, 2);
+    Q_ = Q_scalar * Eigen::MatrixXd::Identity(2, 2);  // Convert scalar to matrix
     
     // Load planner parameters
     planning_time_ = pt.get<double>("Planner.planning_time");
@@ -89,14 +144,11 @@ void BarrierRRTMain::loadConfig(const std::string& config_file)
     sampling_bias_ = pt.get<double>("Planner.sampling_bias");
     intermediate_states_ = pt.get<bool>("Planner.intermediate_states");
     
-    // Load environment parameters
-    std::string x_bounds = pt.get<std::string>("Environment.x_bounds");
-    std::string y_bounds = pt.get<std::string>("Environment.y_bounds");
-    std::string start_state = pt.get<std::string>("Planner.initial_state");
-    std::string goal_state = pt.get<std::string>("Planner.goal");
-    
-    // Parse bounds and states (you'll need to implement parsing logic)
-    // This is a simplified version - you may need more robust parsing
+    // Parse control duration (format: "min,max")
+    std::string control_dur = pt.get<std::string>("Planner.control_duration");
+    comma_pos = control_dur.find(',');
+    control_duration_[0] = std::stod(control_dur.substr(0, comma_pos));
+    control_duration_[1] = std::stod(control_dur.substr(comma_pos + 1));
     
     // Load barrier parameters
     risk_threshold_ = pt.get<double>("Barrier.risk_threshold");
@@ -105,31 +157,91 @@ void BarrierRRTMain::loadConfig(const std::string& config_file)
     
     // Load scene
     scene_name_ = pt.get<std::string>("Scene.scene");
+    std::cout << "Loaded scene name from config: '" << scene_name_ << "'" << std::endl;
 }
 
 void BarrierRRTMain::loadScene(const std::string& scene_file)
 {
+    std::cout << "loadScene called with: '" << scene_file << "'" << std::endl;
+    
     YAML::Node config = YAML::LoadFile(scene_file);
     
     if (config["scene"]["obstacles"]) {
+        std::cout << "Found obstacles in scene file" << std::endl;
         for (const auto& obstacle : config["scene"]["obstacles"]) {
-            if (obstacle["type"].as<std::string>() == "circle") {
-                double center_x = obstacle["center_x"].as<double>();
-                double center_y = obstacle["center_y"].as<double>();
-                double radius = obstacle["radius"].as<double>();
-                int num_constraints = obstacle["num_constraints"].as<int>();
+            std::cout << "Processing obstacle..." << std::endl;
+            
+            // Check if it's a circle obstacle (has type field)
+            if (obstacle["type"]) {
+                std::string obstacle_type = obstacle["type"].as<std::string>();
+                std::cout << "Circle obstacle type: " << obstacle_type << std::endl;
                 
-                // Generate half-space constraints for circle
-                for (int i = 0; i < num_constraints; ++i) {
-                    double angle = 2.0 * M_PI * i / num_constraints;
-                    Eigen::VectorXd a_obs(2);
-                    a_obs << -cos(angle), -sin(angle);
-                    obstacle_constraints_a_.push_back(a_obs);
-                    obstacle_constraints_gamma_.push_back(-center_x * cos(angle) - center_y * sin(angle) + radius);
+                if (obstacle_type == "circle") {
+                    double center_x = obstacle["center_x"].as<double>();
+                    double center_y = obstacle["center_y"].as<double>();
+                    double radius = obstacle["radius"].as<double>();
+                    int num_constraints = obstacle["num_constraints"].as<int>();
+                    
+                    // Generate half-space constraints for circle
+                    for (int i = 0; i < num_constraints; ++i) {
+                        double angle = 2.0 * M_PI * i / num_constraints;
+                        Eigen::VectorXd a_obs(2);
+                        // Point AWAY from the center (positive direction)
+                        a_obs << cos(angle), sin(angle);
+                        obstacle_constraints_a_.push_back(a_obs);
+                        // The constraint should be: a^T * point >= a^T * center + radius
+                        obstacle_constraints_gamma_.push_back(center_x * cos(angle) + center_y * sin(angle) + radius);
+                    }
                 }
+            }
+            // Check if it's a rectangular obstacle (has fx, tx, fy, ty fields)
+            else if (obstacle["fx"] && obstacle["tx"] && obstacle["fy"] && obstacle["ty"]) {
+                std::cout << "Processing rectangular obstacle" << std::endl;
+                
+                double fx = obstacle["fx"].as<double>();
+                double tx = obstacle["tx"].as<double>();
+                double fy = obstacle["fy"].as<double>();
+                double ty = obstacle["ty"].as<double>();
+                
+                std::cout << "Rectangle: (" << fx << "," << fy << ") to (" << tx << "," << ty << ")" << std::endl;
+                
+                // Create 4 half-space constraints for rectangle
+                // Left: x >= fx
+                Eigen::VectorXd a1(2);
+                a1 << -1.0, 0.0;
+                obstacle_constraints_a_.push_back(a1);
+                obstacle_constraints_gamma_.push_back(-fx);
+                
+                // Right: x <= tx
+                Eigen::VectorXd a2(2);
+                a2 << 1.0, 0.0;
+                obstacle_constraints_a_.push_back(a2);
+                obstacle_constraints_gamma_.push_back(tx);
+                
+                // Bottom: y >= fy
+                Eigen::VectorXd a3(2);
+                a3 << 0.0, -1.0;
+                obstacle_constraints_a_.push_back(a3);
+                obstacle_constraints_gamma_.push_back(-fy);
+                
+                // Top: y <= ty
+                Eigen::VectorXd a4(2);
+                a4 << 0.0, 1.0;
+                obstacle_constraints_a_.push_back(a4);
+                obstacle_constraints_gamma_.push_back(ty);
+                
+                std::cout << "Added 4 half-space constraints for rectangle" << std::endl;
+            }
+            else {
+                std::cout << "Unknown obstacle type, skipping..." << std::endl;
             }
         }
     }
+    else {
+        std::cout << "No obstacles found in scene file" << std::endl;
+    }
+    
+    std::cout << "Total obstacle constraints: " << obstacle_constraints_a_.size() << std::endl;
 }
 
 void BarrierRRTMain::setupBarrierConstraints()
@@ -165,21 +277,33 @@ void BarrierRRTMain::setupBarrierConstraints()
     // Add obstacle constraints
     a_list.insert(a_list.end(), obstacle_constraints_a_.begin(), obstacle_constraints_a_.end());
     gamma_list.insert(gamma_list.end(), obstacle_constraints_gamma_.begin(), obstacle_constraints_gamma_.end());
+    
+    // Store for later use
+    a_list_ = a_list;
+    gamma_list_ = gamma_list;
 }
 
 void BarrierRRTMain::planWithBarrierRRT()
 {
     std::cout << "Starting Barrier RRT Planning..." << std::endl;
+    std::cout << "Scene name from config: '" << scene_name_ << "'" << std::endl;
+    
+    // Load scene if specified
+    if (!scene_name_.empty()) {
+        // Use the scene name directly from config - no path manipulation needed
+        std::cout << "AHH Loading scene from: " << scene_name_ << std::endl;
+        loadScene(scene_name_);
+    }
     
     // Create state space (2D belief space)
     auto state_space = std::make_shared<RNBeliefSpace>(2, initial_covariance_);
     
     // Set bounds for the state space
     RealVectorBounds bounds_se2(2);
-    bounds_se2.setLow(planning_bounds_x_[0]);
-    bounds_se2.setHigh(planning_bounds_x_[1]);
-    bounds_se2.setLow(planning_bounds_y_[0]);
-    bounds_se2.setHigh(planning_bounds_y_[1]);
+    bounds_se2.setLow(0, planning_bounds_x_[0]);
+    bounds_se2.setHigh(0, planning_bounds_x_[1]);
+    bounds_se2.setLow(1, planning_bounds_y_[0]);
+    bounds_se2.setHigh(1, planning_bounds_y_[1]);
     state_space->setBounds(bounds_se2);
     
     // Create control space (3D: x_vel, y_vel, duration)
@@ -187,49 +311,39 @@ void BarrierRRTMain::planWithBarrierRRT()
     
     // Set control bounds
     RealVectorBounds control_bounds(3);
-    control_bounds.setLow(-1.0);
-    control_bounds.setHigh(1.0);
+    control_bounds.setLow(0, -1.0);
+    control_bounds.setHigh(0, 1.0);
+    control_bounds.setLow(1, -1.0);
+    control_bounds.setHigh(1, 1.0);
+    control_bounds.setLow(2, 0.1);
+    control_bounds.setHigh(2, 0.9);
     control_space->setBounds(control_bounds);
     
-    // Create space information - be explicit about control::SpaceInformation
+    // Create space information
     auto si = std::make_shared<ompl::control::SpaceInformation>(state_space, control_space);
     
     // Create the barrier trajectory validity checker
     auto validity_checker = std::make_shared<BarrierTrajectoryValidityChecker>(si);
     
     // Set system matrices
-    validity_checker->setSystemMatrices(A_, B_, K_, G_, Q_);
+    validity_checker->setSystemMatrices(A_, B_, K_, G_, Q_);  // Now Q_ is a matrix
     
     // Setup barrier constraints
     setupBarrierConstraints();
     
-    // Get constraints from setup
-    std::vector<Eigen::VectorXd> a_list;
-    std::vector<double> gamma_list;
-    
-    // Add boundary constraints
-    Eigen::VectorXd a1(2), a2(2), a3(2), a4(2);
-    a1 << -1.0, 0.0; a_list.push_back(a1); gamma_list.push_back(0.0);
-    a2 << 1.0, 0.0; a_list.push_back(a2); gamma_list.push_back(planning_bounds_x_[1]);
-    a3 << 0.0, -1.0; a_list.push_back(a3); gamma_list.push_back(0.0);
-    a4 << 0.0, 1.0; a_list.push_back(a4); gamma_list.push_back(planning_bounds_y_[1]);
-    
-    // Add obstacle constraints
-    a_list.insert(a_list.end(), obstacle_constraints_a_.begin(), obstacle_constraints_a_.end());
-    gamma_list.insert(gamma_list.end(), obstacle_constraints_gamma_.begin(), obstacle_constraints_gamma_.end());
-    
-    validity_checker->setHalfSpaceConstraints(a_list, gamma_list, risk_threshold_);
+    // Set half-space constraints
+    validity_checker->setHalfSpaceConstraints(a_list_, gamma_list_, risk_threshold_);
     validity_checker->setTimeParameters(time_steps_, step_duration_);
     
     // Set the validity checker
     si->setStateValidityChecker(validity_checker);
     
-    // Set state propagator
+    // Set state propagator with config values
     std::vector<std::vector<double>> measurement_regions = {
         {planning_bounds_x_[0], planning_bounds_x_[1]}, 
         {planning_bounds_y_[0], planning_bounds_y_[1]}
     };
-    si->setStatePropagator(std::make_shared<SimpleStatePropagator>(si, 0.1, 0.1, 0.2, 1.0, measurement_regions));
+    si->setStatePropagator(std::make_shared<SimpleStatePropagator>(si, Q_.trace()/2.0, R_, R_bad_, K_default_, measurement_regions));
     
     // Set propagation parameters
     si->setPropagationStepSize(dt_);
@@ -285,7 +399,7 @@ void BarrierRRTMain::planWithBarrierRRT()
     
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
     
-    if (status == PlannerStatus::EXACT_SOLUTION || status == PlannerStatus::APPROXIMATE_SOLUTION)
+    if (status == PlannerStatus::EXACT_SOLUTION)
     {
         std::cout << "Found solution!" << std::endl;
         if (status == PlannerStatus::APPROXIMATE_SOLUTION) {
