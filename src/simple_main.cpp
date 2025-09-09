@@ -6,6 +6,9 @@
 #include <vector>
 #include <boost/bind.hpp>
 #include <fstream>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
+#include <yaml-cpp/yaml.h>
 
 // OMPL
 // #include <ompl/control/SpaceInformation.h>
@@ -27,10 +30,12 @@
 #include "ValidityCheckers/state_validity_checker_pcc_blackmore.hpp" // simple validity checker
 #include "ValidityCheckers/state_validity_checker_pcc_blackmore_euclidean.hpp" // simple validity checker
 // #include "Planners/mod_sst.hpp" //PLANNER
+#include "Planners/mod_rrt.hpp" //PLANNER
 #include "StatePropagators/SimpleStatePropagator.h" //SIMPLE STATE PROPAGATOR *mostly done*
 #include "StatePropagators/SimpleStatePropagatorEuclidean.h" //SIMPLE STATE PROPAGATOR *mostly done*
 #include "Spaces/R2BeliefSpace.h" //R2 Belief Space *done*
 #include "Spaces/R2BeliefSpaceEuclidean.h"
+#include "Spaces/RNBeliefSpace.h"
 #include "OptimizationObjectives/state_cost_objective.hpp"
 
 #include "euclidean_main.hpp"
@@ -42,7 +47,8 @@ namespace og = ompl::geometric;
 
 ob::StateSpacePtr constructStateSpace(void)
 {
-    ob::StateSpacePtr state_space = ob::StateSpacePtr(new R2BeliefSpace(5.0));
+    Eigen::MatrixXd sigma_init = 5.0 * Eigen::MatrixXd::Identity(2, 2);
+    ob::StateSpacePtr state_space = ob::StateSpacePtr(new RNBeliefSpace(2, sigma_init));
     return state_space;
 }
 
@@ -52,48 +58,121 @@ ob::StateSpacePtr constructRealVectorStateSpace(void)
     return state_space;
 }
 
-class MyGoalRegion : public ompl::base::GoalRegion
+// Replace the MyGoalRegion class (lines 61-78) with the BeliefGoalRegion from barrier_rrt_main:
+class BeliefGoalRegion : public GoalRegion
 {
 public:
-    MyGoalRegion(const oc::SpaceInformationPtr &si) : ompl::base::GoalRegion(si)
+    BeliefGoalRegion(const ompl::control::SpaceInformationPtr &si, const State *goal_state, double threshold = 0.5)
+        : GoalRegion(si), goal_state_(si->cloneState(goal_state)), threshold_(threshold)
     {
-        setThreshold(16.0);
     }
- 
-    virtual double distanceGoal(const State *st) const
+    
+    virtual ~BeliefGoalRegion()
+    {
+        si_->freeState(goal_state_);
+    }
+    
+    virtual double distanceGoal(const State *state) const override
+    {
+        auto state_belief = state->as<RNBeliefSpace::StateType>();
+        auto goal_belief = goal_state_->as<RNBeliefSpace::StateType>();
+        
+        double dx = state_belief->getX() - goal_belief->getX();
+        double dy = state_belief->getY() - goal_belief->getY();
+
+        // std::cout << state_belief->getX() << " " << state_belief->getY() << " " << goal_belief->getX() << " " << goal_belief->getY() << std::endl;
+        
+        if (std::sqrt(dx*dx + dy*dy) < threshold_)
         {
-
-        double dx = st->as<R2BeliefSpace::StateType>()->getX() - 90.0;
-        double dy = st->as<R2BeliefSpace::StateType>()->getY() - 90.0;
-
-        return (dx*dx + dy*dy);
-        // perform any operations and return a double indicating the distance to the goal
+            return 0.0;
+        }
+        
+        return std::sqrt(dx*dx + dy*dy);
     }
+
+private:
+    State *goal_state_;
+    double threshold_;
 };
 
 
-EuclideanMain::EuclideanMain()
+EuclideanMain::EuclideanMain(const std::string& config_file)
 {
     //=======================================================================
-    // Get parameters
+    // Load parameters from config file
     //=======================================================================
     planning_bounds_x_.resize(2);
     planning_bounds_y_.resize(2);
     start_configuration_.resize(2);
     goal_configuration_.resize(2);
 
-    planning_bounds_x_[0] = 0.0;
-    planning_bounds_x_[1] = 100.0;
-    planning_bounds_y_[0] = 0.0;
-    planning_bounds_y_[1] = 100.0;
+    if (!config_file.empty()) {
+        loadConfig(config_file);
+    } else {
+        // Default values if no config file
+        planning_bounds_x_[0] = 0.0;
+        planning_bounds_x_[1] = 100.0;
+        planning_bounds_y_[0] = 0.0;
+        planning_bounds_y_[1] = 100.0;
+        start_configuration_[0] = 10.0;
+        start_configuration_[1] = 10.0;
+        goal_configuration_[0] = 90.0;
+        goal_configuration_[1] = 90.0;
+        initial_covariance_ = 1.0*Eigen::MatrixXd::Identity(2, 2);
+        scene_name_ = "scene3";
+        solving_time_ = 60.0;  // Default 60 seconds
+        Q_noise_ = 0.2;
+        R_noise_ = 0.1;
+        R_bad_ = 5.0;
+        K_default_ = 0.9;
+    }
+}
 
-    //84.039,10.9097,10
-    start_configuration_[0] = 10.0; //10.0; //50.0; //15.0
-    start_configuration_[1] = 10.0; //10.0; //10.0; //40.0
-    goal_configuration_[0] = 90.0;
-    goal_configuration_[1] = 90.0;
+void EuclideanMain::loadConfig(const std::string& config_file)
+{
+    boost::property_tree::ptree pt;
+    boost::property_tree::ini_parser::read_ini(config_file, pt);
+    
+    // Load environment bounds
+    std::string x_bounds = pt.get<std::string>("Environment.x_bounds");
+    std::string y_bounds = pt.get<std::string>("Environment.y_bounds");
+    
+    // Parse bounds (format: "min,max")
+    size_t comma_pos = x_bounds.find(',');
+    planning_bounds_x_[0] = std::stod(x_bounds.substr(0, comma_pos));
+    planning_bounds_x_[1] = std::stod(x_bounds.substr(comma_pos + 1));
+    
+    comma_pos = y_bounds.find(',');
+    planning_bounds_y_[0] = std::stod(y_bounds.substr(0, comma_pos));
+    planning_bounds_y_[1] = std::stod(y_bounds.substr(comma_pos + 1));
+    
+    // Load start and goal configurations
+    std::string start_config = pt.get<std::string>("Environment.start_configuration");
+    std::string goal_config = pt.get<std::string>("Environment.goal_configuration");
+    
+    comma_pos = start_config.find(',');
+    start_configuration_[0] = std::stod(start_config.substr(0, comma_pos));
+    start_configuration_[1] = std::stod(start_config.substr(comma_pos + 1));
+    
+    comma_pos = goal_config.find(',');
+    goal_configuration_[0] = std::stod(goal_config.substr(0, comma_pos));
+    goal_configuration_[1] = std::stod(goal_config.substr(comma_pos + 1));
+    
+    // Load system parameters
+    double initial_cov = pt.get<double>("System.initial_covariance");
+    initial_covariance_ = initial_cov * Eigen::MatrixXd::Identity(2, 2);
+    
+    // Load system noise parameters
+    Q_noise_ = pt.get<double>("System.Q");
+    R_noise_ = pt.get<double>("System.R");
+    R_bad_ = pt.get<double>("System.R_bad");
+    K_default_ = pt.get<double>("System.K_default");
+    
+    // Load scene name
+    scene_name_ = pt.get<std::string>("Scene.scene");
 
-    initial_covariance_ = 1.0*Eigen::MatrixXd::Identity(2, 2);
+    // Load planner parameters
+    solving_time_ = pt.get<double>("Planner.planning_time");
 }
 
 void EuclideanMain::SaveSolutionPath(oc::PathControl path_control, ob::StateSpacePtr space, std::string stringpath)
@@ -112,9 +191,9 @@ void EuclideanMain::SaveSolutionPath(oc::PathControl path_control, ob::StateSpac
         space->copyState(s, path_control_states[i]);
         path_states_.push_back(s);
 
-        double x_pose = s->as<R2BeliefSpace::StateType>()->getX();
-        double y_pose = s->as<R2BeliefSpace::StateType>()->getY();
-        Mat cov = s->as<R2BeliefSpace::StateType>()->getCovariance();
+        double x_pose = s->as<RNBeliefSpace::StateType>()->getX();
+        double y_pose = s->as<RNBeliefSpace::StateType>()->getY();
+        Mat cov = s->as<RNBeliefSpace::StateType>()->getCovariance();
 
         outputsolution << x_pose << ","  << y_pose << "," <<  cov.trace() << std::endl;
 
@@ -129,19 +208,19 @@ void EuclideanMain::SaveSolutionPath(oc::PathControl path_control, ob::StateSpac
 void EuclideanMain::planWithSimpleSetup()
 {
 
-    std::cout << "solving" << std::endl;
+    std::cout << "solving with scene: " << scene_name_ << std::endl;
     //=======================================================================
     // Instantiate the state space (SE2)
     //=======================================================================
     ob::StateSpacePtr space(constructStateSpace()); //space should probably be a class attribute
-    // set the bounds for the R^2 part of R2BeliefSpace();
+    // set the bounds for the R^2 part of RNBeliefSpace();
     ob::RealVectorBounds bounds_se2(2);
-    bounds_se2.setLow(0, 0.0);
-    bounds_se2.setHigh(0, 100.0);
-    bounds_se2.setLow(1, 0.0);
-    bounds_se2.setHigh(1, 100.0);
+    bounds_se2.setLow(planning_bounds_x_[0]);
+    bounds_se2.setHigh(planning_bounds_x_[1]);
+    bounds_se2.setLow(planning_bounds_y_[0]);
+    bounds_se2.setHigh(planning_bounds_y_[1]);
     
-    space->as<R2BeliefSpace>()->setBounds(bounds_se2);
+    space->as<RNBeliefSpace>()->setBounds(bounds_se2);
     
     //=======================================================================
     // Instantiate the control space
@@ -185,12 +264,10 @@ void EuclideanMain::planWithSimpleSetup()
     double pruning_radius_ = 1.0;
 
     ob::PlannerPtr planner;
-    planner = ob::PlannerPtr(new oc::SSBT(si));
-    planner->as<oc::SSBT>()->setGoalBias(goal_bias_);
-    planner->as<oc::SSBT>()->setSelectionRadius(selection_radius_);
-    planner->as<oc::SSBT>()->setPruningRadius(pruning_radius_);
-    planner->as<oc::SSBT>()->setSamplingBias(sampling_bias_);
-    planner->as<oc::SSBT>()->setDistanceFunction(1); //1 is for wasserstein
+    planner = ob::PlannerPtr(new oc::mod_RRT(si));
+    planner->as<oc::mod_RRT>()->setGoalBias(goal_bias_);
+    planner->as<oc::mod_RRT>()->setSamplingBias(sampling_bias_);
+    planner->as<oc::mod_RRT>()->setDistanceFunction(1); //1 is for wasserstein
     
     //=======================================================================
     // Create a start and goal states
@@ -202,20 +279,19 @@ void EuclideanMain::planWithSimpleSetup()
     // create a goal state
 
     ob::ScopedState<> goal(space);
-    // goal[0] = double(goal_configuration_[0]); 	//x
-
-    // goal[1] = double(goal_configuration_[1]); 	//y
-
-    goal[0] = 90.0;
-    goal[1] = 90.0;
+    goal[0] = double(goal_configuration_[0]); //x
+    goal[1] = double(goal_configuration_[1]); //y
 
     //=======================================================================
     // set the propagation routine for this space
     //=======================================================================
 
     // std::cout << "a" << std::endl;
-    std::vector<std::vector<double>> measurement_regions = {{0.0, 100.0}, {0.0, 100.0}};
-    si->setStatePropagator(oc::StatePropagatorPtr(new SimpleStatePropagator(si, 0.2, 0.1, 5.0, 0.9, measurement_regions)));
+    std::vector<std::vector<double>> measurement_regions = {
+        {planning_bounds_x_[0], planning_bounds_x_[1]}, 
+        {planning_bounds_y_[0], planning_bounds_y_[1]}
+    };
+    si->setStatePropagator(oc::StatePropagatorPtr(new SimpleStatePropagator(si, Q_noise_, R_noise_, R_bad_, K_default_, measurement_regions)));
 //	//=======================================================================
 //	// Set optimization objective
 //	//=======================================================================
@@ -236,7 +312,7 @@ void EuclideanMain::planWithSimpleSetup()
 //	//simple_setup_->getProblemDefinition()->setOptimizationObjective(getBalancedObjective2(si));
     ob::StateValidityCheckerPtr om_stat_val_check;
     // om_stat_val_check = ob::StateValidityCheckerPtr(new Scenario2ValidityChecker(si));
-    om_stat_val_check = ob::StateValidityCheckerPtr(new StateValidityCheckerPCCBlackmore("scene3", si, 0.99, 0));
+    om_stat_val_check = ob::StateValidityCheckerPtr(new StateValidityCheckerPCCBlackmore(scene_name_, si, 0.99, 0));
     // simple_setup_->setStateValidityChecker(om_stat_val_check);
     si->setStateValidityChecker(om_stat_val_check);
 
@@ -244,7 +320,7 @@ void EuclideanMain::planWithSimpleSetup()
 
     ob::ProblemDefinitionPtr pdef(new ob::ProblemDefinition(si));
     pdef->addStartState(start);
-    pdef->setGoal(std::make_shared<MyGoalRegion>(si));
+    pdef->setGoal(std::make_shared<BeliefGoalRegion>(si, goal.get(), 10.0));
 
     pdef->setOptimizationObjective(getEuclideanPathLengthObjective(si));
     pdef->getOptimizationObjective()->setCostThreshold(ob::Cost(45.0));
@@ -269,7 +345,7 @@ void EuclideanMain::planWithSimpleSetup()
 
     //     // std::cout << i << " " << x << " " << y << " " << cov.trace() << std::endl; 
     //     if (planner_data.getIncomingEdges(i, edgeList) > 0){
-    //         outputfile << i << "," << edgeList[0] << "," << x << "," << y << "," << cov.trace() << "," << planner_data.getVertex(i).getState()->as<R2BeliefSpace::StateType>()->getCost() << std::endl; 
+    //         outputfile << i << "," << edgeList[0] << "," << x << "," << y << "," << cov.trace() << "," << planner_data.getVertex(i).getState()->as<RNBeliefSpace::StateType>()->getCost() << std::endl; 
     //     }
 
         
@@ -304,7 +380,7 @@ void EuclideanMain::planWithSimpleSetup()
 
     //     // std::cout << i << " " << x << " " << y << " " << cov.trace() << std::endl; 
     //     if (planner_data.getIncomingEdges(i, edgeList) > 0){
-    //         outputfile << i << "," << edgeList[0] << "," << x << "," << y << "," << cov.trace() << "," << planner_data.getVertex(i).getState()->as<R2BeliefSpace::StateType>()->getCost() << std::endl; 
+    //         outputfile << i << "," << edgeList[0] << "," << x << "," << y << "," << cov.trace() << "," << planner_data.getVertex(i).getState()->as<RNBeliefSpace::StateType>()->getCost() << std::endl; 
     //     }
 
     //     // for (int j = 0; j < edgeList.size(); ++j){
@@ -324,22 +400,22 @@ void EuclideanMain::planWithSimpleSetup()
     // else{
     //     std::cout << "No solution for 0.001 secs" << std::endl;
     // }
-    planner->solve(60.0);
+    planner->solve(solving_time_);
     planner->getPlannerData(planner_data);
 
     
-    outputfile.open("fixedK_03_tree_60sec.csv", std::ios::out | std::ios::trunc);
-    outputfile << "to,from,x,y,cov,cost" << std::endl;
+    outputfile.open("solution_states_gbt.csv", std::ios::out | std::ios::trunc);
+    outputfile << "x,y,cov,cost" << std::endl;
     
     for(unsigned int i = 1; i < planner_data.numVertices(); ++i) {
 
-        double x = planner_data.getVertex(i).getState()->as<R2BeliefSpaceEuclidean::StateType>()->getX();
-        double y = planner_data.getVertex(i).getState()->as<R2BeliefSpaceEuclidean::StateType>()->getY();
-        Mat cov = planner_data.getVertex(i).getState()->as<R2BeliefSpaceEuclidean::StateType>()->getCovariance();
+        double x = planner_data.getVertex(i).getState()->as<RNBeliefSpace::StateType>()->getX();
+        double y = planner_data.getVertex(i).getState()->as<RNBeliefSpace::StateType>()->getY();
+        Mat cov = planner_data.getVertex(i).getState()->as<RNBeliefSpace::StateType>()->getCovariance();
 
         // std::cout << i << " " << x << " " << y << " " << cov.trace() << std::endl; 
         if (planner_data.getIncomingEdges(i, edgeList) > 0){
-            outputfile << i << "," << edgeList[0] << "," << x << "," << y << "," << cov.trace() << "," << planner_data.getVertex(i).getState()->as<R2BeliefSpace::StateType>()->getCost() << std::endl; 
+            outputfile << i << "," << edgeList[0] << "," << x << "," << y << "," << cov.trace() << "," << planner_data.getVertex(i).getState()->as<RNBeliefSpace::StateType>()->getCost() << std::endl; 
         }
     }
 
@@ -348,7 +424,7 @@ void EuclideanMain::planWithSimpleSetup()
     if (planner->getProblemDefinition()->hasExactSolution()){
     const ompl::base::PathPtr &path_5sec = planner->getProblemDefinition()->getSolutionPath(); 
     oc::PathControl path_control = static_cast<oc::PathControl&>(*path_5sec);
-    this->SaveSolutionPath(path_control, space, "solution_60sec_fixedK_03.csv");
+    this->SaveSolutionPath(path_control, space, "solution_states_gbt.csv");
     }
     else{
         std::cout << "No solution for 10 secs" << std::endl;
@@ -407,9 +483,9 @@ void EuclideanMain::solve(ob::PlannerPtr planner)
             space->copyState(s, path_control_states[i]);
             path_states_.push_back(s);
 
-            double x_pose = s->as<R2BeliefSpace::StateType>()->getX();
-            double y_pose = s->as<R2BeliefSpace::StateType>()->getY();
-            Mat x_cov = s->as<R2BeliefSpace::StateType>()->getCovariance();
+            double x_pose = s->as<RNBeliefSpace::StateType>()->getX();
+            double y_pose = s->as<RNBeliefSpace::StateType>()->getY();
+            Mat x_cov = s->as<RNBeliefSpace::StateType>()->getCovariance();
             std::cout << "x_pose: " << x_pose << std::endl;
             std::cout << "y_pose: " << y_pose << std::endl;
             std::cout << "cov: " << x_cov << std::endl;
@@ -433,9 +509,9 @@ void EuclideanMain::solve(ob::PlannerPtr planner)
         }
 
         oc::SpaceInformationPtr si = simple_setup_->getSpaceInformation();
-        // std::cout << "distance is: " << si->distance(path_control_states[0], path_control_states[1]) << std::endl;
+        // std::cout << "distance is: " << space->as<RNBeliefSpace>()->distance(path_control_states[0], path_control_states[1]) << std::endl;
         // ob::StateSpacePtr space(constructStateSpace()); 
-        // std::cout << "distance is: " << space->as<R2BeliefSpace>()->distance(path_control_states[0], path_control_states[1]) << std::endl;
+        // std::cout << "distance is: " << space->as<RNBeliefSpace>()->distance(path_control_states[0], path_control_states[1]) << std::endl;
         double total_duration=0;
         for(int i=0 ;i<path_control_controls.size(); i++)
         {
@@ -483,9 +559,17 @@ void EuclideanMain::solve(ob::PlannerPtr planner)
 
 int main(int argc, char **argv)
 {
-
-    EuclideanMain offline_planner_uncertainty;
-    std::cout << "test" << std::endl;
+    std::string config_file;
+    
+    if (argc > 1) {
+        config_file = argv[1];
+        std::cout << "Loading configuration from: " << config_file << std::endl;
+    } else {
+        std::cout << "No config file provided, using default values" << std::endl;
+    }
+    
+    EuclideanMain offline_planner_uncertainty(config_file);
+    std::cout << "Starting planning..." << std::endl;
     offline_planner_uncertainty.planWithSimpleSetup();
 
     return 0;

@@ -38,6 +38,9 @@
 // #include "Planners/rrg.hpp"
 
 #include <limits>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
+#include <yaml-cpp/yaml.h>
 
 namespace ob = ompl::base;
 namespace og = ompl::geometric;
@@ -46,6 +49,7 @@ namespace oc = ompl::control;
 class EuclideanMain {
   public:
         EuclideanMain();
+        EuclideanMain(const std::string& config_file);
         // ~EuclideanMain();
 
         ob::StateSpacePtr constructCSpace();
@@ -61,10 +65,12 @@ class EuclideanMain {
         void solve(ob::PlannerPtr planner);
 
         void SaveSolutionPath(oc::PathControl path_control, ob::StateSpacePtr space, std::string pathstring);
+        void loadConfig(const std::string& config_file);
 
 
   private:
     std::string scene_id_;
+    std::string scene_name_;
     bool SVC_first_iteration_;
     double planning_depth_, watchdog_period_, solving_time_, discretisation_time_, min_control_duration_, max_control_duration_, p_safe_, goal_tolerance_, confidence_level_;
     std::vector<double> planning_bounds_x_, planning_bounds_y_, planning_bounds_z_, start_configuration_, goal_configuration_, controller_parameters_, surge_bounds_, heave_bounds_, forward_acceleration_bounds_, turning_rate_bounds_, heave_acceleration_bounds_, system_noise_;
@@ -92,6 +98,8 @@ class EuclideanMain {
 
     //
     int svc_method_;
+
+    double Q_noise_, R_noise_, R_bad_, K_default_;
 };
 
 #endif

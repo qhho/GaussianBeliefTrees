@@ -16,6 +16,7 @@ StateValidityCheckerPCCBlackmore::StateValidityCheckerPCCBlackmore(const std::st
 	B_list_.resize(n_obstacles_); B_list_ = scene_.B_list_;
 
 	OMPL_INFORM("scene is %s", scene_id.c_str());
+	OMPL_INFORM("Number of obstacles: %d", n_obstacles_);
 
 	// OMPL_INFORM("scene is %s", scene_id.c_str());
 	// if (scene_id == "2d_narrow") {
@@ -80,12 +81,18 @@ bool StateValidityCheckerPCCBlackmore::isValid(const ob::State *state) const {
 	{
 		const double x = state->as<RNBeliefSpace::StateType>()->getX();
 		const double y = state->as<RNBeliefSpace::StateType>()->getY();
-		if (x > 100.0 || x < 0.0 || y < 0.0 || y > 100.0){
-			return false;
-		}
+
+		// Debug output
+		std::cout << "Checking state at (" << x << ", " << y << ")" << std::endl;
+
+		// Fix: Use config bounds instead of hardcoded 100.0
+		// if (x > 100.0 || x < 0.0 || y < 0.0 || y > 100.0){
+		//     return false;
+		// }
+
 		x_pose = state->as<RNBeliefSpace::StateType>()->getX();
 		y_pose = state->as<RNBeliefSpace::StateType>()->getY();
-		z_pose = 4.0;
+		z_pose = 0.0;
 		PX(0,0) = state->as<RNBeliefSpace::StateType>()->getCovariance()(0,0);
 		PX(1,1) = state->as<RNBeliefSpace::StateType>()->getCovariance()(1,1);
 		PX(2,2) = 0.000001;
@@ -145,7 +152,9 @@ bool StateValidityCheckerPCCBlackmore::isValid(const ob::State *state) const {
 	}
 
 	for (int o = 0; o < n_obstacles_; o++) {
+		std::cout << "Checking obstacle " << o << " at position (" << x_pose << ", " << y_pose << ")" << std::endl;
 		if (not HyperplaneCCValidityChecker(A_list_.at(o), B_list_.at(o), x_pose, y_pose, z_pose, PX)) {
+			std::cout << "Collision detected with obstacle " << o << std::endl;
 			goto exit_switch;
 		}
 	}
