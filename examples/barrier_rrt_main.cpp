@@ -374,7 +374,6 @@ void BarrierRRTMain::planWithBarrierRRT()
     // Set multiple obstacles constraints (each obstacle checked separately)
     validity_checker->setMultipleObstacles(obstacle_a_lists_, obstacle_gamma_lists_, risk_threshold_);
     validity_checker->setTimeParameters(time_steps_, step_duration_);
-    validity_checker->setNumConstraints(static_cast<int>(a_list_.size()));
     
     // Set the validity checker
     si->setStateValidityChecker(validity_checker);

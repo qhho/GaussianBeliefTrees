@@ -44,8 +44,3 @@ build
 results
 
 .vscode
-
-# Ignore files
-*.csv
-*.asv
-*.png
