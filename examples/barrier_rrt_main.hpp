@@ -59,7 +59,11 @@ private:
     int time_steps_;
     double step_duration_;
     
-    // Obstacle constraints
+    // Obstacle constraints (for multiple obstacles mode)
+    std::vector<std::vector<Eigen::VectorXd>> obstacle_a_lists_;
+    std::vector<std::vector<double>> obstacle_gamma_lists_;
+    
+    // Legacy single obstacle mode (kept for backward compatibility)
     std::vector<Eigen::VectorXd> obstacle_constraints_a_;
     std::vector<double> obstacle_constraints_gamma_;
     std::vector<Eigen::VectorXd> a_list_;

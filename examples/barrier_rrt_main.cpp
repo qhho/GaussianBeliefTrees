@@ -50,9 +50,9 @@ BarrierRRTMain::BarrierRRTMain(const std::string& config_file)
         loadConfig(config_file);
     } else {
         // Default values if no config file
-        planning_bounds_x_[0] = 0.0;
+        planning_bounds_x_[0] = -10.0;
         planning_bounds_x_[1] = 50.0;
-        planning_bounds_y_[0] = 0.0;
+        planning_bounds_y_[0] = -10.0;
         planning_bounds_y_[1] = 50.0;
         
         start_configuration_[0] = 5.0;
@@ -168,8 +168,13 @@ void BarrierRRTMain::loadScene(const std::string& scene_file)
     
     if (config["scene"]["obstacles"]) {
         std::cout << "Found obstacles in scene file" << std::endl;
+        
         for (const auto& obstacle : config["scene"]["obstacles"]) {
             std::cout << "Processing obstacle..." << std::endl;
+            
+            // Create vectors for this specific obstacle
+            std::vector<Eigen::VectorXd> obstacle_a_list;
+            std::vector<double> obstacle_gamma_list;
             
             // Check if it's a circle obstacle (has type field)
             if (obstacle["type"]) {
@@ -188,10 +193,12 @@ void BarrierRRTMain::loadScene(const std::string& scene_file)
                         Eigen::VectorXd a_obs(2);
                         // Point AWAY from the center (positive direction)
                         a_obs << cos(angle), sin(angle);
-                        obstacle_constraints_a_.push_back(a_obs);
+                        obstacle_a_list.push_back(a_obs);
                         // The constraint should be: a^T * point >= a^T * center + radius
-                        obstacle_constraints_gamma_.push_back(center_x * cos(angle) + center_y * sin(angle) + radius);
+                        obstacle_gamma_list.push_back(center_x * cos(angle) + center_y * sin(angle) + radius);
                     }
+                    
+                    std::cout << "Added " << num_constraints << " half-space constraints for circle" << std::endl;
                 }
             }
             // Check if it's a rectangular obstacle (has fx, tx, fy, ty fields)
@@ -209,31 +216,39 @@ void BarrierRRTMain::loadScene(const std::string& scene_file)
                 // Left: x >= fx
                 Eigen::VectorXd a1(2);
                 a1 << -1.0, 0.0;
-                obstacle_constraints_a_.push_back(a1);
-                obstacle_constraints_gamma_.push_back(-fx);
+                obstacle_a_list.push_back(a1);
+                obstacle_gamma_list.push_back(-fx);
                 
                 // Right: x <= tx
                 Eigen::VectorXd a2(2);
                 a2 << 1.0, 0.0;
-                obstacle_constraints_a_.push_back(a2);
-                obstacle_constraints_gamma_.push_back(tx);
+                obstacle_a_list.push_back(a2);
+                obstacle_gamma_list.push_back(tx);
                 
                 // Bottom: y >= fy
                 Eigen::VectorXd a3(2);
                 a3 << 0.0, -1.0;
-                obstacle_constraints_a_.push_back(a3);
-                obstacle_constraints_gamma_.push_back(-fy);
+                obstacle_a_list.push_back(a3);
+                obstacle_gamma_list.push_back(-fy);
                 
                 // Top: y <= ty
                 Eigen::VectorXd a4(2);
                 a4 << 0.0, 1.0;
-                obstacle_constraints_a_.push_back(a4);
-                obstacle_constraints_gamma_.push_back(ty);
+                obstacle_a_list.push_back(a4);
+                obstacle_gamma_list.push_back(ty);
                 
                 std::cout << "Added 4 half-space constraints for rectangle" << std::endl;
             }
             else {
                 std::cout << "Unknown obstacle type, skipping..." << std::endl;
+                continue; // Skip this obstacle
+            }
+            
+            // Add this obstacle to the multiple obstacles list
+            if (!obstacle_a_list.empty()) {
+                obstacle_a_lists_.push_back(obstacle_a_list);
+                obstacle_gamma_lists_.push_back(obstacle_gamma_list);
+                std::cout << "Added obstacle with " << obstacle_a_list.size() << " constraints" << std::endl;
             }
         }
     }
@@ -241,46 +256,75 @@ void BarrierRRTMain::loadScene(const std::string& scene_file)
         std::cout << "No obstacles found in scene file" << std::endl;
     }
     
-    std::cout << "Total obstacle constraints: " << obstacle_constraints_a_.size() << std::endl;
+    std::cout << "Total obstacles loaded: " << obstacle_a_lists_.size() << std::endl;
+    for (size_t i = 0; i < obstacle_a_lists_.size(); ++i) {
+        std::cout << "  Obstacle " << i << ": " << obstacle_a_lists_[i].size() << " constraints" << std::endl;
+    }
 }
 
 void BarrierRRTMain::setupBarrierConstraints()
 {
-    // Add boundary constraints
-    std::vector<Eigen::VectorXd> a_list;
-    std::vector<double> gamma_list;
+    // Create the final multiple obstacles list
+    std::vector<std::vector<Eigen::VectorXd>> final_obstacle_a_lists;
+    std::vector<std::vector<double>> final_obstacle_gamma_lists;
+    
+    // Add each boundary constraint as a separate obstacle (AND logic between boundaries)
     
     // Left boundary: x >= 0
+    std::vector<Eigen::VectorXd> left_boundary;
+    std::vector<double> left_gamma;
     Eigen::VectorXd a1(2);
-    a1 << -1.0, 0.0;
-    a_list.push_back(a1);
-    gamma_list.push_back(0.0);
+    a1 << 1.0, 0.0;
+    left_boundary.push_back(a1);
+    left_gamma.push_back(0.0);
+    final_obstacle_a_lists.push_back(left_boundary);
+    final_obstacle_gamma_lists.push_back(left_gamma);
     
     // Right boundary: x <= max_x
+    std::vector<Eigen::VectorXd> right_boundary;
+    std::vector<double> right_gamma;
     Eigen::VectorXd a2(2);
-    a2 << 1.0, 0.0;
-    a_list.push_back(a2);
-    gamma_list.push_back(planning_bounds_x_[1]);
+    a2 << -1.0, 0.0;
+    right_boundary.push_back(a2);
+    right_gamma.push_back(-planning_bounds_x_[1]);
+    final_obstacle_a_lists.push_back(right_boundary);
+    final_obstacle_gamma_lists.push_back(right_gamma);
     
     // Bottom boundary: y >= 0
+    std::vector<Eigen::VectorXd> bottom_boundary;
+    std::vector<double> bottom_gamma;
     Eigen::VectorXd a3(2);
-    a3 << 0.0, -1.0;
-    a_list.push_back(a3);
-    gamma_list.push_back(0.0);
+    a3 << 0.0, 1.0;
+    bottom_boundary.push_back(a3);
+    bottom_gamma.push_back(0.0);
+    final_obstacle_a_lists.push_back(bottom_boundary);
+    final_obstacle_gamma_lists.push_back(bottom_gamma);
     
     // Top boundary: y <= max_y
+    std::vector<Eigen::VectorXd> top_boundary;
+    std::vector<double> top_gamma;
     Eigen::VectorXd a4(2);
-    a4 << 0.0, 1.0;
-    a_list.push_back(a4);
-    gamma_list.push_back(planning_bounds_y_[1]);
+    a4 << 0.0, -1.0;
+    top_boundary.push_back(a4);
+    top_gamma.push_back(-planning_bounds_y_[1]);
+    final_obstacle_a_lists.push_back(top_boundary);
+    final_obstacle_gamma_lists.push_back(top_gamma);
     
-    // Add obstacle constraints
-    a_list.insert(a_list.end(), obstacle_constraints_a_.begin(), obstacle_constraints_a_.end());
-    gamma_list.insert(gamma_list.end(), obstacle_constraints_gamma_.begin(), obstacle_constraints_gamma_.end());
+    // Add all scene obstacles (each as a separate obstacle)
+    final_obstacle_a_lists.insert(final_obstacle_a_lists.end(), 
+                                  obstacle_a_lists_.begin(), 
+                                  obstacle_a_lists_.end());
+    final_obstacle_gamma_lists.insert(final_obstacle_gamma_lists.end(), 
+                                      obstacle_gamma_lists_.begin(), 
+                                      obstacle_gamma_lists_.end());
     
-    // Store for later use
-    a_list_ = a_list;
-    gamma_list_ = gamma_list;
+    // Store the final combined list
+    obstacle_a_lists_ = final_obstacle_a_lists;
+    obstacle_gamma_lists_ = final_obstacle_gamma_lists;
+    
+    std::cout << "Setup complete: " << obstacle_a_lists_.size() << " obstacles total" << std::endl;
+    std::cout << "  - Boundary constraints: 4 separate obstacles (AND logic)" << std::endl;
+    std::cout << "  - Scene obstacles: " << (obstacle_a_lists_.size() - 4) << " obstacles" << std::endl;
 }
 
 void BarrierRRTMain::planWithBarrierRRT()
@@ -288,12 +332,8 @@ void BarrierRRTMain::planWithBarrierRRT()
     std::cout << "Starting Barrier RRT Planning..." << std::endl;
     std::cout << "Scene name from config: '" << scene_name_ << "'" << std::endl;
     
-    // Load scene if specified
-    if (!scene_name_.empty()) {
-        // Use the scene name directly from config - no path manipulation needed
-        std::cout << "AHH Loading scene from: " << scene_name_ << std::endl;
-        loadScene(scene_name_);
-    }
+    // Note: Scene should be loaded before calling this method
+    // (e.g., via loadScene() or loadConfig() which calls loadScene())
     
     // Create state space (2D belief space)
     auto state_space = std::make_shared<RNBeliefSpace>(2, initial_covariance_);
@@ -331,8 +371,8 @@ void BarrierRRTMain::planWithBarrierRRT()
     // Setup barrier constraints
     setupBarrierConstraints();
     
-    // Set half-space constraints
-    validity_checker->setHalfSpaceConstraints(a_list_, gamma_list_, risk_threshold_);
+    // Set multiple obstacles constraints (each obstacle checked separately)
+    validity_checker->setMultipleObstacles(obstacle_a_lists_, obstacle_gamma_lists_, risk_threshold_);
     validity_checker->setTimeParameters(time_steps_, step_duration_);
     
     // Set the validity checker

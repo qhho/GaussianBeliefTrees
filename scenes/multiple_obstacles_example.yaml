@@ -1,0 +1,18 @@
+scene:
+  obstacles:
+    
+    # Rectangular obstacle
+    - fx: 10.0
+      tx: 15.0
+      fy: 10.0
+      ty: 15.0
+      # fz: -1
+      # tz: -1
+    
+    # Another rectangular obstacle
+    - fx: 30.0
+      tx: 40.0
+      fy: 30.0
+      ty: 40.0
+    #   fz: -1
+    #   tz: -1

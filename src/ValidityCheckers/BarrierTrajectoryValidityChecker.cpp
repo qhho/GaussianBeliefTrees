@@ -83,6 +83,30 @@ void BarrierTrajectoryValidityChecker::setHalfSpaceConstraints(const std::vector
     a_list_ = a_list;
     gamma_list_ = gamma_list;
     delta_ = delta;
+    
+    // Clear multiple obstacles when using single obstacle mode
+    obstacle_a_lists_.clear();
+    obstacle_gamma_lists_.clear();
+}
+
+void BarrierTrajectoryValidityChecker::setMultipleObstacles(const std::vector<std::vector<Eigen::VectorXd>> &obstacle_a_lists,
+                                                           const std::vector<std::vector<double>> &obstacle_gamma_lists,
+                                                           double delta)
+{
+    std::cout << "setMultipleObstacles called with " << obstacle_a_lists.size() << " obstacles" << std::endl;
+    for (size_t i = 0; i < obstacle_a_lists.size(); ++i) {
+        std::cout << "  Obstacle " << i << ": " << obstacle_a_lists[i].size() << " constraints" << std::endl;
+    }
+    
+    obstacle_a_lists_ = obstacle_a_lists;
+    obstacle_gamma_lists_ = obstacle_gamma_lists;
+    delta_ = delta;
+    
+    // Clear single obstacle mode when using multiple obstacles
+    a_list_.clear();
+    gamma_list_.clear();
+    
+    std::cout << "Multiple obstacles setup complete" << std::endl;
 }
 
 void BarrierTrajectoryValidityChecker::setTimeParameters(int N, double dt)
@@ -196,14 +220,28 @@ bool BarrierTrajectoryValidityChecker::checkTrajectoryBarrierConstraints(
     const std::vector<ompl::control::Control*> &controls,
     const std::vector<double> &durations) const
 {
-    if (a_list_.empty() || controls.empty())
+    // Check if we have constraints to check
+    bool has_single_obstacle = !a_list_.empty();
+    bool has_multiple_obstacles = !obstacle_a_lists_.empty();
+    
+    // std::cout << "BarrierTrajectoryValidityChecker: has_single_obstacle=" << has_single_obstacle 
+    //           << ", has_multiple_obstacles=" << has_multiple_obstacles 
+    //           << ", controls.size()=" << controls.size() << std::endl;
+    
+    if ((!has_single_obstacle && !has_multiple_obstacles) || controls.empty())
     {
         // std::cout << "BarrierTrajectoryValidityChecker: No constraints or controls to check" << std::endl;
         return true; // No constraints to check
     }
 
     // std::cout << "BarrierTrajectoryValidityChecker: Checking trajectory with " 
-    //           << controls.size() << " controls and " << a_list_.size() << " constraints" << std::endl;
+    //           << controls.size() << " controls" << std::endl;
+    // if (has_single_obstacle) {
+    //     std::cout << "  Single obstacle with " << a_list_.size() << " constraints" << std::endl;
+    // }
+    // if (has_multiple_obstacles) {
+    //     std::cout << "  Multiple obstacles: " << obstacle_a_lists_.size() << " obstacles" << std::endl;
+    // }
 
     // Extract initial belief state
     Belief b;
@@ -239,8 +277,34 @@ bool BarrierTrajectoryValidityChecker::checkTrajectoryBarrierConstraints(
             // std::cout << "      dSigma:\n" << b_dot.dSigma << std::endl;
             // std::cout << "      dLambda:\n" << b_dot.dLambda << std::endl;
             
-            // Check all half-space constraints in a risk-aware manner
-            bool constraint_satisfied = barrierCheckMultiple(b, a_list_, gamma_list_, delta_, b_dot, B_, u);
+            // Check constraints based on mode (single obstacle or multiple obstacles)
+            bool constraint_satisfied = false;
+            
+            if (has_single_obstacle) {
+                // Single obstacle mode: check all half-space constraints together
+                // std::cout << "    Using single obstacle mode with " << a_list_.size() << " constraints" << std::endl;
+                constraint_satisfied = barrierCheckMultiple(b, a_list_, gamma_list_, delta_, b_dot, B_, u);
+            } else if (has_multiple_obstacles) {
+                // Multiple obstacles mode: check each obstacle separately
+                // std::cout << "    Using multiple obstacles mode with " << obstacle_a_lists_.size() << " obstacles" << std::endl;
+                // For multiple obstacles, we need ALL obstacles to be satisfied (AND logic)
+                constraint_satisfied = true; // Start with true, will be false if any obstacle fails
+                
+                for (size_t obs_idx = 0; obs_idx < obstacle_a_lists_.size(); ++obs_idx) {
+                    // std::cout << "      Checking obstacle " << obs_idx << " with " << obstacle_a_lists_[obs_idx].size() << " constraints" << std::endl;
+                    bool obstacle_satisfied = barrierCheckMultiple(b, 
+                                                                  obstacle_a_lists_[obs_idx], 
+                                                                  obstacle_gamma_lists_[obs_idx], 
+                                                                  delta_, b_dot, B_, u);
+                    // std::cout << "      Obstacle " << obs_idx << " satisfied: " << (obstacle_satisfied ? "YES" : "NO") << std::endl;
+                    if (!obstacle_satisfied) {
+                        constraint_satisfied = false;
+                        // std::cout << "    ❌ Obstacle " << obs_idx << " violated at step " << step << std::endl;
+                        break; // No need to check remaining obstacles
+                    }
+                }
+            }
+            
             // std::cout << "    Constraint satisfied: " << (constraint_satisfied ? "YES" : "NO") << std::endl;
             
             if (!constraint_satisfied)

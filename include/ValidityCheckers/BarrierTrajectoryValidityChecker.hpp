@@ -30,10 +30,15 @@ public:
                           const Eigen::MatrixXd &G,
                           const Eigen::MatrixXd &Q);
     
-    // Set half-space constraints
+    // Set half-space constraints for a single obstacle
     void setHalfSpaceConstraints(const std::vector<Eigen::VectorXd> &a_list,
                                 const std::vector<double> &gamma_list,
                                 double delta);
+    
+    // Set multiple obstacles, each with their own half-space constraints
+    void setMultipleObstacles(const std::vector<std::vector<Eigen::VectorXd>> &obstacle_a_lists,
+                             const std::vector<std::vector<double>> &obstacle_gamma_lists,
+                             double delta);
     
     // Set time discretization parameters
     void setTimeParameters(int N, double dt);
@@ -42,9 +47,14 @@ private:
     // System matrices for belief propagation
     Eigen::MatrixXd A_, B_, K_, G_, Q_;
     
-    // Half-space constraints
+    // Half-space constraints (for single obstacle mode)
     std::vector<Eigen::VectorXd> a_list_;
     std::vector<double> gamma_list_;
+    
+    // Multiple obstacles (each obstacle has its own set of half-space constraints)
+    std::vector<std::vector<Eigen::VectorXd>> obstacle_a_lists_;
+    std::vector<std::vector<double>> obstacle_gamma_lists_;
+    
     double delta_;
     
     // Time discretization

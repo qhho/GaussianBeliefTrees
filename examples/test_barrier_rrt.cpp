@@ -93,7 +93,9 @@ int main()
     
     validity_checker->setSystemMatrices(A, B, K, G, Q);
     
-    // Set half-space constraints to create a corridor
+    // Example 1: Single obstacle mode (all constraints together)
+    // Uncomment this section to use single obstacle mode
+    /*
     std::vector<Eigen::VectorXd> a_list;
     std::vector<double> gamma_list;
     
@@ -121,18 +123,93 @@ int main()
     a_list.push_back(a4);
     gamma_list.push_back(50.0);
     
-    // Add obstacle constraint: avoid center region
-    // Constraint: (x-25)^2 + (y-25)^2 >= 10^2 (avoid circle of radius 10 at center)
-    // This is approximated with multiple half-space constraints
+    validity_checker->setHalfSpaceConstraints(a_list, gamma_list, 0.01); // 1% risk
+    */
+    
+    // Example 2: Multiple obstacles mode (each obstacle checked separately)
+    std::vector<std::vector<Eigen::VectorXd>> obstacle_a_lists;
+    std::vector<std::vector<double>> obstacle_gamma_lists;
+    
+    // Obstacle 1: Boundary constraints (corridor)
+    std::vector<Eigen::VectorXd> boundary_a_list;
+    std::vector<double> boundary_gamma_list;
+    
+    // Left boundary: x >= 0
+    Eigen::VectorXd a1(2);
+    a1 << -1.0, 0.0;
+    boundary_a_list.push_back(a1);
+    boundary_gamma_list.push_back(0.0);
+    
+    // Right boundary: x <= 50
+    Eigen::VectorXd a2(2);
+    a2 << 1.0, 0.0;
+    boundary_a_list.push_back(a2);
+    boundary_gamma_list.push_back(50.0);
+    
+    // Bottom boundary: y >= 0
+    Eigen::VectorXd a3(2);
+    a3 << 0.0, -1.0;
+    boundary_a_list.push_back(a3);
+    boundary_gamma_list.push_back(0.0);
+    
+    // Top boundary: y <= 50
+    Eigen::VectorXd a4(2);
+    a4 << 0.0, 1.0;
+    boundary_a_list.push_back(a4);
+    boundary_gamma_list.push_back(50.0);
+    
+    obstacle_a_lists.push_back(boundary_a_list);
+    obstacle_gamma_lists.push_back(boundary_gamma_list);
+    
+    // Obstacle 2: Circular obstacle at center (approximated with half-spaces)
+    std::vector<Eigen::VectorXd> circle_a_list;
+    std::vector<double> circle_gamma_list;
+    
+    // Approximate circle (x-25)^2 + (y-25)^2 >= 5^2 with 8 half-space constraints
     for (int i = 0; i < 8; ++i) {
         double angle = 2.0 * M_PI * i / 8.0;
         Eigen::VectorXd a_obs(2);
         a_obs << -cos(angle), -sin(angle);
-        a_list.push_back(a_obs);
-        gamma_list.push_back(-25.0 * cos(angle) - 25.0 * sin(angle) + 2.0);
+        circle_a_list.push_back(a_obs);
+        circle_gamma_list.push_back(-25.0 * cos(angle) - 25.0 * sin(angle) + 5.0);
     }
     
-    validity_checker->setHalfSpaceConstraints(a_list, gamma_list, 0.01); // 1% risk
+    obstacle_a_lists.push_back(circle_a_list);
+    obstacle_gamma_lists.push_back(circle_gamma_list);
+    
+    // Obstacle 3: Rectangular obstacle (example)
+    std::vector<Eigen::VectorXd> rect_a_list;
+    std::vector<double> rect_gamma_list;
+    
+    // Rectangle from (15,15) to (20,20) - avoid this region
+    // Left edge: x >= 15
+    Eigen::VectorXd rect_a1(2);
+    rect_a1 << -1.0, 0.0;
+    rect_a_list.push_back(rect_a1);
+    rect_gamma_list.push_back(15.0);
+    
+    // Right edge: x <= 20
+    Eigen::VectorXd rect_a2(2);
+    rect_a2 << 1.0, 0.0;
+    rect_a_list.push_back(rect_a2);
+    rect_gamma_list.push_back(-20.0);
+    
+    // Bottom edge: y >= 15
+    Eigen::VectorXd rect_a3(2);
+    rect_a3 << 0.0, -1.0;
+    rect_a_list.push_back(rect_a3);
+    rect_gamma_list.push_back(15.0);
+    
+    // Top edge: y <= 20
+    Eigen::VectorXd rect_a4(2);
+    rect_a4 << 0.0, 1.0;
+    rect_a_list.push_back(rect_a4);
+    rect_gamma_list.push_back(-20.0);
+    
+    obstacle_a_lists.push_back(rect_a_list);
+    obstacle_gamma_lists.push_back(rect_gamma_list);
+    
+    validity_checker->setMultipleObstacles(obstacle_a_lists, obstacle_gamma_lists, 0.01); // 1% risk
     validity_checker->setTimeParameters(10, 0.1/10); // 10 steps, 0.1s each
     
     // Set the validity checker
