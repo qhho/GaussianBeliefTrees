@@ -143,3 +143,11 @@ target_link_libraries (barrier_rrt
     ${Boost_LIBRARIES}
     yaml-cpp
 )
+add_executable (discrete_continuous_example examples/discrete_continuous_example.cpp)
+
+target_link_libraries (discrete_continuous_example
+    gbt_lib
+    ${OMPL_LIBRARIES}
+    ${Boost_LIBRARIES}
+    yaml-cpp
+)

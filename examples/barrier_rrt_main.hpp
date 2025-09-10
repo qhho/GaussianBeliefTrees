@@ -32,6 +32,34 @@ public:
     void planWithBarrierRRT();
     void saveSolutionPath(const PathControl& path_control, const StateSpacePtr& space, const std::string& filepath);
 
+    // Continuous-time validation methods
+    void generateIntermediateStates(const PathControl& path_control,
+                                   const ompl::control::SpaceInformationPtr& si,
+                                   std::vector<ompl::base::State*>& intermediate_states,
+                                   std::vector<ompl::control::Control*>& intermediate_controls,
+                                   std::vector<double>& intermediate_durations);
+    bool validateWithContinuousTime(const PathControl& path_control,
+                                   const ompl::control::SpaceInformationPtr& si,
+                                   const StateSpacePtr& space);
+    void saveIntermediateStates(const std::vector<ompl::base::State*>& states,
+                               const std::vector<ompl::control::Control*>& controls,
+                               const std::vector<double>& durations,
+                               const std::string& filepath);
+
+    // Helper methods for trajectory validation (same as in continuous_rrt_with_trajectory_checking.cpp)
+    std::vector<ompl::base::State*> propagateWhileValidWithTrajectoryChecking(
+        const ompl::base::State* state,
+        const ompl::control::Control* control,
+        unsigned int steps,
+        std::shared_ptr<BarrierTrajectoryValidityChecker> validity_checker,
+        const ompl::control::SpaceInformationPtr& si) const;
+    
+    bool checkTrajectoryValidityAtStep(
+        const ompl::base::State *current_state, 
+        const ompl::control::Control *control, 
+        double step_duration,
+        std::shared_ptr<BarrierTrajectoryValidityChecker> validity_checker) const;
+
     // Make scene_name_ public for access
     std::string scene_name_;
 

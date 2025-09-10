@@ -83,7 +83,7 @@ bool StateValidityCheckerPCCBlackmore::isValid(const ob::State *state) const {
 		const double y = state->as<RNBeliefSpace::StateType>()->getY();
 
 		// Debug output
-		std::cout << "Checking state at (" << x << ", " << y << ")" << std::endl;
+		// std::cout << "Checking state at (" << x << ", " << y << ")" << std::endl;
 
 		// Fix: Use config bounds instead of hardcoded 100.0
 		// if (x > 100.0 || x < 0.0 || y < 0.0 || y > 100.0){
@@ -152,9 +152,9 @@ bool StateValidityCheckerPCCBlackmore::isValid(const ob::State *state) const {
 	}
 
 	for (int o = 0; o < n_obstacles_; o++) {
-		std::cout << "Checking obstacle " << o << " at position (" << x_pose << ", " << y_pose << ")" << std::endl;
+		// std::cout << "Checking obstacle " << o << " at position (" << x_pose << ", " << y_pose << ")" << std::endl;
 		if (not HyperplaneCCValidityChecker(A_list_.at(o), B_list_.at(o), x_pose, y_pose, z_pose, PX)) {
-			std::cout << "Collision detected with obstacle " << o << std::endl;
+			// std::cout << "Collision detected with obstacle " << o << std::endl;
 			goto exit_switch;
 		}
 	}
