@@ -2,6 +2,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 #include <yaml-cpp/yaml.h>
+#include <chrono>
 
 // Custom goal region for belief states
 class BeliefGoalRegion : public GoalRegion
@@ -450,7 +451,19 @@ void BarrierRRTMain::planWithBarrierRRT()
         auto path = pdef->getSolutionPath();
         
         if (auto path_control = std::dynamic_pointer_cast<PathControl>(path)) {
+            // Compute and report path cost using the objective (feasibility planner won't optimize it)
+            double total_cost = 0.0;
+            for (size_t i = 1; i < path_control->getStateCount(); ++i) {
+                auto c = objective->motionCost(path_control->getState(i-1), path_control->getState(i));
+                total_cost += c.value();
+            }
+            std::cout << "Path cost (objective): " << total_cost << std::endl;
+
             saveSolutionPath(*path_control, state_space, "solution_barrier_rrt.csv");
+
+            // Validate with continuous-time barrier checker
+            std::cout << "\n=== Continuous Time Validation ===" << std::endl;
+            validateWithContinuousTime(*path_control, si, state_space);
         }
     }
     else
@@ -486,3 +499,206 @@ void BarrierRRTMain::saveSolutionPath(const PathControl& path_control,
     output_file.close();
     std::cout << "Solution saved to: " << filepath << std::endl;
 } 
+
+// FIXED Continuous-time validation methods
+void BarrierRRTMain::generateIntermediateStates(const PathControl& path_control, 
+                                               const ompl::control::SpaceInformationPtr& si,
+                                               std::vector<ompl::base::State*>& intermediate_states,
+                                               std::vector<ompl::control::Control*>& intermediate_controls,
+                                               std::vector<double>& intermediate_durations)
+{
+    std::cout << "Generating intermediate states using SAME validation as planner..." << std::endl;
+    
+    // Get the states and controls from the path
+    std::vector<ompl::base::State*> path_states = const_cast<PathControl&>(path_control).getStates();
+    std::vector<ompl::control::Control*> path_controls = const_cast<PathControl&>(path_control).getControls();
+    
+    // Clear output vectors
+    intermediate_states.clear();
+    intermediate_controls.clear();
+    intermediate_durations.clear();
+    
+    // Create the barrier trajectory validity checker (SAME as planner)
+    auto validity_checker = std::make_shared<BarrierTrajectoryValidityChecker>(si);
+    validity_checker->setSystemMatrices(A_, B_, K_, G_, Q_);
+    validity_checker->setMultipleObstacles(obstacle_a_lists_, obstacle_gamma_lists_, risk_threshold_);
+    validity_checker->setTimeParameters(time_steps_, step_duration_);
+    
+    // For each control segment, use the SAME validation approach as the planner
+    for (size_t i = 0; i < path_controls.size(); ++i) {
+        double duration = path_control.getControlDuration(i);
+        int num_steps = static_cast<int>(duration / dt_);
+        
+        // std::cout << "Control " << i << ": duration = " << duration 
+                //   << ", generating " << num_steps << " intermediate states" << std::endl;
+        
+        // Use the SAME validation approach as propagateWhileValidWithTrajectoryChecking
+        std::vector<ompl::base::State*> pstates = propagateWhileValidWithTrajectoryChecking(
+            path_states[i], path_controls[i], num_steps, validity_checker, si);
+        
+        // std::cout << "  Actual steps propagated: " << pstates.size() << std::endl;
+        
+        // Add all propagated states to our intermediate states
+        for (size_t j = 0; j < pstates.size(); ++j) {
+            intermediate_states.push_back(pstates[j]);
+            intermediate_controls.push_back(path_controls[i]);
+            intermediate_durations.push_back(dt_);
+        }
+    }
+    
+    // std::cout << "Generated " << intermediate_states.size() << " intermediate states using SAME validation as planner" << std::endl;
+}
+
+// Helper method that implements the SAME validation logic as the planner
+std::vector<ompl::base::State*> BarrierRRTMain::propagateWhileValidWithTrajectoryChecking(
+    const ompl::base::State* state,
+    const ompl::control::Control* control,
+    unsigned int steps,
+    std::shared_ptr<BarrierTrajectoryValidityChecker> validity_checker,
+    const ompl::control::SpaceInformationPtr& si) const
+{
+    double stepSize = si->getPropagationStepSize();
+    std::vector<ompl::base::State*> result;
+    
+    // Clear the result vector and add the starting state
+    result.clear();
+    result.push_back(si->cloneState(state));
+    
+    // If no steps requested, return immediately
+    if (steps == 0) {
+        return result;
+    }
+    
+    // Check initial state validity using SAME method as planner
+    if (!checkTrajectoryValidityAtStep(state, control, stepSize, validity_checker)) {
+        return result; // Return only the initial state
+    }
+    
+    ompl::base::State *current_state = si->cloneState(state);
+    ompl::base::State *next_state = si->allocState();
+    
+    // Propagate step by step, checking validity at each step (SAME as planner)
+    for (unsigned int i = 0; i < steps; ++i) {
+        // Propagate one step forward
+        si->getStatePropagator()->propagate(current_state, control, stepSize, next_state);
+        
+        // Check trajectory validity for this single step (SAME as planner)
+        if (!checkTrajectoryValidityAtStep(current_state, control, stepSize, validity_checker)) {
+            break; // Stop if trajectory becomes invalid
+        }
+        
+        // Check if the resulting state is valid (SAME as planner)
+        if (!si->isValid(next_state)) {
+            break; // Stop if state becomes invalid
+        }
+        
+        // Step is valid, add to result and continue
+        result.push_back(si->cloneState(next_state));
+        si->copyState(current_state, next_state);
+    }
+    
+    // Clean up temporary states
+    si->freeState(current_state);
+    si->freeState(next_state);
+    
+    return result;
+}
+
+// Helper method that implements the SAME trajectory validity check as the planner
+bool BarrierRRTMain::checkTrajectoryValidityAtStep(
+    const ompl::base::State *current_state, 
+    const ompl::control::Control *control, 
+    double step_duration,
+    std::shared_ptr<BarrierTrajectoryValidityChecker> validity_checker) const
+{
+    // Create vectors for single-step trajectory check (SAME as planner)
+    std::vector<ompl::control::Control*> controls;
+    std::vector<double> durations;
+    
+    // Add the current control and single step duration
+    controls.push_back(const_cast<ompl::control::Control*>(control));
+    durations.push_back(step_duration);
+    
+    // Check single-step trajectory validity (SAME as planner)
+    return validity_checker->isValidTrajectory(current_state, controls, durations);
+}
+
+bool BarrierRRTMain::validateWithContinuousTime(const PathControl& path_control,
+                                               const ompl::control::SpaceInformationPtr& si,
+                                               const StateSpacePtr& space)
+{
+    std::cout << "Starting continuous time validation using SAME approach as planner..." << std::endl;
+    
+    // Generate intermediate states using the SAME validation approach as the planner
+    std::vector<ompl::base::State*> intermediate_states;
+    std::vector<ompl::control::Control*> intermediate_controls;
+    std::vector<double> intermediate_durations;
+    
+    generateIntermediateStates(path_control, si, intermediate_states, intermediate_controls, intermediate_durations);
+    
+    auto start_time = std::chrono::high_resolution_clock::now();
+    
+    // Check if the trajectory was fully valid by comparing expected vs actual states
+    // If any step failed validation, we'll have fewer states than expected
+    std::vector<ompl::base::State*> path_states = const_cast<PathControl&>(path_control).getStates();
+    std::vector<ompl::control::Control*> path_controls = const_cast<PathControl&>(path_control).getControls();
+    
+    // Calculate expected number of intermediate states
+    int expected_states = 0;
+    for (size_t i = 0; i < path_controls.size(); ++i) {
+        double duration = path_control.getControlDuration(i);
+        int num_steps = static_cast<int>(duration / dt_);
+        expected_states += num_steps + 1; // +1 for the starting state of each segment
+    }
+    
+    bool is_fully_valid = (intermediate_states.size() == expected_states);
+    
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    
+    std::cout << "Validation completed in " << duration.count() << " ms" << std::endl;
+    std::cout << "Expected states: " << expected_states << ", Actual states: " << intermediate_states.size() << std::endl;
+    
+    if (is_fully_valid) {
+        std::cout << "✅ Trajectory is VALID according to continuous time barrier constraints!" << std::endl;
+        // Save the full valid trajectory
+        saveIntermediateStates(intermediate_states, intermediate_controls, intermediate_durations, "solution_continuous_valid.csv");
+    } else {
+        std::cout << "❌ Trajectory is INVALID according to continuous time barrier constraints!" << std::endl;
+        std::cout << "Some steps failed validation during propagation!" << std::endl;
+        // Save the valid portion of the trajectory (up to the failure point)
+        saveIntermediateStates(intermediate_states, intermediate_controls, intermediate_durations, "solution_continuous_invalid.csv");
+    }
+    
+    return is_fully_valid;
+}
+
+void BarrierRRTMain::saveIntermediateStates(const std::vector<ompl::base::State*>& states, 
+                                          const std::vector<ompl::control::Control*>& controls,
+                                          const std::vector<double>& durations,
+                                          const std::string& filepath)
+{
+    std::ofstream output_file(filepath);
+    output_file << "x,y,sigma_trace,lambda_trace,control_x,control_y,control_duration" << std::endl;
+    
+    for (size_t i = 0; i < states.size(); ++i) {
+        auto state = states[i];
+        auto belief = state->as<RNBeliefSpace::StateType>();
+        
+        // Get control information
+        auto control = controls[i];
+        auto control_values = control->as<ompl::control::RealVectorControlSpace::ControlType>()->values;
+        double duration = durations[i];
+        
+        output_file << belief->getX() << "," 
+                   << belief->getY() << "," 
+                   << belief->getSigma().trace() << "," 
+                   << belief->getLambda().trace() << ","
+                   << control_values[0] << ","
+                   << control_values[1] << ","
+                   << duration << std::endl;
+    }
+    
+    output_file.close();
+    std::cout << "Intermediate states saved to: " << filepath << std::endl;
+}

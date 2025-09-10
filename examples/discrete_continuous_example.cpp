@@ -540,6 +540,15 @@ void DiscreteContinuousExample::planWithDiscreteTime()
         solution_path_ = std::make_shared<oc::PathControl>(static_cast<oc::PathControl&>(*path));
         solution_found_ = true;
         
+        // Compute and report path cost using the set optimization objective
+        auto objective = pdef->getOptimizationObjective();
+        double total_cost = 0.0;
+        auto &states_for_cost = const_cast<oc::PathControl&>(*solution_path_).getStates();
+        for (size_t i = 1; i < states_for_cost.size(); ++i) {
+            total_cost += objective->motionCost(states_for_cost[i-1], states_for_cost[i]).value();
+        }
+        std::cout << "Path cost (objective): " << total_cost << std::endl;
+
         // Save the discrete time solution
         saveSolutionPath(*solution_path_, space, "solution_discrete.csv");
         
