@@ -300,6 +300,10 @@ bool BarrierTrajectoryValidityChecker::checkTrajectoryBarrierConstraints(
                     if (!obstacle_satisfied) {
                         constraint_satisfied = false;
                         // std::cout << "    ❌ Obstacle " << obs_idx << " violated at step " << step << std::endl;
+                        // std::cout << "Initial State: " << initial_state->as<RNBeliefSpace::StateType>()->getX() << std::endl;
+                        // std::cout << "State: " << b.mu.transpose() << std::endl;
+                        // std::cout << "Sigma: " << b.Sigma.trace() << std::endl;
+                        // std::cout << "Lambda: " << b.Lambda.trace() << std::endl;
                         break; // No need to check remaining obstacles
                     }
                 }

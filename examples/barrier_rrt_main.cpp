@@ -412,7 +412,7 @@ void BarrierRRTMain::planWithBarrierRRT()
     pdef->addStartState(start_state);
     
     // Create custom goal region
-    auto goal_region = std::make_shared<BeliefGoalRegion>(si, goal_state, 10.0);
+    auto goal_region = std::make_shared<BeliefGoalRegion>(si, goal_state, 5.0);
     pdef->setGoal(goal_region);
     
     // Set optimization objective

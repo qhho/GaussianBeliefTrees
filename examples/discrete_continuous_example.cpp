@@ -509,7 +509,7 @@ void DiscreteContinuousExample::planWithDiscreteTime()
 
     ob::ProblemDefinitionPtr pdef(new ob::ProblemDefinition(si));
     pdef->addStartState(start);
-    pdef->setGoal(std::make_shared<BeliefGoalRegion>(si, goal.get(), 10.0));
+    pdef->setGoal(std::make_shared<BeliefGoalRegion>(si, goal.get(), 5.0));
 
     pdef->setOptimizationObjective(getEuclideanPathLengthObjective(si));
     pdef->getOptimizationObjective()->setCostThreshold(ob::Cost(45.0));

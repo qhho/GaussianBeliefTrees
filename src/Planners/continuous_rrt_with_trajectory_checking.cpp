@@ -390,7 +390,7 @@ ompl::base::PlannerStatus ompl::control::mod_RRT::solve(const base::PlannerTermi
                 totalIncCost = opt_->combineCosts(totalIncCost, incCost);
             }
         }
-        std::cout << "Cost of solution: " << solcost << std::endl;
+        // std::cout << "Cost of solution: " << solcost << std::endl;
     }
 
     if (rmotion->state)
