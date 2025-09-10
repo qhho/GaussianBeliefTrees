@@ -458,6 +458,10 @@ void BarrierRRTMain::planWithBarrierRRT()
                 total_cost += c.value();
             }
             std::cout << "Path cost (objective): " << total_cost << std::endl;
+            {
+                std::ofstream cost_file("solution_barrier_rrt_cost.txt");
+                cost_file << total_cost << std::endl;
+            }
 
             saveSolutionPath(*path_control, state_space, "solution_barrier_rrt.csv");
 

@@ -548,6 +548,10 @@ void DiscreteContinuousExample::planWithDiscreteTime()
             total_cost += objective->motionCost(states_for_cost[i-1], states_for_cost[i]).value();
         }
         std::cout << "Path cost (objective): " << total_cost << std::endl;
+        {
+            std::ofstream cost_file("solution_discrete_cost.txt");
+            cost_file << total_cost << std::endl;
+        }
 
         // Save the discrete time solution
         saveSolutionPath(*solution_path_, space, "solution_discrete.csv");
