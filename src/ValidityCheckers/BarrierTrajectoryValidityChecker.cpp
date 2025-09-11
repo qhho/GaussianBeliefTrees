@@ -223,6 +223,20 @@ bool BarrierTrajectoryValidityChecker::checkTrajectoryBarrierConstraints(
     // Check if we have constraints to check
     bool has_single_obstacle = !a_list_.empty();
     bool has_multiple_obstacles = !obstacle_a_lists_.empty();
+
+    // If multiple obstacles, account for this in the chance constraint
+    double effective_delta = delta_;
+    size_t num_obs = 0;
+
+    if (has_single_obstacle) {
+        num_obs = 1;
+    } else if (has_multiple_obstacles) {
+        num_obs = obstacle_a_lists_.size();
+    }
+
+    if (num_obs > 0) {
+        effective_delta = delta_ / static_cast<double>(num_obs);
+    }
     
     // std::cout << "BarrierTrajectoryValidityChecker: has_single_obstacle=" << has_single_obstacle 
     //           << ", has_multiple_obstacles=" << has_multiple_obstacles 
@@ -283,7 +297,7 @@ bool BarrierTrajectoryValidityChecker::checkTrajectoryBarrierConstraints(
             if (has_single_obstacle) {
                 // Single obstacle mode: check all half-space constraints together
                 // std::cout << "    Using single obstacle mode with " << a_list_.size() << " constraints" << std::endl;
-                constraint_satisfied = barrierCheckMultiple(b, a_list_, gamma_list_, delta_, b_dot, B_, u);
+                constraint_satisfied = barrierCheckMultiple(b, a_list_, gamma_list_, effective_delta, b_dot, B_, u);
             } else if (has_multiple_obstacles) {
                 // Multiple obstacles mode: check each obstacle separately
                 // std::cout << "    Using multiple obstacles mode with " << obstacle_a_lists_.size() << " obstacles" << std::endl;
@@ -295,7 +309,7 @@ bool BarrierTrajectoryValidityChecker::checkTrajectoryBarrierConstraints(
                     bool obstacle_satisfied = barrierCheckMultiple(b, 
                                                                   obstacle_a_lists_[obs_idx], 
                                                                   obstacle_gamma_lists_[obs_idx], 
-                                                                  delta_, b_dot, B_, u);
+                                                                  effective_delta, b_dot, B_, u);
                     // std::cout << "      Obstacle " << obs_idx << " satisfied: " << (obstacle_satisfied ? "YES" : "NO") << std::endl;
                     if (!obstacle_satisfied) {
                         constraint_satisfied = false;
