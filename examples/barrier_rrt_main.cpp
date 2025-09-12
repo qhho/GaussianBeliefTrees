@@ -365,10 +365,6 @@ void BarrierRRTMain::planWithBarrierRRT()
     
     // Create the barrier trajectory validity checker
     auto validity_checker = std::make_shared<BarrierTrajectoryValidityChecker>(si);
-
-    std::cout << "[Monte Carlo] Empirical P_satisfy = "
-          << validity_checker->getEmpiricalPsatisfy()
-          << std::endl;
     
     // Set system matrices
     validity_checker->setSystemMatrices(A_, B_, K_, G_, Q_);  // Now Q_ is a matrix

@@ -587,11 +587,6 @@ void DiscreteContinuousExample::generateIntermediateStates(const oc::PathControl
     
     // Create the barrier trajectory validity checker (SAME as planner)
     auto validity_checker = std::make_shared<BarrierTrajectoryValidityChecker>(si);
-
-    std::cout << "[Monte Carlo] Empirical P_satisfy = "
-          << validity_checker->getEmpiricalPsatisfy()
-          << std::endl;
-
     validity_checker->setSystemMatrices(A_, B_, K_, G_, Q_);
     validity_checker->setMultipleObstacles(obstacle_a_lists_, obstacle_gamma_lists_, risk_threshold_);
     validity_checker->setTimeParameters(time_steps_, step_duration_);
@@ -601,14 +596,14 @@ void DiscreteContinuousExample::generateIntermediateStates(const oc::PathControl
         double duration = path_control.getControlDuration(i);
         int num_steps = static_cast<int>(duration / dt_);
         
-        // std::cout << "Control " << i << ": duration = " << duration 
-        //           << ", generating " << num_steps << " intermediate states" << std::endl;
+        std::cout << "Control " << i << ": duration = " << duration 
+                  << ", generating " << num_steps << " intermediate states" << std::endl;
         
         // Use the SAME validation approach as propagateWhileValidWithTrajectoryChecking
         std::vector<ompl::base::State*> pstates = propagateWhileValidWithTrajectoryChecking(
             path_states[i], path_controls[i], num_steps, validity_checker, si);
         
-        // std::cout << "  Actual steps propagated: " << pstates.size() << std::endl;
+        std::cout << "  Actual steps propagated: " << pstates.size() << std::endl;
         
         // Add all propagated states to our intermediate states
         for (size_t j = 0; j < pstates.size(); ++j) {
