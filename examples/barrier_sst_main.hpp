@@ -1,0 +1,98 @@
+#ifndef BARRIER_SST_MAIN_HPP
+#define BARRIER_SST_MAIN_HPP
+
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <Eigen/Dense>
+#include <ompl/control/SpaceInformation.h>
+#include <ompl/control/ControlSpace.h>
+#include <ompl/control/spaces/RealVectorControlSpace.h>
+#include <ompl/control/SimpleSetup.h>
+#include <ompl/base/goals/GoalRegion.h>
+#include <ompl/base/objectives/PathLengthOptimizationObjective.h>
+
+#include <ompl/control/planners/sst/SST.h>
+#include "ValidityCheckers/BarrierTrajectoryValidityChecker.hpp"
+#include "Spaces/RNBeliefSpace.h"
+#include "StatePropagators/SimpleStatePropagator.h"
+
+using namespace ompl;
+using namespace ompl::base;
+using namespace ompl::control;
+
+class BarrierSSTMain
+{
+public:
+    BarrierSSTMain(const std::string& config_file = "");
+    void loadConfig(const std::string& config_file);
+    void loadScene(const std::string& scene_file);
+    void setupBarrierConstraints();
+    void planWithBarrierSST();
+    void saveSolutionPath(const PathControl& path_control, const StateSpacePtr& space, const std::string& filepath);
+
+    // Continuous-time validation methods
+    void generateIntermediateStates(const PathControl& path_control,
+                                   const ompl::control::SpaceInformationPtr& si,
+                                   std::vector<ompl::base::State*>& intermediate_states,
+                                   std::vector<ompl::control::Control*>& intermediate_controls,
+                                   std::vector<double>& intermediate_durations);
+    bool validateWithContinuousTime(const PathControl& path_control,
+                                   const ompl::control::SpaceInformationPtr& si,
+                                   const StateSpacePtr& space);
+    void saveIntermediateStates(const std::vector<ompl::base::State*>& states,
+                               const std::vector<ompl::control::Control*>& controls,
+                               const std::vector<double>& durations,
+                               const std::string& filepath);
+
+    // Helper methods for trajectory validation
+    std::vector<ompl::base::State*> propagateWhileValidWithTrajectoryChecking(
+        const ompl::base::State* state,
+        const ompl::control::Control* control,
+        unsigned int steps,
+        std::shared_ptr<BarrierTrajectoryValidityChecker> validity_checker,
+        const ompl::control::SpaceInformationPtr& si) const;
+    
+    bool checkTrajectoryValidityAtStep(
+        const ompl::base::State *current_state, 
+        const ompl::control::Control *control, 
+        double step_duration,
+        std::shared_ptr<BarrierTrajectoryValidityChecker> validity_checker) const;
+
+    std::string scene_name_;  // expose for config/scene mgmt
+
+private:
+    // Environment parameters
+    std::vector<double> planning_bounds_x_;
+    std::vector<double> planning_bounds_y_;
+    std::vector<double> start_configuration_;
+    std::vector<double> goal_configuration_;
+    Eigen::MatrixXd initial_covariance_;
+    
+    // System parameters
+    Eigen::MatrixXd A_, B_, K_, G_, Q_;
+    double R_, R_bad_, K_default_, dt_;
+    
+    // Planner parameters
+    double planning_time_;
+    double selection_radius_;  
+    double pruning_radius_;    
+    std::vector<int> control_duration_;
+    
+    // Barrier parameters
+    double risk_threshold_;
+    int time_steps_;
+    double step_duration_;
+    
+    // Obstacles
+    std::vector<std::vector<Eigen::VectorXd>> obstacle_a_lists_;
+    std::vector<std::vector<double>> obstacle_gamma_lists_;
+    
+    // Legacy compatibility
+    std::vector<Eigen::VectorXd> obstacle_constraints_a_;
+    std::vector<double> obstacle_constraints_gamma_;
+    std::vector<Eigen::VectorXd> a_list_;
+    std::vector<double> gamma_list_;
+};
+
+#endif // BARRIER_SST_MAIN_HPP
