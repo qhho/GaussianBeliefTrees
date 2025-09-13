@@ -151,3 +151,16 @@ target_link_libraries (discrete_continuous_example
     ${Boost_LIBRARIES}
     yaml-cpp
 )
+
+# Discrete SST executable
+add_executable(discrete_sst
+    examples/discrete_sst.cpp
+    examples/discrete_sst_test.cpp
+)
+
+target_link_libraries(discrete_sst
+    gbt_lib
+    ${OMPL_LIBRARIES}
+    ${Boost_LIBRARIES}
+    yaml-cpp
+)
